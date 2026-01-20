@@ -3,10 +3,12 @@
  */
 
 import { jsPDF } from 'jspdf'
+import { sanitizeFilename } from '../utils/sanitizers.js'
 
 export function exportToPdf(data) {
   const invoice = data.invoices[0]
-  const filename = `factura-${invoice.series || ''}${invoice.number || 'sin-numero'}.pdf`
+  const safeNumber = sanitizeFilename(`${invoice.series || ''}${invoice.number || ''}`)
+  const filename = `factura-${safeNumber || 'sin-numero'}.pdf`
 
   try {
     const pdf = new jsPDF({
@@ -103,23 +105,23 @@ export function exportToPdf(data) {
     pdf.setFontSize(9)
     pdf.setTextColor(...grayMedium)
     pdf.text('Descripción', margin + 2, y)
-    pdf.text('Cant.', margin + 85, y)
-    pdf.text('Precio', margin + 100, y)
-    pdf.text('IVA', margin + 125, y)
-    pdf.text('Total', margin + 145, y, { align: 'right' })
+    pdf.text('Cant.', margin + 70, y)
+    pdf.text('Precio', margin + 90, y)
+    pdf.text('IVA', margin + 115, y)
+    pdf.text('Total', pageWidth - margin, y, { align: 'right' })
     y += 6
 
     // Líneas
     pdf.setTextColor(...grayDark)
     invoice.lines.forEach(line => {
       const desc = line.description || '-'
-      const descLines = pdf.splitTextToSize(desc, 80)
+      const descLines = pdf.splitTextToSize(desc, 65)
 
       pdf.text(descLines, margin + 2, y)
-      pdf.text(String(line.quantity), margin + 85, y)
-      pdf.text(formatCurrency(line.unitPrice, currencyCode), margin + 100, y)
-      pdf.text(`${line.taxRate}%`, margin + 125, y)
-      pdf.text(formatCurrency(line.grossAmount || line.totalAmount, currencyCode), margin + 145, y, { align: 'right' })
+      pdf.text(String(line.quantity), margin + 70, y)
+      pdf.text(formatCurrency(line.unitPrice, currencyCode), margin + 90, y)
+      pdf.text(`${line.taxRate}%`, margin + 115, y)
+      pdf.text(formatCurrency(line.grossAmount || line.totalAmount, currencyCode), pageWidth - margin, y, { align: 'right' })
 
       y += Math.max(descLines.length * 4, 6)
 

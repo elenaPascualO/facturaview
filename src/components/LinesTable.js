@@ -3,6 +3,7 @@
  */
 
 import { formatCurrency } from '../utils/formatters.js'
+import { escapeHtml } from '../utils/sanitizers.js'
 
 export function createLinesTable(lines) {
   if (!lines || lines.length === 0) {
@@ -16,11 +17,11 @@ export function createLinesTable(lines) {
 
   const rows = lines.map(line => `
     <tr class="border-b border-gray-100">
-      <td class="py-3 px-4 text-gray-800">${line.description || '-'}</td>
-      <td class="py-3 px-4 text-center text-gray-600">${line.quantity}</td>
-      <td class="py-3 px-4 text-right text-gray-600">${formatCurrency(line.unitPrice)}</td>
-      <td class="py-3 px-4 text-center text-gray-600">${line.taxRate}%</td>
-      <td class="py-3 px-4 text-right font-medium text-gray-800">${formatCurrency(line.grossAmount || line.totalAmount)}</td>
+      <td class="py-3 px-4 text-gray-800">${escapeHtml(line.description || '-')}</td>
+      <td class="py-3 px-4 text-center text-gray-600">${escapeHtml(line.quantity)}</td>
+      <td class="py-3 px-4 text-right text-gray-600">${escapeHtml(formatCurrency(line.unitPrice))}</td>
+      <td class="py-3 px-4 text-center text-gray-600">${escapeHtml(line.taxRate)}%</td>
+      <td class="py-3 px-4 text-right font-medium text-gray-800">${escapeHtml(formatCurrency(line.grossAmount || line.totalAmount))}</td>
     </tr>
   `).join('')
 

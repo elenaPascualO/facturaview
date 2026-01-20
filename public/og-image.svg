@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a8a"/>
+      <stop offset="100%" style="stop-color:#3b82f6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Patrón decorativo -->
+  <circle cx="1100" cy="100" r="200" fill="#ffffff" opacity="0.05"/>
+  <circle cx="100" cy="530" r="150" fill="#ffffff" opacity="0.05"/>
+
+  <!-- Icono de documento (escalado) -->
+  <g transform="translate(150, 165) scale(3)">
+    <rect x="15" y="10" width="70" height="85" rx="5" fill="#ffffff" stroke="#ffffff" stroke-width="2"/>
+    <rect x="25" y="25" width="35" height="4" rx="2" fill="#3b82f6"/>
+    <rect x="25" y="35" width="50" height="3" rx="1.5" fill="#d1d5db"/>
+    <rect x="25" y="43" width="50" height="3" rx="1.5" fill="#d1d5db"/>
+    <rect x="25" y="51" width="50" height="3" rx="1.5" fill="#d1d5db"/>
+    <rect x="25" y="63" width="25" height="3" rx="1.5" fill="#10b981"/>
+    <rect x="55" y="63" width="20" height="3" rx="1.5" fill="#10b981"/>
+    <rect x="25" y="75" width="50" height="8" rx="2" fill="#3b82f6"/>
+  </g>
+
+  <!-- Texto principal -->
+  <text x="480" y="280" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" fill="#ffffff">FacturaView</text>
+
+  <!-- Subtítulo -->
+  <text x="480" y="350" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#ffffff" opacity="0.9">Visualiza facturas Facturae online</text>
+
+  <!-- Features -->
+  <g transform="translate(480, 400)" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#ffffff" opacity="0.8">
+    <text x="0" y="0">✓ Sin instalar nada</text>
+    <text x="0" y="40">✓ Exporta a PDF y Excel</text>
+    <text x="0" y="80">✓ 100% gratis y privado</text>
+  </g>
+
+  <!-- URL -->
+  <text x="480" y="560" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#ffffff" opacity="0.6">facturaview.es</text>
+</svg>

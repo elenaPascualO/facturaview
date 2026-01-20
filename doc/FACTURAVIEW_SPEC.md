@@ -171,7 +171,9 @@ Deploy:   Railway (configurado) / Vercel / Netlify / GitHub Pages
 - [x] **Descargar como Excel** (3 hojas: General, Líneas, Impuestos)
 - [x] **100% privado** (todo en navegador, nada al servidor)
 - [x] **Responsive** (funciona en móvil)
-- [x] **Tests automatizados** (40 tests con Vitest)
+- [x] **Tests automatizados** (92 tests con Vitest)
+- [x] **Formulario de contacto** (Formspree)
+- [x] **Seguridad** (XSS, inyección Excel, CSP headers)
 
 ### Nice to Have (Fase 1)
 
@@ -280,12 +282,15 @@ facturaview/
 │   │   ├── toPdf.js         # Exportar a PDF
 │   │   └── toExcel.js       # Exportar a Excel
 │   ├── utils/
-│   │   └── formatters.js    # Formateo de moneda, fechas, etc.
+│   │   ├── formatters.js    # Formateo de moneda, fechas, etc.
+│   │   ├── sanitizers.js    # Sanitización (XSS, Excel, filenames)
+│   │   └── validators.js    # Validación de archivos (extensión, tamaño)
 │   └── styles/
 │       └── main.css
 ├── public/
 │   └── favicon.ico
 ├── package.json
+├── .env.example             # Variables de entorno (Formspree ID)
 ├── bun.lockb                # Lockfile de Bun
 ├── vite.config.js
 └── README.md
@@ -483,8 +488,10 @@ bun run test:run
 - [x] Exportar a PDF (jsPDF directo)
 - [x] Exportar a Excel (3 hojas)
 - [x] Diseño responsive
-- [x] 40 tests automatizados
+- [x] 92 tests automatizados
 - [x] Deploy en Railway (configurado)
+- [x] Formulario de contacto (Formspree)
+- [x] Auditoría de seguridad (XSS, Excel injection, CSP)
 
 ### Próximos Pasos
 - [ ] Probar con facturas reales de usuarios
@@ -515,7 +522,7 @@ bun run test:run
 
 ## Conclusión
 
-**Estado:** MVP completado con 40 tests pasando.
+**Estado:** MVP completado con 92 tests pasando (parser, exportación, seguridad, validación).
 
 **¿Backend necesario?** No. Todo 100% frontend.
 

@@ -39,7 +39,12 @@ export function createDropzone() {
         </button>
 
         <div id="contact-form-container" class="hidden mt-4 max-w-md mx-auto">
-          <form id="contact-form" class="text-left space-y-3 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+          <form
+            id="contact-form"
+            action="https://formspree.io/f/xpqqjpkw"
+            method="POST"
+            class="text-left space-y-3 p-4 bg-white rounded-lg border border-gray-200 shadow-sm"
+          >
             <div>
               <label for="contact-email" class="block text-xs text-gray-600 mb-1">
                 Email <span class="text-gray-400">(opcional)</span>
@@ -65,6 +70,7 @@ export function createDropzone() {
                 class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               ></textarea>
             </div>
+            <input type="hidden" name="_subject" value="Mensaje de FacturaView" />
             <div class="flex items-center gap-3">
               <button
                 type="submit"

@@ -29,6 +29,7 @@
 - [x] Desglose de impuestos y totales
 - [x] Información de pago
 - [x] Diseño responsive (móvil)
+- [x] Formulario de contacto (Formspree)
 
 ### Exportación
 - [x] Exportar a PDF (jsPDF directo)
@@ -37,18 +38,37 @@
 ### Testing
 - [x] Tests del parser (27 tests)
 - [x] Tests de exportación (13 tests)
+- [x] Tests de seguridad (25 tests)
+- [x] Tests de validación de archivos (27 tests)
 - [x] Fixtures de prueba (6 archivos XML)
 
-**Total: 40 tests pasando**
+**Total: 92 tests pasando**
+
+### Seguridad (Auditoría completada)
+- [x] Reemplazar Discord webhook con Formspree
+- [x] Prevención XSS en todos los componentes UI
+- [x] Sanitización de fórmulas Excel
+- [x] Sanitización de nombres de archivo
+- [x] Validación de archivos (extensión y tamaño)
+- [x] Headers CSP en index.html
+- [x] Eliminada dependencia html2canvas no usada
 
 ---
 
 ## Próximos Pasos (Prioridad Alta)
 
 - [x] Deploy en Railway (configuración completada en `railway.toml`)
+- [x] Meta tags SEO y Open Graph image
 - [ ] Probar con facturas reales de usuarios
 - [ ] Mejorar manejo de errores (mensajes más descriptivos)
 - [ ] Añadir loading state durante parseo
+
+### SEO Pendiente (ver `doc/SEO.md`)
+- [ ] Crear `public/robots.txt`
+- [ ] Crear `public/sitemap.xml`
+- [ ] Añadir Schema.org JSON-LD
+- [ ] Crear `public/manifest.json` (PWA)
+- [ ] Mejorar accesibilidad (ARIA labels)
 
 ---
 

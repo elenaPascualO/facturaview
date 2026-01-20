@@ -3,33 +3,35 @@
  */
 
 import * as XLSX from 'xlsx'
+import { sanitizeExcelValue, sanitizeFilename } from '../utils/sanitizers.js'
 
 export function exportToExcel(data) {
   const invoice = data.invoices[0]
-  const filename = `factura-${invoice.series || ''}${invoice.number || 'sin-numero'}.xlsx`
+  const safeNumber = sanitizeFilename(`${invoice.series || ''}${invoice.number || ''}`)
+  const filename = `factura-${safeNumber || 'sin-numero'}.xlsx`
   const currencyCode = data.fileHeader?.currencyCode || 'EUR'
 
   // Crear workbook
   const wb = XLSX.utils.book_new()
 
-  // Hoja 1: Datos generales
+  // Hoja 1: Datos generales (sanitizar textos para prevenir inyección de fórmulas)
   const generalData = [
     ['DATOS DE LA FACTURA'],
     [''],
-    ['Número', `${invoice.series || ''}${invoice.series ? '/' : ''}${invoice.number}`],
-    ['Fecha emisión', invoice.issueDate],
-    ['Versión Facturae', data.version],
-    ['Moneda', currencyCode],
+    ['Número', sanitizeExcelValue(`${invoice.series || ''}${invoice.series ? '/' : ''}${invoice.number}`)],
+    ['Fecha emisión', sanitizeExcelValue(invoice.issueDate)],
+    ['Versión Facturae', sanitizeExcelValue(data.version)],
+    ['Moneda', sanitizeExcelValue(currencyCode)],
     [''],
     ['EMISOR'],
-    ['Nombre/Razón social', data.seller?.name || ''],
-    ['NIF/CIF', data.seller?.taxId || ''],
-    ['Dirección', formatAddress(data.seller?.address)],
+    ['Nombre/Razón social', sanitizeExcelValue(data.seller?.name || '')],
+    ['NIF/CIF', sanitizeExcelValue(data.seller?.taxId || '')],
+    ['Dirección', sanitizeExcelValue(formatAddress(data.seller?.address))],
     [''],
     ['RECEPTOR'],
-    ['Nombre/Razón social', data.buyer?.name || ''],
-    ['NIF/CIF', data.buyer?.taxId || ''],
-    ['Dirección', formatAddress(data.buyer?.address)],
+    ['Nombre/Razón social', sanitizeExcelValue(data.buyer?.name || '')],
+    ['NIF/CIF', sanitizeExcelValue(data.buyer?.taxId || '')],
+    ['Dirección', sanitizeExcelValue(formatAddress(data.buyer?.address))],
     [''],
     ['TOTALES'],
     ['Base imponible', invoice.totals?.grossAmount || 0],
@@ -39,10 +41,10 @@ export function exportToExcel(data) {
     ['TOTAL A PAGAR', invoice.totals?.totalToPay || 0],
     [''],
     ['INFORMACIÓN DE PAGO'],
-    ['Forma de pago', invoice.payment?.paymentMeans ? getPaymentMeansLabel(invoice.payment.paymentMeans) : ''],
-    ['Fecha vencimiento', invoice.payment?.dueDate || ''],
-    ['IBAN', invoice.payment?.iban || ''],
-    ['BIC', invoice.payment?.bic || '']
+    ['Forma de pago', sanitizeExcelValue(invoice.payment?.paymentMeans ? getPaymentMeansLabel(invoice.payment.paymentMeans) : '')],
+    ['Fecha vencimiento', sanitizeExcelValue(invoice.payment?.dueDate || '')],
+    ['IBAN', sanitizeExcelValue(invoice.payment?.iban || '')],
+    ['BIC', sanitizeExcelValue(invoice.payment?.bic || '')]
   ]
 
   const wsGeneral = XLSX.utils.aoa_to_sheet(generalData)
@@ -61,7 +63,7 @@ export function exportToExcel(data) {
     linesHeader,
     ...invoice.lines.map((line, index) => [
       index + 1,
-      line.description,
+      sanitizeExcelValue(line.description),
       line.quantity,
       line.unitPrice,
       line.taxRate,
@@ -89,7 +91,7 @@ export function exportToExcel(data) {
     const taxesData = [
       taxesHeader,
       ...invoice.taxes.map(tax => [
-        getTaxTypeLabel(tax.type),
+        sanitizeExcelValue(getTaxTypeLabel(tax.type)),
         tax.rate,
         tax.base,
         tax.amount

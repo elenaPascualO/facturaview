@@ -3,6 +3,7 @@
  */
 
 import { formatCurrency, formatDate } from '../utils/formatters.js'
+import { escapeHtml } from '../utils/sanitizers.js'
 import { createPartyCard } from './PartyCard.js'
 import { createLinesTable } from './LinesTable.js'
 import { createTotalsBox } from './TotalsBox.js'
@@ -37,13 +38,13 @@ export function createInvoiceView(data) {
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h2 class="text-xl font-semibold text-gray-800">
-                FACTURA Nº: ${invoice.series ? invoice.series + '/' : ''}${invoice.number}
+            FACTURA Nº: ${invoice.series ? escapeHtml(invoice.series) + '/' : ''}${escapeHtml(invoice.number)}
               </h2>
-              <p class="text-gray-500">${getInvoiceTypeLabel(invoice.invoiceType)} · ${getInvoiceClassLabel(invoice.invoiceClass)}</p>
+              <p class="text-gray-500">${escapeHtml(getInvoiceTypeLabel(invoice.invoiceType))} · ${escapeHtml(getInvoiceClassLabel(invoice.invoiceClass))}</p>
             </div>
             <div class="text-right">
-              <p class="text-gray-600">Fecha: <span class="font-medium">${formatDate(invoice.issueDate)}</span></p>
-              <p class="text-sm text-gray-400">Versión Facturae: ${data.version}</p>
+              <p class="text-gray-600">Fecha: <span class="font-medium">${escapeHtml(formatDate(invoice.issueDate))}</span></p>
+              <p class="text-sm text-gray-400">Versión Facturae: ${escapeHtml(data.version)}</p>
               ${data.isSigned ? '<p class="text-sm text-green-600">✓ Firmada digitalmente</p>' : ''}
             </div>
           </div>
@@ -101,10 +102,10 @@ function createPaymentInfo(payment) {
     <div class="bg-white rounded-xl shadow-sm p-6 mt-6">
       <h3 class="text-lg font-semibold text-gray-800 mb-4">Información de Pago</h3>
       <div class="grid md:grid-cols-2 gap-4 text-sm">
-        ${payment.dueDate ? `<p><span class="text-gray-500">Vencimiento:</span> ${formatDate(payment.dueDate)}</p>` : ''}
-        ${payment.paymentMeans ? `<p><span class="text-gray-500">Forma de pago:</span> ${getPaymentMeansLabel(payment.paymentMeans)}</p>` : ''}
-        ${payment.iban ? `<p><span class="text-gray-500">IBAN:</span> ${payment.iban}</p>` : ''}
-        ${payment.bic ? `<p><span class="text-gray-500">BIC:</span> ${payment.bic}</p>` : ''}
+        ${payment.dueDate ? `<p><span class="text-gray-500">Vencimiento:</span> ${escapeHtml(formatDate(payment.dueDate))}</p>` : ''}
+        ${payment.paymentMeans ? `<p><span class="text-gray-500">Forma de pago:</span> ${escapeHtml(getPaymentMeansLabel(payment.paymentMeans))}</p>` : ''}
+        ${payment.iban ? `<p><span class="text-gray-500">IBAN:</span> ${escapeHtml(payment.iban)}</p>` : ''}
+        ${payment.bic ? `<p><span class="text-gray-500">BIC:</span> ${escapeHtml(payment.bic)}</p>` : ''}
       </div>
     </div>
   `

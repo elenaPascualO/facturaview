@@ -2,7 +2,7 @@ import './style.css'
 import { createDropzone } from './components/Dropzone.js'
 import { createInvoiceView } from './components/InvoiceView.js'
 import { parseFacturae } from './parser/facturae.js'
-import { sendToDiscord } from './utils/discord.js'
+import { validateFile } from './utils/validators.js'
 
 const app = document.querySelector('#app')
 
@@ -54,6 +54,13 @@ function setupDropzoneEvents() {
 
 // Procesar archivo XML
 async function handleFile(file) {
+  // Validar archivo (extensión y tamaño)
+  const validation = validateFile(file)
+  if (!validation.valid) {
+    alert(validation.error)
+    return
+  }
+
   try {
     const text = await file.text()
     currentInvoice = parseFacturae(text)
@@ -93,14 +100,20 @@ function setupContactForm() {
 
   if (!toggleBtn || !container || !form) return
 
+  // Configurar la URL de Formspree desde variable de entorno
+  const formspreeId = import.meta.env.VITE_FORMSPREE_ID
+  if (formspreeId) {
+    form.action = `https://formspree.io/f/${formspreeId}`
+  }
+
   toggleBtn.addEventListener('click', () => {
     container.classList.toggle('hidden')
   })
 
+  // Envío asíncrono con feedback al usuario
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
 
-    const email = document.getElementById('contact-email').value.trim()
     const message = document.getElementById('contact-message').value.trim()
     const status = document.getElementById('contact-status')
     const submitBtn = form.querySelector('button[type="submit"]')
@@ -116,14 +129,24 @@ function setupContactForm() {
     status.textContent = ''
 
     try {
-      await sendToDiscord(email, message)
-      status.textContent = '✓ Enviado'
-      status.className = 'text-xs text-green-600'
-      form.reset()
-      setTimeout(() => {
-        status.textContent = ''
-        container.classList.add('hidden')
-      }, 2000)
+      const formData = new FormData(form)
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      })
+
+      if (response.ok) {
+        status.textContent = '✓ Enviado'
+        status.className = 'text-xs text-green-600'
+        form.reset()
+        setTimeout(() => {
+          status.textContent = ''
+          container.classList.add('hidden')
+        }, 2000)
+      } else {
+        throw new Error('Error del servidor')
+      }
     } catch (error) {
       status.textContent = 'Error al enviar'
       status.className = 'text-xs text-red-500'
