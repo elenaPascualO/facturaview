@@ -30,12 +30,13 @@
 
 ```
 Runtime:  Bun (más rápido que npm/node)
-Build:    Vite
-Frontend: Vanilla JS (o React si prefieres)
-Styling:  Tailwind CSS (CDN para velocidad)
-PDF:      jsPDF + html2canvas
+Build:    Vite 7.x
+Frontend: Vanilla JS (ES Modules)
+Styling:  Tailwind CSS v4
+PDF:      jsPDF (generación directa, sin html2canvas)
 Excel:    SheetJS (xlsx)
-Deploy:   Vercel / Netlify / GitHub Pages (gratis)
+Testing:  Vitest + jsdom
+Deploy:   Railway (configurado) / Vercel / Netlify / GitHub Pages
 ```
 
 **Tiempo estimado MVP:** 1-2 semanas
@@ -292,17 +293,21 @@ facturaview/
 
 ---
 
-## Dependencias (mínimas)
+## Dependencias (actuales)
 
 ```json
 {
   "dependencies": {
-    "jspdf": "^2.5.1",
-    "html2canvas": "^1.4.1",
-    "xlsx": "^0.18.5"
+    "jspdf": "^4.0.0",
+    "xlsx": "^0.18.5",
+    "serve": "^14.2.5"
   },
   "devDependencies": {
-    "vite": "^5.0.0"
+    "@tailwindcss/vite": "^4.1.18",
+    "jsdom": "^27.4.0",
+    "tailwindcss": "^4.1.18",
+    "vite": "^7.2.4",
+    "vitest": "^4.0.17"
   }
 }
 ```
@@ -310,10 +315,10 @@ facturaview/
 **Instalación con Bun:**
 
 ```bash
-bun add jspdf html2canvas xlsx
+bun install
 ```
 
-**Total:** ~3 dependencias de producción. Muy ligero.
+**Total:** 3 dependencias de producción + 5 de desarrollo.
 
 ---
 
@@ -450,43 +455,42 @@ function parseTotals(invoiceEl) {
 
 ---
 
-## Plan de Lanzamiento
+## Plan de Lanzamiento - ✅ MVP COMPLETADO
 
 ### Setup inicial (Bun + Vite)
 
 ```bash
-# Crear proyecto
-bun create vite . --template vanilla
-
 # Instalar dependencias
 bun install
-bun add jspdf html2canvas xlsx
 
 # Arrancar servidor desarrollo
 bun run dev
 
 # Build para producción
 bun run build
+
+# Ejecutar tests
+bun run test:run
 ```
 
-### Semana 1
-- [ ] Setup proyecto (Bun + Vite + Vanilla JS)
-- [ ] Parser Facturae básico (3.2.2)
-- [ ] UI de subida de archivo
-- [ ] Vista básica de factura
+### Desarrollo - ✅ COMPLETADO
+- [x] Setup proyecto (Bun + Vite + Vanilla JS)
+- [x] Configurar Tailwind CSS v4
+- [x] Configurar Vitest para tests
+- [x] Parser Facturae (3.2, 3.2.1, 3.2.2)
+- [x] UI de subida de archivo (drag & drop)
+- [x] Vista completa de factura
+- [x] Exportar a PDF (jsPDF directo)
+- [x] Exportar a Excel (3 hojas)
+- [x] Diseño responsive
+- [x] 40 tests automatizados
+- [x] Deploy en Railway (configurado)
 
-### Semana 2
-- [ ] Soporte versiones 3.2.1 y 3.2
-- [ ] Exportar a PDF
-- [ ] Exportar a Excel
-- [ ] Pulir UI responsive
-- [ ] Deploy en Vercel/Netlify
-
-### Semana 3
+### Próximos Pasos
+- [ ] Probar con facturas reales de usuarios
 - [ ] Landing page con SEO
 - [ ] FAQ
-- [ ] Publicar en foros españoles (forocoches, mediavida, etc.)
-- [ ] Compartir en comunidades de autónomos
+- [ ] Publicar en comunidades de autónomos
 
 ---
 
@@ -511,18 +515,19 @@ bun run build
 
 ## Conclusión
 
-**¿Backend necesario?** No para el MVP.
+**Estado:** MVP completado con 40 tests pasando.
 
-**¿Tiempo estimado?** 1-2 semanas.
+**¿Backend necesario?** No. Todo 100% frontend.
 
-**¿Stack recomendado?** 
-- Bun + Vite + Vanilla JS + Vercel
+**Stack actual:**
+- Bun + Vite 7.x + Vanilla JS + Tailwind CSS v4 + Railway
 
 **Comandos clave:**
 ```bash
-bun run dev      # Desarrollo
-bun run build    # Producción  
-bun run preview  # Preview del build
+bun run dev       # Desarrollo
+bun run build     # Producción
+bun run preview   # Preview del build
+bun run test:run  # Ejecutar tests
 ```
 
 **Ventaja clave:** Eres más rápido que el gobierno. Siempre.

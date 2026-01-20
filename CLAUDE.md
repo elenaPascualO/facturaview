@@ -15,7 +15,7 @@ Web app que permite a autónomos y pymes españoles visualizar, entender y expor
 - **PDF:** jsPDF (generación directa, sin html2canvas)
 - **Excel:** SheetJS (xlsx)
 - **Testing:** Vitest + jsdom
-- **Deploy:** Vercel / Netlify / GitHub Pages
+- **Deploy:** Railway (configurado) / Vercel / Netlify / GitHub Pages
 
 ## Estructura del Proyecto
 

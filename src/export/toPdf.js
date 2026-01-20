@@ -25,11 +25,8 @@ export function exportToPdf(data) {
     const grayMedium = [107, 114, 128] // gray-500
     const grayLight = [156, 163, 175] // gray-400
 
-    // Título
-    pdf.setFontSize(24)
-    pdf.setTextColor(...primaryColor)
-    pdf.text('FacturaView', margin, y)
-    y += 15
+    // Moneda del documento
+    const currencyCode = data.fileHeader?.currencyCode || 'EUR'
 
     // Número y fecha de factura
     pdf.setFontSize(16)
@@ -120,9 +117,9 @@ export function exportToPdf(data) {
 
       pdf.text(descLines, margin + 2, y)
       pdf.text(String(line.quantity), margin + 85, y)
-      pdf.text(formatCurrency(line.unitPrice), margin + 100, y)
+      pdf.text(formatCurrency(line.unitPrice, currencyCode), margin + 100, y)
       pdf.text(`${line.taxRate}%`, margin + 125, y)
-      pdf.text(formatCurrency(line.grossAmount || line.totalAmount), margin + 145, y, { align: 'right' })
+      pdf.text(formatCurrency(line.grossAmount || line.totalAmount, currencyCode), margin + 145, y, { align: 'right' })
 
       y += Math.max(descLines.length * 4, 6)
 
@@ -147,7 +144,7 @@ export function exportToPdf(data) {
     pdf.setTextColor(...grayMedium)
     pdf.text('Base imponible', totalsX, y)
     pdf.setTextColor(...grayDark)
-    pdf.text(formatCurrency(invoice.totals.grossAmount), valuesX, y, { align: 'right' })
+    pdf.text(formatCurrency(invoice.totals.grossAmount, currencyCode), valuesX, y, { align: 'right' })
     y += 6
 
     // Impuestos
@@ -156,7 +153,7 @@ export function exportToPdf(data) {
         pdf.setTextColor(...grayMedium)
         pdf.text(`IVA ${tax.rate}%`, totalsX, y)
         pdf.setTextColor(...grayDark)
-        pdf.text(formatCurrency(tax.amount), valuesX, y, { align: 'right' })
+        pdf.text(formatCurrency(tax.amount, currencyCode), valuesX, y, { align: 'right' })
         y += 6
       })
     }
@@ -166,7 +163,7 @@ export function exportToPdf(data) {
       pdf.setTextColor(...grayMedium)
       pdf.text('Retenciones', totalsX, y)
       pdf.setTextColor(220, 38, 38) // red-600
-      pdf.text(`-${formatCurrency(invoice.totals.taxesWithheld)}`, valuesX, y, { align: 'right' })
+      pdf.text(`-${formatCurrency(invoice.totals.taxesWithheld, currencyCode)}`, valuesX, y, { align: 'right' })
       y += 6
     }
 
@@ -179,7 +176,7 @@ export function exportToPdf(data) {
     pdf.setTextColor(...grayDark)
     pdf.text('TOTAL', totalsX, y + 4)
     pdf.setTextColor(...primaryColor)
-    pdf.text(formatCurrency(invoice.totals.totalToPay), valuesX, y + 4, { align: 'right' })
+    pdf.text(formatCurrency(invoice.totals.totalToPay, currencyCode), valuesX, y + 4, { align: 'right' })
     y += 15
 
     // Información de pago
@@ -213,11 +210,6 @@ export function exportToPdf(data) {
       }
     }
 
-    // Footer
-    pdf.setFontSize(8)
-    pdf.setTextColor(...grayLight)
-    pdf.text('Generado con FacturaView - facturaview.es', pageWidth / 2, 285, { align: 'center' })
-
     pdf.save(filename)
   } catch (error) {
     console.error('Error generando PDF:', error)
@@ -225,11 +217,11 @@ export function exportToPdf(data) {
   }
 }
 
-function formatCurrency(amount) {
+function formatCurrency(amount, currency = 'EUR') {
   if (amount === null || amount === undefined) return '-'
   return new Intl.NumberFormat('es-ES', {
     style: 'currency',
-    currency: 'EUR'
+    currency: currency
   }).format(amount)
 }
 

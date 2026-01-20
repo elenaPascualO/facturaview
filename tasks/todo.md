@@ -45,7 +45,7 @@
 
 ## Próximos Pasos (Prioridad Alta)
 
-- [ ] Deploy en Vercel/Netlify
+- [x] Deploy en Railway (configuración completada en `railway.toml`)
 - [ ] Probar con facturas reales de usuarios
 - [ ] Mejorar manejo de errores (mensajes más descriptivos)
 - [ ] Añadir loading state durante parseo
