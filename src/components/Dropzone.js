@@ -13,7 +13,10 @@ export function createDropzone() {
 
       <div
         id="dropzone"
-        class="w-full max-w-xl border-2 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer transition-colors hover:border-blue-400 hover:bg-blue-50"
+        role="button"
+        tabindex="0"
+        aria-label="Área de subida de archivos: arrastra tu factura XML aquí o haz clic para seleccionar"
+        class="w-full max-w-xl border-2 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer transition-colors hover:border-blue-400 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
       >
         <div class="text-5xl mb-4">📎</div>
         <p class="text-lg text-gray-700 mb-2">Arrastra tu archivo XML aquí</p>

@@ -63,12 +63,12 @@
 - [ ] Mejorar manejo de errores (mensajes más descriptivos)
 - [ ] Añadir loading state durante parseo
 
-### SEO Pendiente (ver `doc/SEO.md`)
-- [ ] Crear `public/robots.txt`
-- [ ] Crear `public/sitemap.xml`
-- [ ] Añadir Schema.org JSON-LD
-- [ ] Crear `public/manifest.json` (PWA)
-- [ ] Mejorar accesibilidad (ARIA labels)
+### SEO Completado (ver `doc/SEO.md`)
+- [x] Crear `public/robots.txt`
+- [x] Crear `public/sitemap.xml`
+- [x] Añadir Schema.org JSON-LD
+- [x] Crear `public/manifest.json` (PWA)
+- [x] Mejorar accesibilidad (ARIA labels, teclado, scope en tablas)
 
 ---
 

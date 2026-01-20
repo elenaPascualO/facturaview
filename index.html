@@ -4,7 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Preconnect para performance -->
+    <link rel="preconnect" href="https://cloud.umami.is">
+    <link rel="dns-prefetch" href="https://cloud.umami.is">
+
     <!-- SEO Básico -->
+    <meta name="google-site-verification" content="N4FhpVpXq4HtMkKrJY5l0MLab6yGr987D1mnBuwMmkA" />
     <title>FacturaView - Visualiza facturas Facturae online gratis</title>
     <meta name="description" content="Abre y visualiza tus facturas electrónicas Facturae (XML) sin instalar nada. Exporta a PDF y Excel. 100% gratis y privado.">
     <meta name="keywords" content="facturae, factura electronica, xml, visualizador, visor, pdf, excel, gratis, online, autonomos, pymes, españa">
@@ -15,6 +20,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -43,6 +51,30 @@
 
     <!-- Umami Analytics -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="a211c801-93da-494e-b699-21ba70081d74"></script>
+
+    <!-- Datos estructurados Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "FacturaView",
+      "description": "Visualizador de facturas electrónicas Facturae (XML) online, gratuito y privado",
+      "url": "https://facturaview.es",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "featureList": [
+        "Visualizar facturas Facturae XML",
+        "Exportar a PDF",
+        "Exportar a Excel",
+        "100% privado - procesamiento local"
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="app"></div>

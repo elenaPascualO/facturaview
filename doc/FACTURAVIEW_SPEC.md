@@ -288,7 +288,11 @@ facturaview/
 │   └── styles/
 │       └── main.css
 ├── public/
-│   └── favicon.ico
+│   ├── favicon.svg
+│   ├── og-image.png
+│   ├── robots.txt
+│   ├── sitemap.xml
+│   └── manifest.json
 ├── package.json
 ├── .env.example             # Variables de entorno (Formspree ID)
 ├── bun.lockb                # Lockfile de Bun
@@ -493,9 +497,15 @@ bun run test:run
 - [x] Formulario de contacto (Formspree)
 - [x] Auditoría de seguridad (XSS, Excel injection, CSP)
 
+### SEO y Accesibilidad - ✅ COMPLETADO
+- [x] robots.txt y sitemap.xml
+- [x] Schema.org JSON-LD (WebApplication)
+- [x] PWA manifest.json
+- [x] Accesibilidad ARIA (labels, roles, scope)
+- [x] Navegación por teclado
+
 ### Próximos Pasos
 - [ ] Probar con facturas reales de usuarios
-- [ ] Landing page con SEO
 - [ ] FAQ
 - [ ] Publicar en comunidades de autónomos
 

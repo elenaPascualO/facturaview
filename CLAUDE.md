@@ -65,7 +65,10 @@ facturaview/
 └── public/
     ├── favicon.svg
     ├── og-image.png            # Imagen Open Graph (1200x630)
-    └── og-image.svg            # Fuente de la imagen OG
+    ├── og-image.svg            # Fuente de la imagen OG
+    ├── robots.txt              # Configuración para bots/crawlers
+    ├── sitemap.xml             # Mapa del sitio para SEO
+    └── manifest.json           # PWA manifest
 ```
 
 ## Versiones Facturae Soportadas
@@ -115,7 +118,7 @@ bun run test:run     # Ejecutar tests una vez
 1. **Sin backend:** Todo se procesa en el navegador del usuario
 2. **Privacidad:** Los archivos nunca salen del dispositivo del usuario
 3. **Simplicidad:** Código mínimo y dependencias mínimas
-4. **Accesibilidad:** Debe funcionar en móvil y desktop
+4. **Accesibilidad:** Debe funcionar en móvil y desktop, con soporte ARIA y navegación por teclado
 
 ## Guías Generales
 
@@ -156,6 +159,14 @@ Formulario colapsable en el Dropzone que envía mensajes via Formspree. Configur
 - **File Validation:** Validación de extensión (.xml, .xsig) y tamaño máximo (10 MB)
 - **CSP Headers:** Content-Security-Policy configurado en index.html
 - **No Secrets in Client:** El formulario usa Formspree (diseñado para uso público)
+
+### SEO y Accesibilidad
+- **robots.txt y sitemap.xml:** En `public/` para indexación
+- **Schema.org JSON-LD:** Datos estructurados WebApplication en index.html
+- **PWA Manifest:** `public/manifest.json` para instalación como app
+- **ARIA:** Labels en botones y dropzone, `role="main"` en vista de factura
+- **Teclado:** Soporte Enter/Space en dropzone, focus visible
+- **Tablas accesibles:** `scope="col"` en headers de tabla
 
 ## Documentación
 

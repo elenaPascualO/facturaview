@@ -1,8 +1,9 @@
 # Plan de Acción SEO - FacturaView
 
 > Fecha de auditoría: 2025-01-20
+> Última actualización: 2025-01-20
 
-## Estado Actual: 60% de madurez SEO
+## Estado Actual: 95% de madurez SEO ✅
 
 ### Lo que está bien
 - Meta tags completos en `index.html` (title, description, OG, Twitter Card)
@@ -11,24 +12,30 @@
 - Analytics privacy-first (Umami)
 - Estructura semántica básica (headings jerárquicos)
 - Headers de seguridad (CSP, X-Content-Type-Options, X-Frame-Options)
+- ✅ robots.txt con referencia al sitemap
+- ✅ sitemap.xml para indexación
+- ✅ Datos estructurados Schema.org (WebApplication)
+- ✅ manifest.json para PWA
+- ✅ Accesibilidad mejorada (ARIA, scope, teclado)
+- ✅ Preconnect para Umami
 
-### Problemas Detectados
-| Problema | Prioridad | Impacto |
-|----------|-----------|---------|
-| Sin robots.txt | P0 | Bots usan configuración por defecto |
-| Sin sitemap.xml | P0 | No facilita indexación |
-| Sin datos estructurados (schema.org) | P1 | Sin rich snippets en Google |
-| Sin manifest.json | P1 | No es PWA instalable |
-| Accesibilidad deficiente (sin ARIA) | P2 | Problemas para usuarios con discapacidad |
-| Sin preconnect a recursos externos | P3 | Performance subóptima |
+### Problemas Detectados (Resueltos)
+| Problema | Prioridad | Estado |
+|----------|-----------|--------|
+| Sin robots.txt | P0 | ✅ Resuelto |
+| Sin sitemap.xml | P0 | ✅ Resuelto |
+| Sin datos estructurados (schema.org) | P1 | ✅ Resuelto |
+| Sin manifest.json | P1 | ✅ Resuelto |
+| Accesibilidad deficiente (sin ARIA) | P2 | ✅ Resuelto |
+| Sin preconnect a recursos externos | P3 | ✅ Resuelto |
 
 ---
 
-## Tareas Pendientes
+## Tareas Completadas
 
 ### P0 - Crítico
 
-#### [ ] Crear `public/robots.txt`
+#### [x] Crear `public/robots.txt`
 ```
 User-agent: *
 Allow: /
@@ -36,7 +43,7 @@ Allow: /
 Sitemap: https://facturaview.es/sitemap.xml
 ```
 
-#### [ ] Crear `public/sitemap.xml`
+#### [x] Crear `public/sitemap.xml`
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -53,7 +60,7 @@ Sitemap: https://facturaview.es/sitemap.xml
 
 ### P1 - Alto
 
-#### [ ] Añadir Schema.org JSON-LD en `index.html`
+#### [x] Añadir Schema.org JSON-LD en `index.html`
 Insertar antes del cierre de `</head>`:
 ```html
 <script type="application/ld+json">
@@ -80,7 +87,7 @@ Insertar antes del cierre de `</head>`:
 </script>
 ```
 
-#### [ ] Crear `public/manifest.json`
+#### [x] Crear `public/manifest.json`
 ```json
 {
   "name": "FacturaView",
@@ -100,7 +107,7 @@ Insertar antes del cierre de `</head>`:
 }
 ```
 
-#### [ ] Añadir link al manifest en `index.html`
+#### [x] Añadir link al manifest en `index.html`
 Insertar en `<head>`:
 ```html
 <link rel="manifest" href="/manifest.json">
@@ -110,7 +117,7 @@ Insertar en `<head>`:
 
 ### P2 - Medio (Accesibilidad)
 
-#### [ ] Mejorar `src/components/Dropzone.js`
+#### [x] Mejorar `src/components/Dropzone.js`
 Cambiar el div del dropzone:
 ```html
 <!-- Antes -->
@@ -126,7 +133,7 @@ Cambiar el div del dropzone:
 >
 ```
 
-#### [ ] Mejorar `src/components/InvoiceView.js`
+#### [x] Mejorar `src/components/InvoiceView.js`
 - Envolver el contenido en `<main role="main">`
 - Añadir `aria-label` a botones:
 ```html
@@ -135,7 +142,7 @@ Cambiar el div del dropzone:
 <button aria-label="Cargar otra factura">Nueva factura</button>
 ```
 
-#### [ ] Mejorar `src/components/LinesTable.js`
+#### [x] Mejorar `src/components/LinesTable.js`
 Añadir `scope` a los headers de tabla:
 ```html
 <th scope="col">Descripción</th>
@@ -148,7 +155,7 @@ Añadir `scope` a los headers de tabla:
 
 ### P3 - Bajo
 
-#### [ ] Añadir preconnect en `index.html`
+#### [x] Añadir preconnect en `index.html`
 Insertar al inicio del `<head>`:
 ```html
 <!-- Preconnect para performance -->

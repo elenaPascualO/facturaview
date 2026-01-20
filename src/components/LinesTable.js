@@ -32,11 +32,11 @@ export function createLinesTable(lines) {
         <table class="w-full">
           <thead class="bg-gray-50">
             <tr>
-              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500">Descripción</th>
-              <th class="py-3 px-4 text-center text-sm font-medium text-gray-500">Cantidad</th>
-              <th class="py-3 px-4 text-right text-sm font-medium text-gray-500">Precio</th>
-              <th class="py-3 px-4 text-center text-sm font-medium text-gray-500">IVA</th>
-              <th class="py-3 px-4 text-right text-sm font-medium text-gray-500">Total</th>
+              <th scope="col" class="py-3 px-4 text-left text-sm font-medium text-gray-500">Descripción</th>
+              <th scope="col" class="py-3 px-4 text-center text-sm font-medium text-gray-500">Cantidad</th>
+              <th scope="col" class="py-3 px-4 text-right text-sm font-medium text-gray-500">Precio</th>
+              <th scope="col" class="py-3 px-4 text-center text-sm font-medium text-gray-500">IVA</th>
+              <th scope="col" class="py-3 px-4 text-right text-sm font-medium text-gray-500">Total</th>
             </tr>
           </thead>
           <tbody>

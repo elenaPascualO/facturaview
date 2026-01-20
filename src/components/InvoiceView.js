@@ -12,7 +12,7 @@ export function createInvoiceView(data) {
   const invoice = data.invoices[0] // Por ahora solo la primera factura
 
   return `
-    <div class="min-h-screen bg-gray-50 p-4 md:p-8">
+    <main role="main" class="min-h-screen bg-gray-50 p-4 md:p-8">
       <div class="max-w-4xl mx-auto">
         <!-- Header -->
         <header class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
@@ -20,12 +20,14 @@ export function createInvoiceView(data) {
           <div class="flex gap-2">
             <button
               id="btn-pdf"
+              aria-label="Descargar factura en formato PDF"
               class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
               Descargar PDF
             </button>
             <button
               id="btn-excel"
+              aria-label="Descargar factura en formato Excel"
               class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               Descargar Excel
@@ -69,13 +71,14 @@ export function createInvoiceView(data) {
         <div class="mt-8 text-center">
           <button
             id="btn-back"
+            aria-label="Cargar otra factura"
             class="px-6 py-2 text-gray-600 hover:text-gray-800 transition-colors"
           >
             ← Cargar otra factura
           </button>
         </div>
       </div>
-    </div>
+    </main>
   `
 }
 

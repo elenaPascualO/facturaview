@@ -27,6 +27,14 @@ function setupDropzoneEvents() {
 
   dropzone.addEventListener('click', () => fileInput.click())
 
+  // Soporte de teclado para accesibilidad
+  dropzone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      fileInput.click()
+    }
+  })
+
   dropzone.addEventListener('dragover', (e) => {
     e.preventDefault()
     dropzone.classList.add('border-blue-500', 'bg-blue-50')
