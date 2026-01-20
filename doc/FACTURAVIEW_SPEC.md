@@ -19,8 +19,8 @@
 | Funcionalidad | Solución frontend |
 |---------------|-------------------|
 | Parsear XML | `DOMParser` nativo de JS |
-| Mostrar datos | React / Vanilla JS |
-| Generar PDF | `jsPDF` + `html2canvas` |
+| Mostrar datos | Vanilla JS |
+| Generar PDF | `jsPDF` (generación directa) |
 | Generar Excel | `SheetJS (xlsx)` |
 | Validar estructura | Comparar contra esquema XSD en JS |
 

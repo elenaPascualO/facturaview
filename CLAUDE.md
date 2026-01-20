@@ -119,7 +119,10 @@ bun run test:run     # Ejecutar tests una vez
 ## Notas Técnicas
 
 ### Exportación PDF
-Se usa jsPDF directamente (sin html2canvas) porque Tailwind CSS v4 usa colores `oklch` que html2canvas no soporta. El PDF se genera programáticamente con todas las secciones de la factura.
+Se usa jsPDF directamente (sin html2canvas) porque Tailwind CSS v4 usa colores `oklch` que html2canvas no soporta. El PDF se genera programáticamente con todas las secciones de la factura. Usa la moneda del documento (`InvoiceCurrencyCode`) en lugar de asumir EUR.
+
+### Exportación Excel
+Genera 3 hojas (General, Líneas, Impuestos) con anchos de columna optimizados. Incluye información de pago y usa la moneda del documento.
 
 ### Parser XML
 El parser usa `DOMParser` nativo del navegador. Detecta automáticamente la versión del esquema y extrae:

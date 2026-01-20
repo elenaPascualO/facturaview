@@ -2,6 +2,7 @@ import './style.css'
 import { createDropzone } from './components/Dropzone.js'
 import { createInvoiceView } from './components/InvoiceView.js'
 import { parseFacturae } from './parser/facturae.js'
+import { sendToDiscord } from './utils/discord.js'
 
 const app = document.querySelector('#app')
 
@@ -46,6 +47,9 @@ function setupDropzoneEvents() {
     const file = e.target.files[0]
     if (file) handleFile(file)
   })
+
+  // Eventos del formulario de contacto
+  setupContactForm()
 }
 
 // Procesar archivo XML
@@ -78,6 +82,56 @@ function setupInvoiceViewEvents() {
   excelBtn?.addEventListener('click', async () => {
     const { exportToExcel } = await import('./export/toExcel.js')
     exportToExcel(currentInvoice)
+  })
+}
+
+// Configurar formulario de contacto
+function setupContactForm() {
+  const toggleBtn = document.getElementById('toggle-contact')
+  const container = document.getElementById('contact-form-container')
+  const form = document.getElementById('contact-form')
+
+  if (!toggleBtn || !container || !form) return
+
+  toggleBtn.addEventListener('click', () => {
+    container.classList.toggle('hidden')
+  })
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    const email = document.getElementById('contact-email').value.trim()
+    const message = document.getElementById('contact-message').value.trim()
+    const status = document.getElementById('contact-status')
+    const submitBtn = form.querySelector('button[type="submit"]')
+
+    if (!message) {
+      status.textContent = 'El mensaje es obligatorio'
+      status.className = 'text-xs text-red-500'
+      return
+    }
+
+    submitBtn.disabled = true
+    submitBtn.textContent = 'Enviando...'
+    status.textContent = ''
+
+    try {
+      await sendToDiscord(email, message)
+      status.textContent = '✓ Enviado'
+      status.className = 'text-xs text-green-600'
+      form.reset()
+      setTimeout(() => {
+        status.textContent = ''
+        container.classList.add('hidden')
+      }, 2000)
+    } catch (error) {
+      status.textContent = 'Error al enviar'
+      status.className = 'text-xs text-red-500'
+      console.error('Error:', error)
+    } finally {
+      submitBtn.disabled = false
+      submitBtn.textContent = 'Enviar'
+    }
   })
 }
 

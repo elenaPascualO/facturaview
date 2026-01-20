@@ -31,6 +31,51 @@ export function createDropzone() {
         <p class="text-sm text-gray-500 flex items-center justify-center gap-2">
           🔒 Tu archivo no sale de tu navegador
         </p>
+        <button
+          id="toggle-contact"
+          class="mt-4 text-sm text-blue-500 hover:text-blue-600 hover:underline"
+        >
+          💬 Contacto / Sugerencias
+        </button>
+
+        <div id="contact-form-container" class="hidden mt-4 max-w-md mx-auto">
+          <form id="contact-form" class="text-left space-y-3 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+            <div>
+              <label for="contact-email" class="block text-xs text-gray-600 mb-1">
+                Email <span class="text-gray-400">(opcional)</span>
+              </label>
+              <input
+                type="email"
+                id="contact-email"
+                name="email"
+                placeholder="tu@email.com"
+                class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label for="contact-message" class="block text-xs text-gray-600 mb-1">
+                Mensaje <span class="text-red-400">*</span>
+              </label>
+              <textarea
+                id="contact-message"
+                name="message"
+                required
+                rows="3"
+                placeholder="Escribe tu mensaje..."
+                class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              ></textarea>
+            </div>
+            <div class="flex items-center gap-3">
+              <button
+                type="submit"
+                class="px-4 py-1.5 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors disabled:opacity-50"
+              >
+                Enviar
+              </button>
+              <span id="contact-status" class="text-xs"></span>
+            </div>
+          </form>
+        </div>
       </footer>
     </div>
   `
