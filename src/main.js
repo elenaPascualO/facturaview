@@ -9,6 +9,30 @@ const app = document.querySelector('#app')
 
 // Estado de la aplicación
 let currentInvoice = null
+let deferredInstallPrompt = null
+
+// Capturar evento de instalación PWA
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault()
+  deferredInstallPrompt = e
+  showInstallButton()
+})
+
+// Ocultar botón si ya está instalada
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null
+  hideInstallButton()
+})
+
+function showInstallButton() {
+  const btn = document.getElementById('btn-install')
+  if (btn) btn.classList.remove('hidden')
+}
+
+function hideInstallButton() {
+  const btn = document.getElementById('btn-install')
+  if (btn) btn.classList.add('hidden')
+}
 
 // Renderizar vista inicial
 function renderApp() {
@@ -57,8 +81,34 @@ function setupDropzoneEvents() {
     if (file) handleFile(file)
   })
 
+  // Botón de instalación PWA
+  setupInstallButton()
+
   // Eventos del formulario de contacto
   setupContactForm()
+}
+
+// Configurar botón de instalación PWA
+function setupInstallButton() {
+  const installBtn = document.getElementById('btn-install')
+  if (!installBtn) return
+
+  // Mostrar si ya tenemos el prompt guardado
+  if (deferredInstallPrompt) {
+    installBtn.classList.remove('hidden')
+  }
+
+  installBtn.addEventListener('click', async () => {
+    if (!deferredInstallPrompt) return
+
+    deferredInstallPrompt.prompt()
+    const { outcome } = await deferredInstallPrompt.userChoice
+
+    if (outcome === 'accepted') {
+      deferredInstallPrompt = null
+      hideInstallButton()
+    }
+  })
 }
 
 // Procesar archivo XML
@@ -170,6 +220,13 @@ function setupContactForm() {
       submitBtn.disabled = false
       submitBtn.textContent = 'Enviar'
     }
+  })
+}
+
+// Registrar Service Worker para PWA
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {
+    // SW registration failed, app works fine without it
   })
 }
 

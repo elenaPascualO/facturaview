@@ -175,7 +175,7 @@ Deploy:   Railway (configurado) / Vercel / Netlify / GitHub Pages
 - [x] **Formulario de contacto** (Formspree)
 - [x] **Seguridad** (XSS, inyección Excel, CSP headers)
 - [x] **Analítica de eventos** (Umami tracking)
-- [x] **PWA instalable** (iconos PNG, meta tags iOS)
+- [x] **PWA instalable** (Service Worker, iconos PNG, botón "Instalar app")
 
 ### Nice to Have (Fase 1)
 
@@ -193,7 +193,7 @@ Deploy:   Railway (configurado) / Vercel / Netlify / GitHub Pages
 - [ ] Soporte VeriFactu (cuando se publique especificación)
 - [ ] API para integraciones
 - [ ] Comparar dos facturas
-- [x] PWA (instalable como app) - Completado
+- [x] PWA completa (Service Worker + botón instalar) - Completado
 
 ---
 
@@ -295,7 +295,8 @@ facturaview/
 │   ├── og-image.png
 │   ├── robots.txt
 │   ├── sitemap.xml
-│   └── manifest.json
+│   ├── manifest.json
+│   └── sw.js                # Service Worker para PWA
 ├── package.json
 ├── serve.json               # Headers HTTP para clickjacking protection (Railway)
 ├── .env.example             # Variables de entorno (Formspree ID)

@@ -57,6 +57,8 @@
 - [x] Tracking de eventos con Umami (file-uploaded, export-pdf, export-excel, contact-sent)
 - [x] PWA completa con iconos PNG (192x192, 512x512, apple-touch-icon)
 - [x] Meta tags iOS para instalación en móvil
+- [x] Service Worker (`public/sw.js`) para cache y uso offline
+- [x] Botón "Instalar app" en footer (solo visible si instalable)
 
 ---
 
@@ -102,7 +104,7 @@
 - [ ] Soporte VeriFactu (cuando se publique especificación)
 - [ ] API para integraciones
 - [ ] Comparar dos facturas
-- [x] PWA (instalable como app) - Completado enero 2026
+- [x] PWA completa (Service Worker + botón instalar) - Completado enero 2026
 
 ---
 

@@ -263,4 +263,4 @@ Insertar al inicio del `<head>`:
 - **Múltiples páginas:** Añadir /about, /faq con contenido indexable
 - **Hreflang:** Preparar para versiones en otros idiomas
 - **Blog:** Crear contenido sobre facturación electrónica para atraer tráfico orgánico
-- **PWA completa:** Service worker para funcionamiento offline
+- ~~**PWA completa:** Service worker para funcionamiento offline~~ ✅ Completado (enero 2026)

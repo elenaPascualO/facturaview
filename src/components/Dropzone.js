@@ -35,6 +35,12 @@ export function createDropzone() {
           🔒 Tu archivo no sale de tu navegador
         </p>
         <button
+          id="btn-install"
+          class="hidden mt-3 text-sm text-blue-500 hover:text-blue-600 hover:underline"
+        >
+          📲 Instalar app
+        </button>
+        <button
           id="toggle-contact"
           class="mt-4 text-sm text-blue-500 hover:text-blue-600 hover:underline"
         >

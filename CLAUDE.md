@@ -70,7 +70,8 @@ facturaview/
     ├── og-image.svg            # Fuente de la imagen OG
     ├── robots.txt              # Configuración para bots/crawlers
     ├── sitemap.xml             # Mapa del sitio para SEO
-    └── manifest.json           # PWA manifest
+    ├── manifest.json           # PWA manifest
+    └── sw.js                   # Service Worker para PWA
 ```
 
 ## Versiones Facturae Soportadas
@@ -106,6 +107,7 @@ bun run test:run     # Ejecutar tests una vez
 - [x] Formulario de contacto (Formspree)
 - [x] Protección contra XSS, inyección Excel y path traversal
 - [x] Analítica de eventos (Umami)
+- [x] PWA instalable (Service Worker + manifest)
 
 ## Tipos de Factura Soportados
 
@@ -174,10 +176,16 @@ Tracking de eventos con Umami para entender el uso de la aplicación:
 
 El módulo `utils/tracking.js` proporciona un wrapper que verifica si Umami está disponible antes de trackear.
 
+### PWA (Progressive Web App)
+La app es instalable como PWA en móviles y desktop:
+- **Service Worker:** `public/sw.js` cachea assets estáticos y permite uso offline
+- **Manifest:** `public/manifest.json` con iconos 192x192 y 512x512
+- **Estrategia de cache:** Network-first para HTML, cache-first para assets
+- **Versionado:** Cambiar `CACHE_NAME` en sw.js para forzar actualización del cache
+
 ### SEO y Accesibilidad
 - **robots.txt y sitemap.xml:** En `public/` para indexación
 - **Schema.org JSON-LD:** Datos estructurados WebApplication en index.html
-- **PWA Manifest:** `public/manifest.json` para instalación como app
 - **ARIA:** Labels en botones y dropzone, `role="main"` en vista de factura
 - **Teclado:** Soporte Enter/Space en dropzone, focus visible
 - **Tablas accesibles:** `scope="col"` en headers de tabla
