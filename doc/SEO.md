@@ -1,9 +1,46 @@
 # Plan de Acción SEO - FacturaView
 
 > Fecha de auditoría: 2025-01-20
-> Última actualización: 2026-01-20
+> Última actualización: 2026-01-21
 
 ## Estado Actual: 95% de madurez SEO ✅
+
+---
+
+## Configuración de Dominio (Enero 2026)
+
+### Problema Detectado
+- `www.facturaview.es` funciona correctamente (Railway)
+- `facturaview.es` (sin www) muestra página en blanco (apunta a IP de Nominalia: 81.88.48.71)
+- Google Search Console había indexado la versión sin www como canónica
+
+### Acciones Realizadas (21 enero 2026)
+- [x] Cambiar canonical URL a `https://www.facturaview.es/` en index.html
+- [x] Actualizar sitemap.xml con URL www
+- [x] Actualizar robots.txt con URL www del sitemap
+- [x] Deploy a producción (Railway)
+- [x] Enviar sitemap en Google Search Console (propiedad www)
+- [x] Solicitar reindexación de `https://www.facturaview.es/`
+
+### Pendiente
+- [ ] **Redirección 301 de `facturaview.es` → `www.facturaview.es`**
+  - Nominalia no permite redireccionar dentro del mismo dominio
+  - Ticket abierto con soporte de Nominalia (esperando respuesta)
+  - Alternativa: Configurar en Railway si Nominalia no lo soporta
+
+### Configuración DNS Actual (Nominalia)
+```
+facturaview.es        A       81.88.48.71          (Nominalia - NO FUNCIONA)
+www.facturaview.es    CNAME   y81ss8y2.up.railway.app  (Railway - OK)
+```
+
+### Configuración DNS Objetivo
+```
+facturaview.es        → Redirigir 301 a https://www.facturaview.es
+www.facturaview.es    CNAME   y81ss8y2.up.railway.app  (Railway - OK)
+```
+
+---
 
 ### Lo que está bien
 - Meta tags completos en `index.html` (title, description, OG, Twitter Card)

@@ -70,6 +70,13 @@
 - [x] Crear `public/manifest.json` (PWA)
 - [x] Mejorar accesibilidad (ARIA labels, teclado, scope en tablas)
 
+### Configuración Dominio (Enero 2026)
+- [x] Cambiar canonical URL a `www.facturaview.es`
+- [x] Solicitar reindexación en Google Search Console
+- [ ] **Redirección 301 `facturaview.es` → `www.facturaview.es`**
+  - Ticket abierto con Nominalia (esperando respuesta)
+  - Si no lo soportan, configurar en Railway
+
 ---
 
 ## Nice to Have (Fase 1)
