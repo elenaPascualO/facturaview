@@ -36,13 +36,13 @@ export function createDropzone() {
         </p>
         <button
           id="btn-install"
-          class="hidden mt-3 text-sm text-blue-500 hover:text-blue-600 hover:underline"
+          class="hidden block mx-auto mt-3 text-sm text-blue-500 hover:text-blue-600 hover:underline"
         >
           📲 Instalar app
         </button>
         <button
           id="toggle-contact"
-          class="mt-4 text-sm text-blue-500 hover:text-blue-600 hover:underline"
+          class="block mx-auto mt-4 text-sm text-blue-500 hover:text-blue-600 hover:underline"
         >
           💬 Contacto / Sugerencias
         </button>
