@@ -73,9 +73,9 @@
 ### Configuración Dominio (Enero 2026)
 - [x] Cambiar canonical URL a `www.facturaview.es`
 - [x] Solicitar reindexación en Google Search Console
-- [ ] **Redirección 301 `facturaview.es` → `www.facturaview.es`**
-  - Ticket abierto con Nominalia (esperando respuesta)
-  - Si no lo soportan, configurar en Railway
+- [x] **Redirección 301 `facturaview.es` → `www.facturaview.es`**
+  - ✅ Configurado via servicio "microhosting" de Nominalia (gratuito)
+  - ⚠️ **Nota:** Si cambias de registrador de dominio o el microhosting deja de ser gratuito, configurar la redirección en Railway como alternativa
 
 ---
 

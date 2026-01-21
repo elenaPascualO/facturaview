@@ -256,7 +256,7 @@ Insertar al inicio del `<head>`:
 | `src/components/LinesTable.js` | Editar | P2 |
 
 ---
-
+    
 ## Mejoras Futuras (No prioritarias)
 
 - **SSR/Prerendering:** Considerar vite-plugin-ssr o similar para mejor crawlabilidad

@@ -294,6 +294,7 @@ facturaview/
 │   ├── sitemap.xml
 │   └── manifest.json
 ├── package.json
+├── serve.json               # Headers HTTP para clickjacking protection (Railway)
 ├── .env.example             # Variables de entorno (Formspree ID)
 ├── bun.lockb                # Lockfile de Bun
 ├── vite.config.js
