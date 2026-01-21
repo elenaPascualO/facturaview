@@ -25,6 +25,7 @@ facturaview/
 ├── vite.config.js
 ├── vitest.config.js
 ├── package.json
+├── serve.json                # Headers HTTP para protección clickjacking (serve)
 ├── .env.example              # Variables de entorno (Formspree ID)
 ├── CLAUDE.md
 ├── src/
@@ -158,6 +159,7 @@ Formulario colapsable en el Dropzone que envía mensajes via Formspree. Configur
 - **Filename Sanitization:** Los nombres de archivo PDF/Excel se sanitizan con `sanitizeFilename()`
 - **File Validation:** Validación de extensión (.xml, .xsig) y tamaño máximo (10 MB)
 - **CSP Headers:** Content-Security-Policy configurado en index.html
+- **Clickjacking Protection:** `X-Frame-Options: DENY` configurado via HTTP headers en `serve.json` (Railway)
 - **No Secrets in Client:** El formulario usa Formspree (diseñado para uso público)
 
 ### SEO y Accesibilidad
