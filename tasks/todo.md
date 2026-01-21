@@ -53,6 +53,11 @@
 - [x] Headers CSP en index.html
 - [x] Eliminada dependencia html2canvas no usada
 
+### Analítica y PWA (Enero 2026)
+- [x] Tracking de eventos con Umami (file-uploaded, export-pdf, export-excel, contact-sent)
+- [x] PWA completa con iconos PNG (192x192, 512x512, apple-touch-icon)
+- [x] Meta tags iOS para instalación en móvil
+
 ---
 
 ## Próximos Pasos (Prioridad Alta)
@@ -97,7 +102,7 @@
 - [ ] Soporte VeriFactu (cuando se publique especificación)
 - [ ] API para integraciones
 - [ ] Comparar dos facturas
-- [ ] PWA (instalable como app)
+- [x] PWA (instalable como app) - Completado enero 2026
 
 ---
 

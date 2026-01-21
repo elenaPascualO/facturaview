@@ -174,6 +174,8 @@ Deploy:   Railway (configurado) / Vercel / Netlify / GitHub Pages
 - [x] **Tests automatizados** (92 tests con Vitest)
 - [x] **Formulario de contacto** (Formspree)
 - [x] **Seguridad** (XSS, inyección Excel, CSP headers)
+- [x] **Analítica de eventos** (Umami tracking)
+- [x] **PWA instalable** (iconos PNG, meta tags iOS)
 
 ### Nice to Have (Fase 1)
 
@@ -191,7 +193,7 @@ Deploy:   Railway (configurado) / Vercel / Netlify / GitHub Pages
 - [ ] Soporte VeriFactu (cuando se publique especificación)
 - [ ] API para integraciones
 - [ ] Comparar dos facturas
-- [ ] PWA (instalable como app)
+- [x] PWA (instalable como app) - Completado
 
 ---
 
@@ -284,6 +286,7 @@ facturaview/
 │   ├── utils/
 │   │   ├── formatters.js    # Formateo de moneda, fechas, etc.
 │   │   ├── sanitizers.js    # Sanitización (XSS, Excel, filenames)
+│   │   ├── tracking.js      # Tracking de eventos con Umami
 │   │   └── validators.js    # Validación de archivos (extensión, tamaño)
 │   └── styles/
 │       └── main.css
@@ -497,6 +500,8 @@ bun run test:run
 - [x] Deploy en Railway (configurado)
 - [x] Formulario de contacto (Formspree)
 - [x] Auditoría de seguridad (XSS, Excel injection, CSP)
+- [x] Analítica de eventos (Umami)
+- [x] PWA instalable (iconos PNG, meta tags iOS)
 
 ### SEO y Accesibilidad - ✅ COMPLETADO
 - [x] robots.txt y sitemap.xml

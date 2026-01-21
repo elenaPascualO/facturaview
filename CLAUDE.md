@@ -45,6 +45,7 @@ facturaview/
 │   └── utils/
 │       ├── formatters.js       # Formateo moneda, fechas, NIF
 │       ├── sanitizers.js       # Funciones de sanitización (XSS, Excel, filenames)
+│       ├── tracking.js         # Tracking de eventos con Umami
 │       └── validators.js       # Validación de archivos (extensión, tamaño)
 ├── tests/
 │   ├── parser.test.js          # Tests del parser (27 tests)
@@ -104,6 +105,7 @@ bun run test:run     # Ejecutar tests una vez
 - [x] Tests automatizados (92 tests)
 - [x] Formulario de contacto (Formspree)
 - [x] Protección contra XSS, inyección Excel y path traversal
+- [x] Analítica de eventos (Umami)
 
 ## Tipos de Factura Soportados
 
@@ -161,6 +163,16 @@ Formulario colapsable en el Dropzone que envía mensajes via Formspree. Configur
 - **CSP Headers:** Content-Security-Policy configurado en index.html
 - **Clickjacking Protection:** `X-Frame-Options: DENY` configurado via HTTP headers en `serve.json` (Railway)
 - **No Secrets in Client:** El formulario usa Formspree (diseñado para uso público)
+
+### Analítica (Umami)
+Tracking de eventos con Umami para entender el uso de la aplicación:
+- **file-uploaded:** Archivo subido correctamente (incluye versión Facturae)
+- **file-error:** Error al subir/parsear archivo (incluye razón y mensaje)
+- **export-pdf:** Exportación a PDF (incluye versión)
+- **export-excel:** Exportación a Excel (incluye versión)
+- **contact-sent:** Formulario de contacto enviado
+
+El módulo `utils/tracking.js` proporciona un wrapper que verifica si Umami está disponible antes de trackear.
 
 ### SEO y Accesibilidad
 - **robots.txt y sitemap.xml:** En `public/` para indexación

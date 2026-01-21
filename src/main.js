@@ -3,6 +3,7 @@ import { createDropzone } from './components/Dropzone.js'
 import { createInvoiceView } from './components/InvoiceView.js'
 import { parseFacturae } from './parser/facturae.js'
 import { validateFile } from './utils/validators.js'
+import { track, events } from './utils/tracking.js'
 
 const app = document.querySelector('#app')
 
@@ -65,6 +66,7 @@ async function handleFile(file) {
   // Validar archivo (extensión y tamaño)
   const validation = validateFile(file)
   if (!validation.valid) {
+    track(events.FILE_ERROR, { reason: 'validation', error: validation.error })
     alert(validation.error)
     return
   }
@@ -72,8 +74,10 @@ async function handleFile(file) {
   try {
     const text = await file.text()
     currentInvoice = parseFacturae(text)
+    track(events.FILE_UPLOADED, { version: currentInvoice.version })
     renderApp()
   } catch (error) {
+    track(events.FILE_ERROR, { reason: 'parse', error: error.message })
     alert('Error al procesar el archivo: ' + error.message)
   }
 }
@@ -90,11 +94,13 @@ function setupInvoiceViewEvents() {
   })
 
   pdfBtn?.addEventListener('click', async () => {
+    track(events.EXPORT_PDF, { version: currentInvoice.version })
     const { exportToPdf } = await import('./export/toPdf.js')
     exportToPdf(currentInvoice)
   })
 
   excelBtn?.addEventListener('click', async () => {
+    track(events.EXPORT_EXCEL, { version: currentInvoice.version })
     const { exportToExcel } = await import('./export/toExcel.js')
     exportToExcel(currentInvoice)
   })
@@ -145,6 +151,7 @@ function setupContactForm() {
       })
 
       if (response.ok) {
+        track(events.CONTACT_SENT)
         status.textContent = '✓ Enviado'
         status.className = 'text-xs text-green-600'
         form.reset()
