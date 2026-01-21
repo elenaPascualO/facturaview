@@ -1,7 +1,7 @@
 # Plan de Acción SEO - FacturaView
 
 > Fecha de auditoría: 2025-01-20
-> Última actualización: 2025-01-20
+> Última actualización: 2026-01-20
 
 ## Estado Actual: 95% de madurez SEO ✅
 
@@ -40,7 +40,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://facturaview.es/sitemap.xml
+Sitemap: https://www.facturaview.es/sitemap.xml
 ```
 
 #### [x] Crear `public/sitemap.xml`
@@ -48,7 +48,7 @@ Sitemap: https://facturaview.es/sitemap.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://facturaview.es/</loc>
+    <loc>https://www.facturaview.es/</loc>
     <lastmod>2025-01-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
@@ -69,7 +69,7 @@ Insertar antes del cierre de `</head>`:
   "@type": "WebApplication",
   "name": "FacturaView",
   "description": "Visualizador de facturas electrónicas Facturae (XML) online y gratuito",
-  "url": "https://facturaview.es",
+  "url": "https://www.facturaview.es",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web Browser",
   "offers": {

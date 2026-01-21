@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://facturaview.es/sitemap.xml
+Sitemap: https://www.facturaview.es/sitemap.xml
