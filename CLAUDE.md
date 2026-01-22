@@ -25,7 +25,6 @@ facturaview/
 ├── vite.config.js
 ├── vitest.config.js
 ├── package.json
-├── serve.json                # Headers HTTP para protección clickjacking (serve)
 ├── .env.example              # Variables de entorno (Formspree ID)
 ├── CLAUDE.md
 ├── src/
@@ -71,7 +70,8 @@ facturaview/
     ├── robots.txt              # Configuración para bots/crawlers
     ├── sitemap.xml             # Mapa del sitio para SEO
     ├── manifest.json           # PWA manifest
-    └── sw.js                   # Service Worker para PWA
+    ├── sw.js                   # Service Worker para PWA
+    └── serve.json              # Config servidor: rewrites, headers, bloqueo rutas
 ```
 
 ## Versiones Facturae Soportadas
@@ -163,7 +163,9 @@ Formulario colapsable en el Dropzone que envía mensajes via Formspree. Configur
 - **Filename Sanitization:** Los nombres de archivo PDF/Excel se sanitizan con `sanitizeFilename()`
 - **File Validation:** Validación de extensión (.xml, .xsig) y tamaño máximo (10 MB)
 - **CSP Headers:** Content-Security-Policy configurado en index.html
-- **Clickjacking Protection:** `X-Frame-Options: DENY` configurado via HTTP headers en `serve.json` (Railway)
+- **Clickjacking Protection:** `X-Frame-Options: DENY` configurado via HTTP headers en `serve.json`
+- **Route Blocking:** Rutas sensibles bloqueadas con 404 real (`.git/`, `.env`, `.aws/`, `wp-admin/`, `*.php`, etc.) configurado en `public/serve.json`
+- **Security Headers:** `X-Content-Type-Options`, `X-XSS-Protection`, `Referrer-Policy` en todas las respuestas
 - **No Secrets in Client:** El formulario usa Formspree (diseñado para uso público)
 
 ### Analítica (Umami)

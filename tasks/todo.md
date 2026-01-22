@@ -52,6 +52,8 @@
 - [x] Validación de archivos (extensión y tamaño)
 - [x] Headers CSP en index.html
 - [x] Eliminada dependencia html2canvas no usada
+- [x] Bloqueo de rutas sensibles con 404 real (`.git/`, `.env`, `.aws/`, `wp-admin/`, `*.php`, etc.)
+- [x] Headers de seguridad adicionales (`X-XSS-Protection`, `Referrer-Policy`)
 
 ### Analítica y PWA (Enero 2026)
 - [x] Tracking de eventos con Umami (file-uploaded, export-pdf, export-excel, contact-sent)

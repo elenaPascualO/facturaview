@@ -173,7 +173,7 @@ Deploy:   Railway (configurado) / Vercel / Netlify / GitHub Pages
 - [x] **Responsive** (funciona en móvil)
 - [x] **Tests automatizados** (92 tests con Vitest)
 - [x] **Formulario de contacto** (Formspree)
-- [x] **Seguridad** (XSS, inyección Excel, CSP headers)
+- [x] **Seguridad** (XSS, inyección Excel, CSP headers, bloqueo rutas sensibles)
 - [x] **Analítica de eventos** (Umami tracking)
 - [x] **PWA instalable** (Service Worker, iconos PNG, botón "Instalar app")
 
@@ -296,9 +296,9 @@ facturaview/
 │   ├── robots.txt
 │   ├── sitemap.xml
 │   ├── manifest.json
-│   └── sw.js                # Service Worker para PWA
+│   ├── sw.js                # Service Worker para PWA
+│   └── serve.json           # Config servidor: rewrites, headers, bloqueo rutas sensibles
 ├── package.json
-├── serve.json               # Headers HTTP para clickjacking protection (Railway)
 ├── .env.example             # Variables de entorno (Formspree ID)
 ├── bun.lockb                # Lockfile de Bun
 ├── vite.config.js
