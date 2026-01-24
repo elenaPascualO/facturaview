@@ -80,7 +80,37 @@
     </script>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <!-- Fallback content for search engines and users without JavaScript -->
+      <noscript>
+        <main style="max-width: 800px; margin: 0 auto; padding: 2rem; font-family: system-ui, sans-serif;">
+          <h1>FacturaView - Visualizador de Facturas Electrónicas Facturae</h1>
+          <p>Visualiza, entiende y exporta tus facturas electrónicas en formato Facturae (XML) sin instalar nada. 100% gratuito y privado.</p>
+
+          <h2>¿Qué es FacturaView?</h2>
+          <p>FacturaView es una herramienta online gratuita para autónomos y pymes españoles que permite abrir y visualizar facturas electrónicas en formato Facturae (XML). Todo el procesamiento se realiza localmente en tu navegador, garantizando la privacidad de tus datos.</p>
+
+          <h2>Funcionalidades</h2>
+          <ul>
+            <li><strong>Visualizar facturas Facturae:</strong> Soporta versiones 3.2, 3.2.1 y 3.2.2</li>
+            <li><strong>Exportar a PDF:</strong> Descarga tu factura en formato PDF legible</li>
+            <li><strong>Exportar a Excel:</strong> Genera un archivo Excel con todos los datos</li>
+            <li><strong>100% privado:</strong> Tus archivos nunca salen de tu dispositivo</li>
+            <li><strong>Sin instalación:</strong> Funciona directamente en el navegador</li>
+            <li><strong>Compatible con FACe:</strong> Facturas de la administración pública española</li>
+          </ul>
+
+          <h2>¿Cómo funciona?</h2>
+          <ol>
+            <li>Arrastra tu archivo XML de factura electrónica o haz clic para seleccionarlo</li>
+            <li>Visualiza todos los datos: emisor, receptor, líneas de detalle, impuestos y totales</li>
+            <li>Exporta a PDF o Excel si lo necesitas</li>
+          </ol>
+
+          <p><strong>Nota:</strong> Esta aplicación requiere JavaScript para funcionar. Por favor, habilita JavaScript en tu navegador.</p>
+        </main>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

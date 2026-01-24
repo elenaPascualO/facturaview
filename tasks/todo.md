@@ -88,6 +88,41 @@
 
 ---
 
+## Bing Indexing Fix (Enero 2026)
+
+El sitio fue descubierto por Bing el 20 Jan 2026 pero no ha sido rastreado.
+Causa principal: contenido renderizado 100% con JavaScript (SPA).
+
+### Paso 1: Añadir contenido estático de fallback
+- [x] Añadir `<noscript>` con contenido HTML básico en index.html
+- [x] Incluir H1, descripción y lista de funcionalidades
+- [x] Esto da a Bingbot contenido visible sin ejecutar JS
+
+### Paso 2: Verificación Bing Webmaster Tools
+- [x] ~~Obtener código de verificación~~ (no necesario, importado desde Google Search Console)
+- [x] ~~Añadir meta tag `msvalidate.01`~~ (no necesario)
+- [x] Verificar propiedad del sitio (automático via GSC)
+
+### Paso 3: Enviar sitemap manualmente
+- [x] ~~Ir a Bing Webmaster Tools > Sitemaps~~ (ya importado desde GSC)
+- [x] ~~Enviar sitemap~~ (enviado 20/01/2026)
+- [x] Confirmar que se procesa correctamente (Status: Success, 1 URL discovered)
+
+### Paso 4: Solicitar indexación
+- [ ] Usar "Request indexing" en URL Inspection
+- [ ] Opcional: usar API de URL Submission para indexación más rápida
+
+### Paso 5: Backlinks (mejora autoridad)
+- [ ] Registrar en directorios de herramientas para autónomos españoles
+- [ ] Publicar en foros/comunidades relevantes (ej: foroautonomos.es)
+- [ ] Considerar guest post en blogs de facturación/contabilidad
+
+### Verificación final
+- [ ] Esperar 1-2 semanas y revisar estado en Bing Webmaster Tools
+- [ ] Verificar que la página aparece en búsqueda: `site:facturaview.es`
+
+---
+
 ## Nice to Have (Fase 1)
 
 - [ ] Validar firma digital (mostrar detalles del certificado)
