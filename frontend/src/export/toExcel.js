@@ -4,6 +4,7 @@
 
 import * as XLSX from 'xlsx'
 import { sanitizeExcelValue, sanitizeFilename } from '../utils/sanitizers.js'
+import { t } from '../utils/i18n.js'
 
 export function exportToExcel(data) {
   const invoice = data.invoices[0]
@@ -16,35 +17,35 @@ export function exportToExcel(data) {
 
   // Hoja 1: Datos generales (sanitizar textos para prevenir inyección de fórmulas)
   const generalData = [
-    ['DATOS DE LA FACTURA'],
+    [t('excel.invoiceData')],
     [''],
-    ['Número', sanitizeExcelValue(`${invoice.series || ''}${invoice.series ? '/' : ''}${invoice.number}`)],
-    ['Fecha emisión', sanitizeExcelValue(invoice.issueDate)],
-    ['Versión Facturae', sanitizeExcelValue(data.version)],
-    ['Moneda', sanitizeExcelValue(currencyCode)],
+    [t('excel.number'), sanitizeExcelValue(`${invoice.series || ''}${invoice.series ? '/' : ''}${invoice.number}`)],
+    [t('excel.issueDate'), sanitizeExcelValue(invoice.issueDate)],
+    [t('excel.facturaeVersion'), sanitizeExcelValue(data.version)],
+    [t('excel.currency'), sanitizeExcelValue(currencyCode)],
     [''],
-    ['EMISOR'],
-    ['Nombre/Razón social', sanitizeExcelValue(data.seller?.name || '')],
-    ['NIF/CIF', sanitizeExcelValue(data.seller?.taxId || '')],
-    ['Dirección', sanitizeExcelValue(formatAddress(data.seller?.address))],
+    [t('excel.seller')],
+    [t('excel.name'), sanitizeExcelValue(data.seller?.name || '')],
+    [t('excel.taxId'), sanitizeExcelValue(data.seller?.taxId || '')],
+    [t('excel.address'), sanitizeExcelValue(formatAddress(data.seller?.address))],
     [''],
-    ['RECEPTOR'],
-    ['Nombre/Razón social', sanitizeExcelValue(data.buyer?.name || '')],
-    ['NIF/CIF', sanitizeExcelValue(data.buyer?.taxId || '')],
-    ['Dirección', sanitizeExcelValue(formatAddress(data.buyer?.address))],
+    [t('excel.buyer')],
+    [t('excel.name'), sanitizeExcelValue(data.buyer?.name || '')],
+    [t('excel.taxId'), sanitizeExcelValue(data.buyer?.taxId || '')],
+    [t('excel.address'), sanitizeExcelValue(formatAddress(data.buyer?.address))],
     [''],
-    ['TOTALES'],
-    ['Base imponible', invoice.totals?.grossAmount || 0],
-    ['Total impuestos', invoice.totals?.taxOutputs || 0],
-    ['Retenciones', invoice.totals?.taxesWithheld || 0],
-    ['Total factura', invoice.totals?.invoiceTotal || 0],
-    ['TOTAL A PAGAR', invoice.totals?.totalToPay || 0],
+    [t('excel.totals')],
+    [t('excel.taxableBase'), invoice.totals?.grossAmount || 0],
+    [t('excel.totalTaxes'), invoice.totals?.taxOutputs || 0],
+    [t('excel.withholdings'), invoice.totals?.taxesWithheld || 0],
+    [t('excel.invoiceTotal'), invoice.totals?.invoiceTotal || 0],
+    [t('excel.totalToPay'), invoice.totals?.totalToPay || 0],
     [''],
-    ['INFORMACIÓN DE PAGO'],
-    ['Forma de pago', sanitizeExcelValue(invoice.payment?.paymentMeans ? getPaymentMeansLabel(invoice.payment.paymentMeans) : '')],
-    ['Fecha vencimiento', sanitizeExcelValue(invoice.payment?.dueDate || '')],
-    ['IBAN', sanitizeExcelValue(invoice.payment?.iban || '')],
-    ['BIC', sanitizeExcelValue(invoice.payment?.bic || '')]
+    [t('excel.paymentInfo')],
+    [t('excel.paymentMethod'), sanitizeExcelValue(invoice.payment?.paymentMeans ? getPaymentMeansLabel(invoice.payment.paymentMeans) : '')],
+    [t('excel.dueDate'), sanitizeExcelValue(invoice.payment?.dueDate || '')],
+    [t('excel.iban'), sanitizeExcelValue(invoice.payment?.iban || '')],
+    [t('excel.bic'), sanitizeExcelValue(invoice.payment?.bic || '')]
   ]
 
   const wsGeneral = XLSX.utils.aoa_to_sheet(generalData)
@@ -55,10 +56,17 @@ export function exportToExcel(data) {
     { wch: 45 }   // Columna B - valores
   ]
 
-  XLSX.utils.book_append_sheet(wb, wsGeneral, 'General')
+  XLSX.utils.book_append_sheet(wb, wsGeneral, t('excel.sheetGeneral'))
 
   // Hoja 2: Líneas de detalle
-  const linesHeader = ['Nº', 'Descripción', 'Cantidad', 'Precio unitario', 'IVA %', 'Importe bruto']
+  const linesHeader = [
+    t('excel.lineNumber'),
+    t('excel.description'),
+    t('excel.quantity'),
+    t('excel.unitPrice'),
+    t('excel.vatPercent'),
+    t('excel.grossAmount')
+  ]
   const linesData = [
     linesHeader,
     ...invoice.lines.map((line, index) => [
@@ -83,11 +91,16 @@ export function exportToExcel(data) {
     { wch: 15 }   // Importe bruto
   ]
 
-  XLSX.utils.book_append_sheet(wb, wsLines, 'Líneas')
+  XLSX.utils.book_append_sheet(wb, wsLines, t('excel.sheetLines'))
 
   // Hoja 3: Impuestos
   if (invoice.taxes && invoice.taxes.length > 0) {
-    const taxesHeader = ['Tipo impuesto', 'Porcentaje', 'Base imponible', 'Cuota']
+    const taxesHeader = [
+      t('excel.taxType'),
+      t('excel.percentage'),
+      t('excel.taxBase'),
+      t('excel.taxAmount')
+    ]
     const taxesData = [
       taxesHeader,
       ...invoice.taxes.map(tax => [
@@ -108,7 +121,7 @@ export function exportToExcel(data) {
       { wch: 15 }   // Cuota
     ]
 
-    XLSX.utils.book_append_sheet(wb, wsTaxes, 'Impuestos')
+    XLSX.utils.book_append_sheet(wb, wsTaxes, t('excel.sheetTaxes'))
   }
 
   // Descargar
@@ -123,27 +136,13 @@ function formatAddress(address) {
 }
 
 function getPaymentMeansLabel(code) {
-  const means = {
-    '01': 'Efectivo',
-    '02': 'Cheque',
-    '04': 'Transferencia',
-    '05': 'Letra aceptada',
-    '13': 'Pago contra reembolso',
-    '14': 'Recibo domiciliado',
-    '15': 'Recibo',
-    '16': 'Tarjeta crédito',
-    '19': 'Domiciliación'
-  }
-  return means[code] || code
+  const key = `paymentMethod.${code}`
+  const translated = t(key)
+  return translated !== key ? translated : code
 }
 
 function getTaxTypeLabel(code) {
-  const types = {
-    '01': 'IVA',
-    '02': 'IPSI',
-    '03': 'IGIC',
-    '04': 'IRPF',
-    '05': 'Otro'
-  }
-  return types[code] || code || 'IVA'
+  const key = `taxType.${code}`
+  const translated = t(key)
+  return translated !== key ? translated : t('taxType.default')
 }

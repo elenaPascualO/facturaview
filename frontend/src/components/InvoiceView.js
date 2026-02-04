@@ -7,9 +7,11 @@ import { escapeHtml } from '../utils/sanitizers.js'
 import { createPartyCard } from './PartyCard.js'
 import { createLinesTable } from './LinesTable.js'
 import { createTotalsBox } from './TotalsBox.js'
+import { t, getLang } from '../utils/i18n.js'
 
 export function createInvoiceView(data, signatureData = null) {
   const invoice = data.invoices[0] // Por ahora solo la primera factura
+  const currentLang = getLang()
 
   return `
     <main role="main" class="min-h-screen bg-gray-50 dark:bg-slate-900 p-4 md:p-8">
@@ -17,12 +19,21 @@ export function createInvoiceView(data, signatureData = null) {
         <!-- Header -->
         <header class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
           <div class="flex items-center gap-3">
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">FacturaView</h1>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">${t('app.title')}</h1>
+            <!-- Botón de idioma -->
+            <button
+              id="btn-lang"
+              aria-label="${t('app.changeLang')}"
+              title="${t('app.changeLang')}"
+              class="px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+            >
+              ${currentLang === 'es' ? 'ES' : 'EN'}
+            </button>
             <!-- Botón de tema -->
             <button
               id="btn-theme"
-              aria-label="Cambiar tema"
-              title="Cambiar tema"
+              aria-label="${t('app.changeTheme')}"
+              title="${t('app.changeTheme')}"
               class="p-2 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
             >
               <svg class="w-5 h-5 icon-sun hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,17 +47,17 @@ export function createInvoiceView(data, signatureData = null) {
           <div class="flex gap-2">
             <button
               id="btn-pdf"
-              aria-label="Descargar factura en formato PDF"
+              aria-label="${t('invoice.downloadPdf')}"
               class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
             >
-              Descargar PDF
+              ${t('invoice.downloadPdf')}
             </button>
             <button
               id="btn-excel"
-              aria-label="Descargar factura en formato Excel"
+              aria-label="${t('invoice.downloadExcel')}"
               class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
             >
-              Descargar Excel
+              ${t('invoice.downloadExcel')}
             </button>
           </div>
         </header>
@@ -56,22 +67,22 @@ export function createInvoiceView(data, signatureData = null) {
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-            FACTURA Nº: ${invoice.series ? escapeHtml(invoice.series) + '/' : ''}${escapeHtml(invoice.number)}
+            ${t('invoice.title')} ${invoice.series ? escapeHtml(invoice.series) + '/' : ''}${escapeHtml(invoice.number)}
               </h2>
               <p class="text-gray-500 dark:text-gray-400">${escapeHtml(getInvoiceTypeLabel(invoice.invoiceType))} · ${escapeHtml(getInvoiceClassLabel(invoice.invoiceClass))}</p>
             </div>
             <div class="text-right">
-              <p class="text-gray-600 dark:text-gray-300">Fecha: <span class="font-medium">${escapeHtml(formatDate(invoice.issueDate))}</span></p>
-              <p class="text-sm text-gray-400 dark:text-gray-500">Versión Facturae: ${escapeHtml(data.version)}</p>
-              ${data.isSigned ? '<p class="text-sm text-green-600 dark:text-green-400">✓ Firmada digitalmente</p>' : ''}
+              <p class="text-gray-600 dark:text-gray-300">${t('invoice.date')} <span class="font-medium">${escapeHtml(formatDate(invoice.issueDate))}</span></p>
+              <p class="text-sm text-gray-400 dark:text-gray-500">${t('invoice.version')} ${escapeHtml(data.version)}</p>
+              ${data.isSigned ? `<p class="text-sm text-green-600 dark:text-green-400">${t('invoice.signed')}</p>` : ''}
             </div>
           </div>
         </div>
 
         <!-- Emisor y Receptor -->
         <div class="grid md:grid-cols-2 gap-6 mb-6">
-          ${createPartyCard('Emisor', data.seller)}
-          ${createPartyCard('Receptor', data.buyer)}
+          ${createPartyCard(t('party.seller'), data.seller)}
+          ${createPartyCard(t('party.buyer'), data.buyer)}
         </div>
 
         <!-- Líneas de detalle -->
@@ -92,10 +103,10 @@ export function createInvoiceView(data, signatureData = null) {
         <div class="mt-8 text-center">
           <button
             id="btn-back"
-            aria-label="Cargar otra factura"
+            aria-label="${t('invoice.loadAnother')}"
             class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
           >
-            ← Cargar otra factura
+            ${t('invoice.loadAnother')}
           </button>
         </div>
       </div>
@@ -104,39 +115,34 @@ export function createInvoiceView(data, signatureData = null) {
 }
 
 function getInvoiceTypeLabel(type) {
-  const types = {
-    'FC': 'Factura completa',
-    'FA': 'Factura simplificada',
-    'AF': 'Autofactura'
-  }
-  return types[type] || type || 'Factura'
+  const key = `invoiceType.${type}`
+  const translated = t(key)
+  // Si la traducción es la misma que la clave, usar el fallback
+  return translated !== key ? translated : t('invoiceType.default')
 }
 
 function getInvoiceClassLabel(invoiceClass) {
-  const classes = {
-    'OO': 'Original',
-    'OR': 'Rectificativa',
-    'CO': 'Copia'
-  }
-  return classes[invoiceClass] || invoiceClass || ''
+  const key = `invoiceClass.${invoiceClass}`
+  const translated = t(key)
+  return translated !== key ? translated : invoiceClass || ''
 }
 
 function createPaymentInfo(payment) {
   return `
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6 mt-6">
-      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Información de Pago</h3>
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">${t('payment.title')}</h3>
       <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-800 dark:text-gray-200">
-        ${payment.dueDate ? `<p><span class="text-gray-500 dark:text-gray-400">Vencimiento:</span> ${escapeHtml(formatDate(payment.dueDate))}</p>` : ''}
-        ${payment.paymentMeans ? `<p><span class="text-gray-500 dark:text-gray-400">Forma de pago:</span> ${escapeHtml(getPaymentMeansLabel(payment.paymentMeans))}</p>` : ''}
+        ${payment.dueDate ? `<p><span class="text-gray-500 dark:text-gray-400">${t('payment.dueDate')}</span> ${escapeHtml(formatDate(payment.dueDate))}</p>` : ''}
+        ${payment.paymentMeans ? `<p><span class="text-gray-500 dark:text-gray-400">${t('payment.method')}</span> ${escapeHtml(getPaymentMeansLabel(payment.paymentMeans))}</p>` : ''}
         ${payment.iban ? `
           <p class="flex items-center gap-2">
-            <span class="text-gray-500 dark:text-gray-400">IBAN:</span>
+            <span class="text-gray-500 dark:text-gray-400">${t('payment.iban')}</span>
             <span>${escapeHtml(payment.iban)}</span>
             <button
               class="btn-copy text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
               data-copy="${escapeHtml(payment.iban)}"
-              aria-label="Copiar IBAN"
-              title="Copiar IBAN"
+              aria-label="${t('payment.copyIban')}"
+              title="${t('payment.copyIban')}"
             >
               <svg class="w-4 h-4 copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
@@ -147,34 +153,16 @@ function createPaymentInfo(payment) {
             </button>
           </p>
         ` : ''}
-        ${payment.bic ? `<p><span class="text-gray-500 dark:text-gray-400">BIC:</span> ${escapeHtml(payment.bic)}</p>` : ''}
+        ${payment.bic ? `<p><span class="text-gray-500 dark:text-gray-400">${t('payment.bic')}</span> ${escapeHtml(payment.bic)}</p>` : ''}
       </div>
     </div>
   `
 }
 
 function getPaymentMeansLabel(code) {
-  const means = {
-    '01': 'Efectivo',
-    '02': 'Cheque',
-    '04': 'Transferencia',
-    '05': 'Letra aceptada',
-    '06': 'Crédito documentario',
-    '07': 'Contrato adjudicación',
-    '08': 'Letra de cambio',
-    '09': 'Pagaré a la orden',
-    '10': 'Pagaré no a la orden',
-    '11': 'Cheque conformado',
-    '12': 'Cheque bancario',
-    '13': 'Pago contra reembolso',
-    '14': 'Recibo domiciliado',
-    '15': 'Recibo',
-    '16': 'Tarjeta crédito',
-    '17': 'Compensación',
-    '18': 'Pago especial',
-    '19': 'Domiciliación'
-  }
-  return means[code] || code
+  const key = `paymentMethod.${code}`
+  const translated = t(key)
+  return translated !== key ? translated : code
 }
 
 /**
@@ -187,11 +175,11 @@ export function createSignatureSection(signatureData) {
     return `
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6 mt-6">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
-          🔐 Firma Digital
+          🔐 ${t('signature.title')}
         </h3>
         <div class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
           <div class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          <span class="text-sm">Validando firma...</span>
+          <span class="text-sm">${t('signature.validating')}</span>
         </div>
       </div>
     `
@@ -201,28 +189,28 @@ export function createSignatureSection(signatureData) {
   // Determinar estado
   const statusIcon = signatureData.valid === true ? '✅' :
                      signatureData.valid === false ? '❌' : '⚠️'
-  const statusText = signatureData.valid === true ? 'Firma válida' :
-                     signatureData.valid === false ? 'Firma inválida' : 'No verificada'
+  const statusText = signatureData.valid === true ? t('signature.valid') :
+                     signatureData.valid === false ? t('signature.invalid') : t('signature.notVerified')
   const statusColor = signatureData.valid === true ? 'text-green-600 dark:text-green-400' :
                       signatureData.valid === false ? 'text-red-600 dark:text-red-400' : 'text-yellow-600 dark:text-yellow-400'
 
   return `
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6 mt-6">
       <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
-        🔐 Firma Digital
+        🔐 ${t('signature.title')}
       </h3>
 
       <div class="space-y-3 text-sm">
         <!-- Estado -->
         <p class="flex items-center gap-2">
-          <span class="text-gray-500 dark:text-gray-400">Estado:</span>
+          <span class="text-gray-500 dark:text-gray-400">${t('signature.status')}</span>
           <span class="${statusColor} font-medium">${statusIcon} ${escapeHtml(statusText)}</span>
         </p>
 
         <!-- Tipo de firma -->
         ${signatureData.signature_type ? `
           <p>
-            <span class="text-gray-500 dark:text-gray-400">Tipo:</span>
+            <span class="text-gray-500 dark:text-gray-400">${t('signature.type')}</span>
             <span class="text-gray-800 dark:text-gray-200">${escapeHtml(signatureData.signature_type)}</span>
           </p>
         ` : ''}
@@ -230,7 +218,7 @@ export function createSignatureSection(signatureData) {
         <!-- Firmante -->
         ${signatureData.signer ? `
           <div class="pt-2 border-t border-gray-100 dark:border-slate-700">
-            <p class="text-gray-500 dark:text-gray-400 mb-1">Firmante:</p>
+            <p class="text-gray-500 dark:text-gray-400 mb-1">${t('signature.signer')}</p>
             ${signatureData.signer.name ? `
               <p class="text-gray-800 dark:text-gray-200 font-medium">${escapeHtml(signatureData.signer.name)}</p>
             ` : ''}
@@ -246,14 +234,14 @@ export function createSignatureSection(signatureData) {
         <!-- Certificado -->
         ${signatureData.certificate ? `
           <div class="pt-2 border-t border-gray-100 dark:border-slate-700">
-            <p class="text-gray-500 dark:text-gray-400 mb-1">Certificado:</p>
+            <p class="text-gray-500 dark:text-gray-400 mb-1">${t('signature.certificate')}</p>
             ${signatureData.certificate.issuer ? `
               <p class="text-gray-800 dark:text-gray-200">${escapeHtml(signatureData.certificate.issuer)}</p>
             ` : ''}
             ${signatureData.certificate.valid_to ? `
               <p class="text-gray-500 dark:text-gray-400 text-xs">
-                Válido hasta: ${escapeHtml(formatDate(signatureData.certificate.valid_to))}
-                ${signatureData.certificate.is_expired ? '<span class="text-red-500"> (Expirado)</span>' : ''}
+                ${t('signature.validUntil')} ${escapeHtml(formatDate(signatureData.certificate.valid_to))}
+                ${signatureData.certificate.is_expired ? `<span class="text-red-500"> ${t('signature.expired')}</span>` : ''}
               </p>
             ` : ''}
           </div>
@@ -262,7 +250,7 @@ export function createSignatureSection(signatureData) {
         <!-- Estado de revocación -->
         ${signatureData.revocation_checked ? `
           <p class="${signatureData.revoked ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}">
-            ${signatureData.revoked ? '✕ Certificado revocado' : '✓ Certificado no revocado (OCSP)'}
+            ${signatureData.revoked ? t('signature.revoked') : t('signature.notRevoked')}
           </p>
         ` : ''}
 
@@ -286,10 +274,10 @@ export function createSignatureSection(signatureData) {
       <!-- Nota de privacidad y disclaimer -->
       <div class="mt-4 text-xs text-gray-400 dark:text-gray-500 space-y-1">
         <p class="italic">
-          El archivo se envía temporalmente para validar la firma y se descarta inmediatamente.
+          ${t('signature.privacyNote')}
         </p>
         <p>
-          Esta es una validacion tecnica, no oficial. Para validacion con efectos legales, usa
+          ${t('signature.disclaimer')}
           <a href="https://valide.redsara.es/" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">VALIDe</a>.
         </p>
       </div>
@@ -304,15 +292,15 @@ export function createNoSignatureSection() {
   return `
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6 mt-6">
       <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
-        🔐 Firma Digital
+        🔐 ${t('signature.title')}
       </h3>
       <div class="space-y-2 text-sm">
         <p class="flex items-center gap-2">
           <span class="text-yellow-600 dark:text-yellow-400">⚠️</span>
-          <span class="text-gray-700 dark:text-gray-300">Esta factura no contiene firma electrónica.</span>
+          <span class="text-gray-700 dark:text-gray-300">${t('signature.noSignature')}</span>
         </p>
         <p class="text-gray-500 dark:text-gray-400 text-xs">
-          Las facturas enviadas a la Administración Pública (FACe) deben estar firmadas digitalmente con certificado electrónico.
+          ${t('signature.faceRequirement')}
         </p>
       </div>
     </div>

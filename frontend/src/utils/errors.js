@@ -2,6 +2,8 @@
  * Utilidades para manejo de errores amigables
  */
 
+import { t } from './i18n.js'
+
 /**
  * Códigos de error internos
  */
@@ -17,17 +19,27 @@ export const ErrorCodes = {
 }
 
 /**
- * Mensajes de error amigables para el usuario
+ * Mapeo de códigos de error a claves de traducción
  */
-const friendlyMessages = {
-  [ErrorCodes.XML_MALFORMED]: 'El archivo no es un XML válido. Verifica que el archivo no esté dañado.',
-  [ErrorCodes.NOT_FACTURAE]: 'El archivo no parece ser una factura electrónica Facturae. Asegúrate de subir un archivo XML de factura electrónica española.',
-  [ErrorCodes.NO_INVOICES]: 'El archivo XML no contiene ninguna factura. Verifica que sea un archivo Facturae válido.',
-  [ErrorCodes.UNSUPPORTED_VERSION]: 'Esta versión de Facturae no está soportada. Solo se admiten las versiones 3.2, 3.2.1 y 3.2.2.',
-  [ErrorCodes.MISSING_SELLER]: 'La factura no contiene datos del emisor (SellerParty).',
-  [ErrorCodes.MISSING_BUYER]: 'La factura no contiene datos del receptor (BuyerParty).',
-  [ErrorCodes.MISSING_TOTALS]: 'La factura no contiene información de totales.',
-  [ErrorCodes.UNKNOWN]: 'Ha ocurrido un error inesperado al procesar la factura.'
+const errorTranslationKeys = {
+  [ErrorCodes.XML_MALFORMED]: 'error.xmlMalformed',
+  [ErrorCodes.NOT_FACTURAE]: 'error.notFacturae',
+  [ErrorCodes.NO_INVOICES]: 'error.noInvoices',
+  [ErrorCodes.UNSUPPORTED_VERSION]: 'error.unsupportedVersion',
+  [ErrorCodes.MISSING_SELLER]: 'error.missingSeller',
+  [ErrorCodes.MISSING_BUYER]: 'error.missingBuyer',
+  [ErrorCodes.MISSING_TOTALS]: 'error.missingTotals',
+  [ErrorCodes.UNKNOWN]: 'error.unknown'
+}
+
+/**
+ * Obtener mensaje de error amigable por código
+ * @param {string} code - Código de error
+ * @returns {string} - Mensaje amigable traducido
+ */
+function getFriendlyMessageByCode(code) {
+  const key = errorTranslationKeys[code] || errorTranslationKeys[ErrorCodes.UNKNOWN]
+  return t(key)
 }
 
 /**
@@ -52,7 +64,7 @@ const errorPatterns = [
  */
 export class FacturaeError extends Error {
   constructor(code, technicalMessage = '') {
-    const friendlyMessage = friendlyMessages[code] || friendlyMessages[ErrorCodes.UNKNOWN]
+    const friendlyMessage = getFriendlyMessageByCode(code)
     super(friendlyMessage)
     this.name = 'FacturaeError'
     this.code = code
@@ -77,12 +89,12 @@ export function getFriendlyErrorMessage(error) {
   // Buscar coincidencia con patrones conocidos
   for (const { pattern, code } of errorPatterns) {
     if (pattern.test(errorMessage)) {
-      return friendlyMessages[code]
+      return getFriendlyMessageByCode(code)
     }
   }
 
   // Si no hay coincidencia, devolver mensaje genérico
-  return friendlyMessages[ErrorCodes.UNKNOWN]
+  return getFriendlyMessageByCode(ErrorCodes.UNKNOWN)
 }
 
 /**

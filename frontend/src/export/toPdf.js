@@ -4,6 +4,7 @@
 
 import { jsPDF } from 'jspdf'
 import { sanitizeFilename } from '../utils/sanitizers.js'
+import { t, getLang } from '../utils/i18n.js'
 
 export function exportToPdf(data) {
   const invoice = data.invoices[0]
@@ -30,17 +31,21 @@ export function exportToPdf(data) {
     // Moneda del documento
     const currencyCode = data.fileHeader?.currencyCode || 'EUR'
 
+    // Obtener locale para formateo
+    const lang = getLang()
+    const locale = lang === 'en' ? 'en-GB' : 'es-ES'
+
     // Número y fecha de factura
     pdf.setFontSize(16)
     pdf.setTextColor(...grayDark)
-    const invoiceTitle = `FACTURA Nº: ${invoice.series ? invoice.series + '/' : ''}${invoice.number}`
+    const invoiceTitle = `${t('pdf.invoiceNumber')} ${invoice.series ? invoice.series + '/' : ''}${invoice.number}`
     pdf.text(invoiceTitle, margin, y)
 
     pdf.setFontSize(10)
     pdf.setTextColor(...grayMedium)
-    pdf.text(`Fecha: ${formatDate(invoice.issueDate)}`, pageWidth - margin - 40, y)
+    pdf.text(`${t('pdf.date')} ${formatDate(invoice.issueDate, locale)}`, pageWidth - margin - 40, y)
     y += 6
-    pdf.text(`Versión Facturae: ${data.version}`, pageWidth - margin - 40, y)
+    pdf.text(`${t('pdf.version')} ${data.version}`, pageWidth - margin - 40, y)
     y += 15
 
     // Emisor y Receptor
@@ -49,12 +54,12 @@ export function exportToPdf(data) {
     // Emisor
     pdf.setFontSize(10)
     pdf.setTextColor(...grayMedium)
-    pdf.text('EMISOR', margin, y)
+    pdf.text(t('pdf.seller'), margin, y)
 
     pdf.setFontSize(11)
     pdf.setTextColor(...grayDark)
     y += 5
-    pdf.text(data.seller?.name || 'Sin nombre', margin, y)
+    pdf.text(data.seller?.name || t('pdf.noName'), margin, y)
     y += 5
     pdf.setFontSize(10)
     pdf.text(data.seller?.taxId || '', margin, y)
@@ -73,12 +78,12 @@ export function exportToPdf(data) {
 
     pdf.setFontSize(10)
     pdf.setTextColor(...grayMedium)
-    pdf.text('RECEPTOR', receptorX, yReceptor)
+    pdf.text(t('pdf.buyer'), receptorX, yReceptor)
 
     pdf.setFontSize(11)
     pdf.setTextColor(...grayDark)
     yReceptor += 5
-    pdf.text(data.buyer?.name || 'Sin nombre', receptorX, yReceptor)
+    pdf.text(data.buyer?.name || t('pdf.noName'), receptorX, yReceptor)
     yReceptor += 5
     pdf.setFontSize(10)
     pdf.text(data.buyer?.taxId || '', receptorX, yReceptor)
@@ -95,7 +100,7 @@ export function exportToPdf(data) {
     // Líneas de detalle
     pdf.setFontSize(12)
     pdf.setTextColor(...grayDark)
-    pdf.text('DETALLE', margin, y)
+    pdf.text(t('pdf.detail'), margin, y)
     y += 8
 
     // Cabecera de tabla
@@ -104,11 +109,11 @@ export function exportToPdf(data) {
 
     pdf.setFontSize(9)
     pdf.setTextColor(...grayMedium)
-    pdf.text('Descripción', margin + 2, y)
-    pdf.text('Cant.', margin + 70, y)
-    pdf.text('Precio', margin + 90, y)
-    pdf.text('IVA', margin + 115, y)
-    pdf.text('Total', pageWidth - margin, y, { align: 'right' })
+    pdf.text(t('pdf.description'), margin + 2, y)
+    pdf.text(t('pdf.quantity'), margin + 70, y)
+    pdf.text(t('pdf.price'), margin + 90, y)
+    pdf.text(t('pdf.vat'), margin + 115, y)
+    pdf.text(t('pdf.total'), pageWidth - margin, y, { align: 'right' })
     y += 6
 
     // Líneas
@@ -119,9 +124,9 @@ export function exportToPdf(data) {
 
       pdf.text(descLines, margin + 2, y)
       pdf.text(String(line.quantity), margin + 70, y)
-      pdf.text(formatCurrency(line.unitPrice, currencyCode), margin + 90, y)
+      pdf.text(formatCurrency(line.unitPrice, currencyCode, locale), margin + 90, y)
       pdf.text(`${line.taxRate}%`, margin + 115, y)
-      pdf.text(formatCurrency(line.grossAmount || line.totalAmount, currencyCode), pageWidth - margin, y, { align: 'right' })
+      pdf.text(formatCurrency(line.grossAmount || line.totalAmount, currencyCode, locale), pageWidth - margin, y, { align: 'right' })
 
       y += Math.max(descLines.length * 4, 6)
 
@@ -136,7 +141,7 @@ export function exportToPdf(data) {
     // Totales
     pdf.setFontSize(12)
     pdf.setTextColor(...grayDark)
-    pdf.text('TOTALES', margin, y)
+    pdf.text(t('pdf.totals'), margin, y)
     y += 8
 
     const totalsX = pageWidth - margin - 60
@@ -144,18 +149,18 @@ export function exportToPdf(data) {
 
     pdf.setFontSize(10)
     pdf.setTextColor(...grayMedium)
-    pdf.text('Base imponible', totalsX, y)
+    pdf.text(t('pdf.taxableBase'), totalsX, y)
     pdf.setTextColor(...grayDark)
-    pdf.text(formatCurrency(invoice.totals.grossAmount, currencyCode), valuesX, y, { align: 'right' })
+    pdf.text(formatCurrency(invoice.totals.grossAmount, currencyCode, locale), valuesX, y, { align: 'right' })
     y += 6
 
     // Impuestos
     if (invoice.taxes && invoice.taxes.length > 0) {
       invoice.taxes.forEach(tax => {
         pdf.setTextColor(...grayMedium)
-        pdf.text(`IVA ${tax.rate}%`, totalsX, y)
+        pdf.text(t('pdf.vatRate', { rate: tax.rate }), totalsX, y)
         pdf.setTextColor(...grayDark)
-        pdf.text(formatCurrency(tax.amount, currencyCode), valuesX, y, { align: 'right' })
+        pdf.text(formatCurrency(tax.amount, currencyCode, locale), valuesX, y, { align: 'right' })
         y += 6
       })
     }
@@ -163,9 +168,9 @@ export function exportToPdf(data) {
     // Retenciones
     if (invoice.totals.taxesWithheld > 0) {
       pdf.setTextColor(...grayMedium)
-      pdf.text('Retenciones', totalsX, y)
+      pdf.text(t('pdf.withholdings'), totalsX, y)
       pdf.setTextColor(220, 38, 38) // red-600
-      pdf.text(`-${formatCurrency(invoice.totals.taxesWithheld, currencyCode)}`, valuesX, y, { align: 'right' })
+      pdf.text(`-${formatCurrency(invoice.totals.taxesWithheld, currencyCode, locale)}`, valuesX, y, { align: 'right' })
       y += 6
     }
 
@@ -178,34 +183,34 @@ export function exportToPdf(data) {
     pdf.setTextColor(...grayDark)
     pdf.text('TOTAL', totalsX, y + 4)
     pdf.setTextColor(...primaryColor)
-    pdf.text(formatCurrency(invoice.totals.totalToPay, currencyCode), valuesX, y + 4, { align: 'right' })
+    pdf.text(formatCurrency(invoice.totals.totalToPay, currencyCode, locale), valuesX, y + 4, { align: 'right' })
     y += 15
 
     // Información de pago
     if (invoice.payment) {
       pdf.setFontSize(12)
       pdf.setTextColor(...grayDark)
-      pdf.text('INFORMACIÓN DE PAGO', margin, y)
+      pdf.text(t('pdf.paymentInfo'), margin, y)
       y += 8
 
       pdf.setFontSize(10)
       if (invoice.payment.dueDate) {
         pdf.setTextColor(...grayMedium)
-        pdf.text('Vencimiento: ', margin, y)
+        pdf.text(t('pdf.dueDate'), margin, y)
         pdf.setTextColor(...grayDark)
-        pdf.text(formatDate(invoice.payment.dueDate), margin + 30, y)
+        pdf.text(formatDate(invoice.payment.dueDate, locale), margin + 30, y)
         y += 5
       }
       if (invoice.payment.paymentMeans) {
         pdf.setTextColor(...grayMedium)
-        pdf.text('Forma de pago: ', margin, y)
+        pdf.text(t('pdf.paymentMethod'), margin, y)
         pdf.setTextColor(...grayDark)
         pdf.text(getPaymentMeansLabel(invoice.payment.paymentMeans), margin + 30, y)
         y += 5
       }
       if (invoice.payment.iban) {
         pdf.setTextColor(...grayMedium)
-        pdf.text('IBAN: ', margin, y)
+        pdf.text(t('pdf.iban'), margin, y)
         pdf.setTextColor(...grayDark)
         pdf.text(invoice.payment.iban, margin + 30, y)
         y += 5
@@ -214,24 +219,24 @@ export function exportToPdf(data) {
 
     pdf.save(filename)
   } catch (error) {
-    console.error('Error generando PDF:', error)
-    alert('Error al generar PDF: ' + error.message)
+    console.error(`${t('pdf.errorGenerating')}`, error)
+    alert(`${t('pdf.errorGenerating')} ${error.message}`)
   }
 }
 
-function formatCurrency(amount, currency = 'EUR') {
+function formatCurrency(amount, currency = 'EUR', locale = 'es-ES') {
   if (amount === null || amount === undefined) return '-'
-  return new Intl.NumberFormat('es-ES', {
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency
   }).format(amount)
 }
 
-function formatDate(dateString) {
+function formatDate(dateString, locale = 'es-ES') {
   if (!dateString) return '-'
   try {
     const date = new Date(dateString)
-    return new Intl.DateTimeFormat('es-ES', {
+    return new Intl.DateTimeFormat(locale, {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
@@ -249,16 +254,7 @@ function formatAddress(address) {
 }
 
 function getPaymentMeansLabel(code) {
-  const means = {
-    '01': 'Efectivo',
-    '02': 'Cheque',
-    '04': 'Transferencia',
-    '05': 'Letra aceptada',
-    '13': 'Pago contra reembolso',
-    '14': 'Recibo domiciliado',
-    '15': 'Recibo',
-    '16': 'Tarjeta crédito',
-    '19': 'Domiciliación'
-  }
-  return means[code] || code
+  const key = `paymentMethod.${code}`
+  const translated = t(key)
+  return translated !== key ? translated : code
 }

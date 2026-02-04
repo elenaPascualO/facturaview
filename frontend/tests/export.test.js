@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { parseFacturae } from '../src/parser/facturae.js'
+import { setLang } from '../src/utils/i18n.js'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
@@ -7,6 +8,11 @@ import { join } from 'path'
 function readFixture(filename) {
   return readFileSync(join(__dirname, 'fixtures', filename), 'utf-8')
 }
+
+// Set language to Spanish for all tests
+beforeEach(() => {
+  setLang('es')
+})
 
 // Mock para jsPDF - usando clase
 vi.mock('jspdf', () => {

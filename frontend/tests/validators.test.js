@@ -2,7 +2,7 @@
  * Tests de validación de archivos
  */
 
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import {
   validateFileExtension,
   validateFileSize,
@@ -10,6 +10,12 @@ import {
   MAX_FILE_SIZE,
   ALLOWED_EXTENSIONS
 } from '../src/utils/validators.js'
+import { setLang } from '../src/utils/i18n.js'
+
+// Set language to Spanish for all tests
+beforeEach(() => {
+  setLang('es')
+})
 
 describe('validateFileExtension', () => {
   it('acepta archivos .xml', () => {

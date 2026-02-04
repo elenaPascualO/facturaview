@@ -8,6 +8,7 @@ import { showToast } from './components/Toast.js'
 import { copyToClipboard } from './utils/clipboard.js'
 import { getFriendlyErrorMessage } from './utils/errors.js'
 import { initTheme, toggleTheme, getTheme } from './utils/theme.js'
+import { initLang, toggleLang, getLang, t } from './utils/i18n.js'
 import { validateSignature } from './utils/signature.js'
 import {
   getHistory,
@@ -121,6 +122,9 @@ function setupDropzoneEvents() {
   // Configurar toggle de tema
   setupThemeToggle()
 
+  // Configurar toggle de idioma
+  setupLangToggle()
+
   // Configurar eventos del historial
   setupHistoryEvents()
 }
@@ -149,7 +153,7 @@ function setupHistoryEvents() {
 async function loadFromHistory(id) {
   const saved = getInvoice(id)
   if (!saved) {
-    showToast('No se encontró la factura', 'error')
+    showToast(t('toast.invoiceNotFound'), 'error')
     return
   }
 
@@ -191,7 +195,7 @@ function showClearHistoryModal() {
   btnConfirm?.addEventListener('click', () => {
     clearHistory()
     cleanup()
-    showToast('Historial eliminado', 'success')
+    showToast(t('toast.historyCleared'), 'success')
     renderApp()
   })
 
@@ -283,7 +287,7 @@ async function handleSaveToHistory(invoice, xmlContent) {
     // Guardar automáticamente
     const result = saveInvoice(invoice, xmlContent, signatureData)
     if (result.success) {
-      showToast('Factura guardada en historial', 'success')
+      showToast(t('toast.invoiceSaved'), 'success')
     }
   } else if (shouldAskToSave()) {
     // Mostrar prompt
@@ -296,9 +300,9 @@ async function handleSaveToHistory(invoice, xmlContent) {
     if (save) {
       const result = saveInvoice(invoice, xmlContent, signatureData)
       if (result.success) {
-        showToast('Factura guardada en historial', 'success')
+        showToast(t('toast.invoiceSaved'), 'success')
       } else {
-        showToast(result.error || 'Error al guardar', 'error')
+        showToast(result.error || t('toast.saveError'), 'error')
       }
     }
   }
@@ -321,7 +325,7 @@ function setupInvoiceViewEvents() {
   pdfBtn?.addEventListener('click', async () => {
     const originalText = pdfBtn.textContent
     pdfBtn.disabled = true
-    pdfBtn.textContent = 'Generando...'
+    pdfBtn.textContent = t('invoice.generating')
     try {
       track(events.EXPORT_PDF, { version: currentInvoice.version })
       const { exportToPdf } = await import('./export/toPdf.js')
@@ -335,7 +339,7 @@ function setupInvoiceViewEvents() {
   excelBtn?.addEventListener('click', async () => {
     const originalText = excelBtn.textContent
     excelBtn.disabled = true
-    excelBtn.textContent = 'Generando...'
+    excelBtn.textContent = t('invoice.generating')
     try {
       track(events.EXPORT_EXCEL, { version: currentInvoice.version })
       const { exportToExcel } = await import('./export/toExcel.js')
@@ -351,6 +355,9 @@ function setupInvoiceViewEvents() {
 
   // Configurar toggle de tema
   setupThemeToggle()
+
+  // Configurar toggle de idioma
+  setupLangToggle()
 }
 
 // Configurar formulario de contacto
@@ -380,13 +387,13 @@ function setupContactForm() {
     const submitBtn = form.querySelector('button[type="submit"]')
 
     if (!message) {
-      status.textContent = 'El mensaje es obligatorio'
+      status.textContent = t('contact.messageRequired')
       status.className = 'text-xs text-red-500'
       return
     }
 
     submitBtn.disabled = true
-    submitBtn.textContent = 'Enviando...'
+    submitBtn.textContent = t('contact.sending')
     status.textContent = ''
 
     try {
@@ -399,7 +406,7 @@ function setupContactForm() {
 
       if (response.ok) {
         track(events.CONTACT_SENT)
-        status.textContent = '✓ Enviado'
+        status.textContent = t('contact.sent')
         status.className = 'text-xs text-green-600'
         form.reset()
         setTimeout(() => {
@@ -410,12 +417,12 @@ function setupContactForm() {
         throw new Error('Error del servidor')
       }
     } catch (error) {
-      status.textContent = 'Error al enviar'
+      status.textContent = t('contact.error')
       status.className = 'text-xs text-red-500'
       console.error('Error:', error)
     } finally {
       submitBtn.disabled = false
-      submitBtn.textContent = 'Enviar'
+      submitBtn.textContent = t('contact.send')
     }
   })
 }
@@ -446,6 +453,18 @@ function updateThemeIcon(btn) {
     sunIcon?.classList.add('hidden')
     moonIcon?.classList.remove('hidden')
   }
+}
+
+// Configurar botón de idioma
+function setupLangToggle() {
+  const langBtn = document.getElementById('btn-lang')
+  if (!langBtn) return
+
+  langBtn.addEventListener('click', () => {
+    toggleLang()
+    // Re-renderizar la app para aplicar el nuevo idioma
+    renderApp()
+  })
 }
 
 // Validar firma en background
@@ -498,7 +517,7 @@ function setupCopyButtons() {
         }, 2000)
       }
     } else {
-      showToast('No se pudo copiar al portapapeles', 'error')
+      showToast(t('toast.copyError'), 'error')
     }
   })
 }
@@ -512,6 +531,9 @@ if ('serviceWorker' in navigator) {
 
 // Inicializar tema antes de renderizar (evita flash)
 initTheme()
+
+// Inicializar idioma antes de renderizar
+initLang()
 
 // Iniciar aplicación
 renderApp()

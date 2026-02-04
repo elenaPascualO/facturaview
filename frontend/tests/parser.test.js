@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeAll } from 'vitest'
+import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
 import { parseFacturae } from '../src/parser/facturae.js'
 import { FacturaeError, ErrorCodes } from '../src/utils/errors.js'
+import { setLang } from '../src/utils/i18n.js'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
@@ -10,6 +11,10 @@ function readFixture(filename) {
 }
 
 describe('Parser Facturae', () => {
+  // Set language to Spanish for all tests
+  beforeEach(() => {
+    setLang('es')
+  })
   describe('Detección de versión', () => {
     it('detecta versión 3.2.2', () => {
       const xml = readFixture('simple-322.xml')

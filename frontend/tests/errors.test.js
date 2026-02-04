@@ -1,10 +1,16 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import {
   ErrorCodes,
   FacturaeError,
   getFriendlyErrorMessage,
   detectErrorCode
 } from '../src/utils/errors.js'
+import { setLang } from '../src/utils/i18n.js'
+
+// Set language to Spanish for all tests
+beforeEach(() => {
+  setLang('es')
+})
 
 describe('FacturaeError', () => {
   it('should create error with code and friendly message', () => {

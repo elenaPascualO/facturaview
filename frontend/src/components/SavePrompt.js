@@ -2,6 +2,8 @@
  * Componente SavePrompt - Modal para preguntar si guardar factura
  */
 
+import { t } from '../utils/i18n.js'
+
 /**
  * Crea el modal de guardar factura
  * @returns {string} HTML del modal
@@ -14,10 +16,10 @@ export function createSavePrompt() {
           <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
           </svg>
-          ¿Guardar en historial?
+          ${t('savePrompt.title')}
         </h3>
         <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
-          Esta factura quedara guardada en tu dispositivo para acceso rapido.
+          ${t('savePrompt.message')}
         </p>
 
         <!-- Checkbox recordar -->
@@ -27,7 +29,7 @@ export function createSavePrompt() {
             id="save-prompt-remember"
             class="w-4 h-4 rounded border-gray-300 dark:border-slate-600 text-blue-500 focus:ring-blue-500 focus:ring-offset-0 dark:bg-slate-700"
           />
-          <span class="text-sm text-gray-600 dark:text-gray-300">Recordar mi eleccion</span>
+          <span class="text-sm text-gray-600 dark:text-gray-300">${t('savePrompt.remember')}</span>
         </label>
 
         <!-- Botones -->
@@ -36,13 +38,13 @@ export function createSavePrompt() {
             id="btn-save-no"
             class="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
           >
-            No guardar
+            ${t('savePrompt.no')}
           </button>
           <button
             id="btn-save-yes"
             class="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
           >
-            Guardar
+            ${t('savePrompt.yes')}
           </button>
         </div>
 
@@ -51,7 +53,7 @@ export function createSavePrompt() {
           <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
           </svg>
-          <span>Solo se guarda en tu navegador, nunca en nuestros servidores.</span>
+          <span>${t('savePrompt.privacyNote')}</span>
         </p>
       </div>
     </div>
