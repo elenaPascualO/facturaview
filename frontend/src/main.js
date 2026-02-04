@@ -9,6 +9,18 @@ import { copyToClipboard } from './utils/clipboard.js'
 import { getFriendlyErrorMessage } from './utils/errors.js'
 import { initTheme, toggleTheme, getTheme } from './utils/theme.js'
 import { validateSignature } from './utils/signature.js'
+import {
+  getHistory,
+  getInvoice,
+  saveInvoice,
+  clearHistory,
+  shouldAskToSave,
+  shouldAutoSave,
+  setSavePreference,
+  findExistingInvoice
+} from './utils/storage.js'
+import { showSavePrompt } from './components/SavePrompt.js'
+import { createClearHistoryModal } from './components/HistorySection.js'
 
 const app = document.querySelector('#app')
 
@@ -58,7 +70,8 @@ function renderApp() {
     app.innerHTML = createInvoiceView(currentInvoice, signatureData)
     setupInvoiceViewEvents()
   } else {
-    app.innerHTML = createDropzone()
+    const history = getHistory()
+    app.innerHTML = createDropzone(history)
     setupDropzoneEvents()
   }
 }
@@ -107,6 +120,96 @@ function setupDropzoneEvents() {
 
   // Configurar toggle de tema
   setupThemeToggle()
+
+  // Configurar eventos del historial
+  setupHistoryEvents()
+}
+
+// Configurar eventos del historial
+function setupHistoryEvents() {
+  // Click en tarjetas de historial (event delegation)
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest('.history-card')
+    if (!card) return
+
+    const invoiceId = card.dataset.invoiceId
+    if (invoiceId) {
+      loadFromHistory(invoiceId)
+    }
+  })
+
+  // Botón limpiar historial
+  const clearBtn = document.getElementById('btn-clear-history')
+  if (clearBtn) {
+    clearBtn.addEventListener('click', showClearHistoryModal)
+  }
+}
+
+// Cargar factura desde el historial
+async function loadFromHistory(id) {
+  const saved = getInvoice(id)
+  if (!saved) {
+    showToast('No se encontró la factura', 'error')
+    return
+  }
+
+  showLoading()
+  try {
+    // Usar los datos guardados directamente
+    currentInvoice = saved.data
+    currentXmlContent = saved.xmlContent
+    signatureData = saved.signatureValid !== null
+      ? { valid: saved.signatureValid }
+      : null
+
+    renderApp()
+
+    // Si estaba firmada, re-validar en background para datos actualizados
+    if (currentInvoice.isSigned && currentXmlContent) {
+      validateSignatureAsync(currentXmlContent)
+    }
+  } finally {
+    hideLoading()
+  }
+}
+
+// Mostrar modal de confirmación para limpiar historial
+function showClearHistoryModal() {
+  const modalHtml = createClearHistoryModal()
+  const modalWrapper = document.createElement('div')
+  modalWrapper.innerHTML = modalHtml
+  document.body.appendChild(modalWrapper.firstElementChild)
+
+  const modal = document.getElementById('clear-history-modal')
+  const btnConfirm = document.getElementById('btn-confirm-clear')
+  const btnCancel = document.getElementById('btn-cancel-clear')
+
+  function cleanup() {
+    modal?.remove()
+  }
+
+  btnConfirm?.addEventListener('click', () => {
+    clearHistory()
+    cleanup()
+    showToast('Historial eliminado', 'success')
+    renderApp()
+  })
+
+  btnCancel?.addEventListener('click', cleanup)
+
+  // Cerrar con Escape
+  function handleKeydown(e) {
+    if (e.key === 'Escape') {
+      cleanup()
+      document.removeEventListener('keydown', handleKeydown)
+    }
+  }
+  document.addEventListener('keydown', handleKeydown)
+
+  // Cerrar al hacer click fuera
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) cleanup()
+  })
 }
 
 // Configurar botón de instalación PWA
@@ -155,6 +258,9 @@ async function handleFile(file) {
     if (currentInvoice.isSigned) {
       validateSignatureAsync(text)
     }
+
+    // Manejar guardado en historial
+    handleSaveToHistory(currentInvoice, text)
   } catch (error) {
     const friendlyMessage = getFriendlyErrorMessage(error)
     track(events.FILE_ERROR, { reason: 'parse', error: error.message })
@@ -163,6 +269,40 @@ async function handleFile(file) {
   } finally {
     hideLoading()
   }
+}
+
+// Manejar guardado en historial
+async function handleSaveToHistory(invoice, xmlContent) {
+  // Si ya está guardada, no hacer nada
+  if (findExistingInvoice(invoice)) {
+    return
+  }
+
+  // Según preferencia del usuario
+  if (shouldAutoSave()) {
+    // Guardar automáticamente
+    const result = saveInvoice(invoice, xmlContent, signatureData)
+    if (result.success) {
+      showToast('Factura guardada en historial', 'success')
+    }
+  } else if (shouldAskToSave()) {
+    // Mostrar prompt
+    const { save, remember } = await showSavePrompt(document.body)
+
+    if (remember) {
+      setSavePreference(save ? 'always' : 'never')
+    }
+
+    if (save) {
+      const result = saveInvoice(invoice, xmlContent, signatureData)
+      if (result.success) {
+        showToast('Factura guardada en historial', 'success')
+      } else {
+        showToast(result.error || 'Error al guardar', 'error')
+      }
+    }
+  }
+  // Si preference es 'never', no hacer nada
 }
 
 // Configurar eventos de la vista de factura

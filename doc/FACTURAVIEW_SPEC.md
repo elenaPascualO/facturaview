@@ -37,7 +37,7 @@ Frontend: Vanilla JS (ES Modules)
 Styling:  Tailwind CSS v4 (con modo oscuro)
 PDF:      jsPDF (generación directa, sin html2canvas)
 Excel:    SheetJS (xlsx)
-Testing:  Vitest + jsdom (125 tests)
+Testing:  Vitest + jsdom (167 tests)
 Deploy:   Railway
 
 # Backend (validación de firmas)
@@ -181,7 +181,7 @@ Deploy:   Railway (Dockerfile)
 - [x] **Descargar como Excel** (3 hojas: General, Líneas, Impuestos)
 - [x] **100% privado** (todo en navegador, nada al servidor)
 - [x] **Responsive** (funciona en móvil)
-- [x] **Tests automatizados** (125 tests con Vitest)
+- [x] **Tests automatizados** (167 tests con Vitest)
 - [x] **Formulario de contacto** (Formspree)
 - [x] **Seguridad** (XSS, inyección Excel, CSP headers, bloqueo rutas sensibles)
 - [x] **Analítica de eventos** (Umami tracking)
@@ -208,10 +208,18 @@ Deploy:   Railway (Dockerfile)
 - [x] **Mensaje informativo para facturas sin firma** (nota sobre requisito FACe)
 - [x] **URLs relativas por defecto** (`VITE_SIGNATURE_API_URL` opcional)
 
+### Historial Local (Fase 2.3) - ✅ COMPLETADO
+
+- [x] **Historial local** (localStorage con límite 50 facturas / 2 MB)
+- [x] **SavePrompt** (preguntar al usuario si guardar)
+- [x] **Preferencias de guardado** (ask/always/never, persistente)
+- [x] **HistorySection** (últimas 5 facturas en Dropzone)
+- [x] **Limpiar historial** (con confirmación)
+- [x] **42 tests nuevos** para storage
+
 ### Nice to Have (Fase 3)
 
 - [ ] Múltiples facturas en lote (Modality="L")
-- [ ] Historial local (localStorage)
 
 ### Futuro (Fase 2+)
 
@@ -310,7 +318,9 @@ facturaview/
 │   │   │   ├── PartyCard.js     # Tarjeta emisor/receptor
 │   │   │   ├── LinesTable.js    # Tabla de líneas de detalle
 │   │   │   ├── TotalsBox.js     # Caja de impuestos y totales
-│   │   │   └── Toast.js         # Notificaciones toast
+│   │   │   ├── Toast.js         # Notificaciones toast
+│   │   │   ├── HistorySection.js # Sección de facturas recientes
+│   │   │   └── SavePrompt.js    # Modal para guardar en historial
 │   │   ├── export/
 │   │   │   ├── toPdf.js         # Exportar a PDF (jsPDF)
 │   │   │   └── toExcel.js       # Exportar a Excel (xlsx)
@@ -322,7 +332,8 @@ facturaview/
 │   │       ├── errors.js        # Errores amigables
 │   │       ├── theme.js         # Gestión tema claro/oscuro
 │   │       ├── clipboard.js     # Copiar al portapapeles
-│   │       └── signature.js     # Cliente API de validación de firmas
+│   │       ├── signature.js     # Cliente API de validación de firmas
+│   │       └── storage.js       # Historial local (localStorage)
 │   ├── public/
 │   │   ├── favicon.svg
 │   │   ├── og-image.png
@@ -337,6 +348,7 @@ facturaview/
 │       ├── validators.test.js   # Tests de validación (27 tests)
 │       ├── errors.test.js       # Tests de errores (23 tests)
 │       ├── clipboard.test.js    # Tests de clipboard (7 tests)
+│       ├── storage.test.js      # Tests de historial local (42 tests)
 │       └── fixtures/            # Archivos XML de prueba
 ├── backend/                     # API de validación de firmas (FastAPI)
 │   ├── __init__.py
@@ -554,7 +566,7 @@ bun run test:run
 - [x] Exportar a PDF (jsPDF directo)
 - [x] Exportar a Excel (3 hojas)
 - [x] Diseño responsive
-- [x] 133 tests automatizados (125 frontend + 8 backend)
+- [x] 175 tests automatizados (167 frontend + 8 backend)
 - [x] Deploy en Railway (configurado)
 - [x] Formulario de contacto (Formspree)
 - [x] Auditoría de seguridad (XSS, Excel injection, CSP)
@@ -596,7 +608,7 @@ bun run test:run
 
 ## Conclusión
 
-**Estado:** MVP+ completado con 133 tests pasando (125 frontend + 8 backend).
+**Estado:** MVP+ completado con 175 tests pasando (167 frontend + 8 backend).
 
 **¿Backend necesario?** Solo para validación de firmas digitales. El resto es 100% frontend.
 
@@ -610,7 +622,7 @@ bun run test:run
 cd frontend
 bun run dev       # Desarrollo (http://localhost:5173)
 bun run build     # Producción (genera frontend/dist/)
-bun run test:run  # Ejecutar tests (125 tests)
+bun run test:run  # Ejecutar tests (167 tests)
 
 # Backend (desde raíz)
 uv sync           # Instalar dependencias

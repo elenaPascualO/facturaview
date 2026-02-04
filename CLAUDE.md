@@ -47,7 +47,9 @@ facturaview/
 │   │   │   ├── InvoiceView.js    # Vista completa de factura
 │   │   │   ├── PartyCard.js      # Tarjeta emisor/receptor
 │   │   │   ├── LinesTable.js     # Tabla de líneas de detalle
-│   │   │   └── TotalsBox.js      # Caja de impuestos y totales
+│   │   │   ├── TotalsBox.js      # Caja de impuestos y totales
+│   │   │   ├── HistorySection.js # Sección de facturas recientes
+│   │   │   └── SavePrompt.js     # Modal para guardar en historial
 │   │   ├── export/
 │   │   │   ├── toPdf.js          # Exportar a PDF (jsPDF directo)
 │   │   │   └── toExcel.js        # Exportar a Excel (xlsx)
@@ -59,7 +61,8 @@ facturaview/
 │   │       ├── errors.js         # Errores amigables para el usuario
 │   │       ├── theme.js          # Gestión tema claro/oscuro
 │   │       ├── clipboard.js      # Copiar al portapapeles
-│   │       └── signature.js      # Cliente API de validación de firmas
+│   │       ├── signature.js      # Cliente API de validación de firmas
+│   │       └── storage.js        # Historial local de facturas (localStorage)
 │   ├── public/
 │   │   ├── favicon.svg
 │   │   ├── og-image.png          # Imagen Open Graph (1200x630)
@@ -75,6 +78,7 @@ facturaview/
 │       ├── validators.test.js    # Tests de validación de archivos (27 tests)
 │       ├── errors.test.js        # Tests de errores amigables (23 tests)
 │       ├── clipboard.test.js     # Tests de clipboard (7 tests)
+│       ├── storage.test.js       # Tests de historial local (42 tests)
 │       └── fixtures/             # Archivos XML de prueba
 │           ├── simple-322.xml    # Factura simple v3.2.2
 │           ├── complex-322.xml   # Factura compleja (4 líneas, 3 IVAs)
@@ -124,7 +128,7 @@ bun run dev          # Servidor de desarrollo (http://localhost:5173)
 bun run build        # Build de producción (genera frontend/dist/)
 bun run preview      # Preview del build
 bun run test         # Tests en modo watch
-bun run test:run     # Ejecutar tests una vez (125 tests)
+bun run test:run     # Ejecutar tests una vez (167 tests)
 ```
 
 ### Backend
@@ -163,11 +167,12 @@ docker run -p 8000:8000 facturaview
 - [x] Descargar como Excel (3 hojas: General, Líneas, Impuestos)
 - [x] 100% privado (todo en navegador)
 - [x] Responsive (móvil)
-- [x] Tests automatizados (92 tests)
+- [x] Tests automatizados (167 tests)
 - [x] Formulario de contacto (Formspree)
 - [x] Protección contra XSS, inyección Excel y path traversal
 - [x] Analítica de eventos (Umami)
 - [x] PWA instalable (Service Worker + manifest)
+- [x] Historial local de facturas (localStorage)
 
 ## Tipos de Factura Soportados
 
@@ -252,6 +257,21 @@ La app es instalable como PWA en móviles y desktop:
 - **Manifest:** `public/manifest.json` con iconos 192x192 y 512x512
 - **Estrategia de cache:** Network-first para HTML, cache-first para assets
 - **Versionado:** Cambiar `CACHE_NAME` en sw.js para forzar actualización del cache
+
+### Historial Local de Facturas
+El historial permite guardar facturas localmente en el navegador para acceso rapido:
+
+- **Almacenamiento:** localStorage con clave `facturaview-history`
+- **Limites:** Maximo 50 facturas, 2 MB de almacenamiento total
+- **Privacidad:** Los datos nunca salen del dispositivo del usuario
+- **Preferencias de guardado:**
+  - `ask` (por defecto): Pregunta al usuario si desea guardar cada factura
+  - `always`: Guarda automaticamente todas las facturas
+  - `never`: No guarda ni pregunta
+- **Datos guardados:** Metadata (numero, emisor, total), datos parseados, XML original, estado de firma
+- **Funciones principales:** `getHistory()`, `saveInvoice()`, `deleteInvoice()`, `clearHistory()`
+
+El componente `HistorySection.js` muestra las ultimas 5 facturas en el Dropzone. El componente `SavePrompt.js` muestra el modal de confirmacion con opcion de recordar preferencia.
 
 ### SEO y Accesibilidad
 - **robots.txt y sitemap.xml:** En `public/` para indexación

@@ -2,7 +2,9 @@
  * Componente Dropzone - Área de subida de archivos
  */
 
-export function createDropzone() {
+import { createHistorySection } from './HistorySection.js'
+
+export function createDropzone(historyInvoices = []) {
   return `
     <div class="relative min-h-screen bg-gray-50 dark:bg-slate-900 flex flex-col items-center justify-center p-4">
       <!-- Botón de tema -->
@@ -135,6 +137,8 @@ export function createDropzone() {
           </form>
         </div>
       </footer>
+
+      ${createHistorySection(historyInvoices)}
     </div>
   `
 }

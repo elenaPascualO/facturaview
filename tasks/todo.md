@@ -42,7 +42,7 @@
 - [x] Tests de validación de archivos (27 tests)
 - [x] Fixtures de prueba (6 archivos XML)
 
-**Total: 125 tests pasando**
+**Total: 167 tests pasando**
 
 ### Seguridad (Auditoría completada)
 - [x] Reemplazar Discord webhook con Formspree
@@ -106,7 +106,7 @@
   - Nota de privacidad
   - Mensaje informativo para facturas sin firma (nota sobre requisito FACe)
 
-**Tests frontend: 125 pasando**
+**Tests frontend: 167 pasando**
 **Tests backend: 8 pasando**
 
 ### Fase 2.3: Reorganización y Deploy Unificado (Febrero 2026) - ✅ COMPLETADO
@@ -188,7 +188,7 @@ Causa principal: contenido renderizado 100% con JavaScript (SPA).
 - [x] Modo oscuro - Completado febrero 2026
 - [ ] Múltiples facturas en lote (Modality="L") - Ver `plan-mejoras.md` Fase 3.1
 - [x] Copiar datos al portapapeles (botón copiar) - Completado febrero 2026
-- [ ] Historial local (localStorage) - Ver `plan-mejoras.md` Fase 2.3
+- [x] Historial local (localStorage) - Completado febrero 2026
 - [ ] Selector de idioma (ES/EN)
 
 ---
