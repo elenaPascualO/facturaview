@@ -1,9 +1,9 @@
 # Plan de Acción SEO - FacturaView
 
 > Fecha de auditoría: 2025-01-20
-> Última actualización: 2026-01-21
+> Última actualización: 2026-02-04
 
-## Estado Actual: 95% de madurez SEO ✅
+## Estado Actual: 100% de madurez SEO ✅
 
 ---
 
@@ -22,21 +22,12 @@
 - [x] Enviar sitemap en Google Search Console (propiedad www)
 - [x] Solicitar reindexación de `https://www.facturaview.es/`
 
-### Pendiente
-- [ ] **Redirección 301 de `facturaview.es` → `www.facturaview.es`**
-  - Nominalia no permite redireccionar dentro del mismo dominio
-  - Ticket abierto con soporte de Nominalia (esperando respuesta)
-  - Alternativa: Configurar en Railway si Nominalia no lo soporta
+### Completado
+- [x] **Redirección 301 de `facturaview.es` → `www.facturaview.es`** ✅
 
-### Configuración DNS Actual (Nominalia)
+### Configuración DNS (Nominalia)
 ```
-facturaview.es        A       81.88.48.71          (Nominalia - NO FUNCIONA)
-www.facturaview.es    CNAME   y81ss8y2.up.railway.app  (Railway - OK)
-```
-
-### Configuración DNS Objetivo
-```
-facturaview.es        → Redirigir 301 a https://www.facturaview.es
+facturaview.es        → Redirección 301 a https://www.facturaview.es
 www.facturaview.es    CNAME   y81ss8y2.up.railway.app  (Railway - OK)
 ```
 
@@ -301,11 +292,29 @@ La UI muestra claramente que la validación es técnica, no oficial:
 
 ---
 
+## Páginas Estáticas SEO (Febrero 2026) ✅
+
+Se han creado páginas estáticas con contenido indexable para mejorar el SEO:
+
+| Página | Descripción | Schema.org |
+|--------|-------------|------------|
+| `/faq.html` | Preguntas frecuentes sobre Facturae, FACe, firmas | FAQPage |
+| `/guia-facturae.html` | Guía completa del formato Facturae | Article |
+| `/about.html` | Sobre FacturaView, privacidad, contacto | AboutPage |
+
+**Beneficios:**
+- Contenido indexable sin JavaScript
+- Captura long-tail keywords
+- Mejora autoridad del dominio
+- Sitemap actualizado con las 4 URLs
+
+---
+
 ## Mejoras Futuras (No prioritarias)
 
 - **Validación oficial:** Integrar con VALIDe API o trust store de CAs españolas
 - **SSR/Prerendering:** Considerar vite-plugin-ssr o similar para mejor crawlabilidad
-- **Múltiples páginas:** Añadir /about, /faq con contenido indexable
+- ~~**Múltiples páginas:** Añadir /about, /faq con contenido indexable~~ ✅ Completado (febrero 2026)
 - **Hreflang:** Preparar para versiones en otros idiomas
 - **Blog:** Crear contenido sobre facturación electrónica para atraer tráfico orgánico
 - ~~**PWA completa:** Service worker para funcionamiento offline~~ ✅ Completado (enero 2026)

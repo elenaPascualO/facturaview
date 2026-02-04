@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <title>Guía Completa del Formato Facturae - FacturaView</title>
+  <meta name="description" content="Aprende todo sobre el formato Facturae: versiones 3.2, 3.2.1 y 3.2.2, estructura XML, tipos de factura, firma digital XAdES y envío a FACe.">
+  <meta name="keywords" content="formato facturae, estructura xml factura, facturae 3.2.2, facturae 3.2.1, factura electronica españa, xades firma">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.facturaview.es/guia-facturae.html">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.facturaview.es/guia-facturae.html">
+  <meta property="og:title" content="Guía Completa del Formato Facturae - FacturaView">
+  <meta property="og:description" content="Aprende todo sobre el formato Facturae: versiones, estructura XML, tipos de factura, firma digital y envío a FACe.">
+  <meta property="og:image" content="https://www.facturaview.es/og-image.png">
+  <meta property="og:locale" content="es_ES">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Guía Completa del Formato Facturae - FacturaView">
+  <meta name="twitter:description" content="Aprende todo sobre el formato Facturae: versiones, estructura XML, tipos de factura, firma digital y envío a FACe.">
+  <meta name="twitter:image" content="https://www.facturaview.es/og-image.png">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#3b82f6">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Umami Analytics -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="a211c801-93da-494e-b699-21ba70081d74"></script>
+
+  <!-- Schema.org Article -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Guía Completa del Formato Facturae",
+    "description": "Aprende todo sobre el formato Facturae: versiones, estructura XML, tipos de factura, firma digital XAdES y envío a FACe.",
+    "author": {
+      "@type": "Organization",
+      "name": "FacturaView"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "FacturaView",
+      "url": "https://www.facturaview.es"
+    },
+    "datePublished": "2026-02-04",
+    "dateModified": "2026-02-04",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://www.facturaview.es/guia-facturae.html"
+    }
+  }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <nav class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="text-xl font-bold text-blue-600 hover:text-blue-700">FacturaView</a>
+      <div class="flex gap-4 text-sm">
+        <a href="/faq.html" class="text-gray-600 hover:text-blue-600">FAQ</a>
+        <a href="/guia-facturae.html" class="text-blue-600 font-medium">Guía Facturae</a>
+        <a href="/about.html" class="text-gray-600 hover:text-blue-600">Sobre nosotros</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main content -->
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <article>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Guía Completa del Formato Facturae</h1>
+      <p class="text-gray-600 mb-8">Todo lo que necesitas saber sobre el estándar español de factura electrónica.</p>
+
+      <!-- Índice -->
+      <nav class="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Contenido</h2>
+        <ol class="list-decimal list-inside space-y-1 text-blue-600">
+          <li><a href="#que-es" class="hover:underline">¿Qué es Facturae?</a></li>
+          <li><a href="#versiones" class="hover:underline">Versiones del formato</a></li>
+          <li><a href="#estructura" class="hover:underline">Estructura del XML</a></li>
+          <li><a href="#tipos" class="hover:underline">Tipos de factura</a></li>
+          <li><a href="#firma" class="hover:underline">Firma digital XAdES</a></li>
+          <li><a href="#face" class="hover:underline">Envío a FACe</a></li>
+        </ol>
+      </nav>
+
+      <!-- Sección 1 -->
+      <section id="que-es" class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. ¿Qué es Facturae?</h2>
+        <p class="text-gray-700 mb-4">Facturae es el formato estándar de factura electrónica en España, regulado por el Ministerio de Hacienda. Es un archivo XML que sigue un esquema definido (XSD) y contiene toda la información necesaria de una factura comercial.</p>
+
+        <h3 class="text-lg font-medium text-gray-900 mt-6 mb-2">Características principales:</h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li>Formato abierto basado en XML</li>
+          <li>Esquema definido públicamente (XSD)</li>
+          <li>Obligatorio para facturar a la Administración Pública</li>
+          <li>Soporta firma digital XAdES</li>
+          <li>Incluye todos los datos fiscales requeridos por la normativa española</li>
+        </ul>
+
+        <h3 class="text-lg font-medium text-gray-900 mt-6 mb-2">Marco legal:</h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li>Ley 25/2013 de impulso de la factura electrónica</li>
+          <li>Orden HAP/492/2014 que regula los requisitos técnicos</li>
+          <li>Obligatorio para proveedores de la Administración Pública desde 2015</li>
+        </ul>
+      </section>
+
+      <!-- Sección 2 -->
+      <section id="versiones" class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">2. Versiones del Formato</h2>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="border border-gray-200 px-4 py-2">Versión</th>
+                <th class="border border-gray-200 px-4 py-2">Namespace</th>
+                <th class="border border-gray-200 px-4 py-2">Estado</th>
+                <th class="border border-gray-200 px-4 py-2">Uso</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-700">
+              <tr>
+                <td class="border border-gray-200 px-4 py-2 font-medium">3.2.2</td>
+                <td class="border border-gray-200 px-4 py-2 text-sm font-mono">http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml</td>
+                <td class="border border-gray-200 px-4 py-2"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Actual</span></td>
+                <td class="border border-gray-200 px-4 py-2">FACe (obligatorio)</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-200 px-4 py-2 font-medium">3.2.1</td>
+                <td class="border border-gray-200 px-4 py-2 text-sm font-mono">http://www.facturae.es/formato/Versiones/Facturaev3_2_1.xml</td>
+                <td class="border border-gray-200 px-4 py-2"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">Vigente</span></td>
+                <td class="border border-gray-200 px-4 py-2">Sector privado</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-200 px-4 py-2 font-medium">3.2</td>
+                <td class="border border-gray-200 px-4 py-2 text-sm font-mono">http://www.facturae.es/formato/Versiones/Facturaev3_2.xml</td>
+                <td class="border border-gray-200 px-4 py-2"><span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">Legacy</span></td>
+                <td class="border border-gray-200 px-4 py-2">Algunos organismos</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-lg font-medium text-gray-900 mt-6 mb-2">Diferencias principales:</h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li><strong>3.2 → 3.2.1:</strong> Mejoras en campos de dirección y datos bancarios</li>
+          <li><strong>3.2.1 → 3.2.2:</strong> Soporte para Suministro Inmediato de Información (SII), nuevos tipos impositivos, mejoras en identificación fiscal</li>
+        </ul>
+      </section>
+
+      <!-- Sección 3 -->
+      <section id="estructura" class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">3. Estructura del XML</h2>
+        <p class="text-gray-700 mb-4">Un archivo Facturae tiene una estructura jerárquica con los siguientes elementos principales:</p>
+
+        <div class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono">
+<pre>&lt;fe:Facturae&gt;
+  &lt;FileHeader&gt;
+    &lt;SchemaVersion&gt;3.2.2&lt;/SchemaVersion&gt;
+    &lt;Modality&gt;I&lt;/Modality&gt;           &lt;!-- I=Individual, L=Lote --&gt;
+    &lt;InvoiceIssuerType&gt;EM&lt;/InvoiceIssuerType&gt;
+    &lt;Batch&gt;...&lt;/Batch&gt;
+  &lt;/FileHeader&gt;
+
+  &lt;Parties&gt;
+    &lt;SellerParty&gt;...&lt;/SellerParty&gt;   &lt;!-- Emisor --&gt;
+    &lt;BuyerParty&gt;...&lt;/BuyerParty&gt;     &lt;!-- Receptor --&gt;
+  &lt;/Parties&gt;
+
+  &lt;Invoices&gt;
+    &lt;Invoice&gt;
+      &lt;InvoiceHeader&gt;...&lt;/InvoiceHeader&gt;
+      &lt;InvoiceIssueData&gt;...&lt;/InvoiceIssueData&gt;
+      &lt;TaxesOutputs&gt;...&lt;/TaxesOutputs&gt;      &lt;!-- IVA repercutido --&gt;
+      &lt;TaxesWithheld&gt;...&lt;/TaxesWithheld&gt;    &lt;!-- Retenciones --&gt;
+      &lt;InvoiceTotals&gt;...&lt;/InvoiceTotals&gt;
+      &lt;Items&gt;...&lt;/Items&gt;                    &lt;!-- Líneas de detalle --&gt;
+      &lt;PaymentDetails&gt;...&lt;/PaymentDetails&gt;  &lt;!-- Datos de pago --&gt;
+    &lt;/Invoice&gt;
+  &lt;/Invoices&gt;
+&lt;/fe:Facturae&gt;</pre>
+        </div>
+
+        <h3 class="text-lg font-medium text-gray-900 mt-6 mb-2">Campos obligatorios:</h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li>Número de factura y serie</li>
+          <li>Fecha de emisión</li>
+          <li>NIF/CIF del emisor y receptor</li>
+          <li>Razón social o nombre completo</li>
+          <li>Dirección fiscal</li>
+          <li>Base imponible e impuestos</li>
+          <li>Total a pagar</li>
+        </ul>
+      </section>
+
+      <!-- Sección 4 -->
+      <section id="tipos" class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">4. Tipos de Factura</h2>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="font-semibold text-gray-900 mb-2">Por clase de documento</h3>
+            <ul class="text-gray-700 space-y-1 text-sm">
+              <li><strong>FC</strong> - Factura completa</li>
+              <li><strong>FA</strong> - Factura simplificada</li>
+              <li><strong>AF</strong> - Autofactura</li>
+            </ul>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="font-semibold text-gray-900 mb-2">Por tipo de operación</h3>
+            <ul class="text-gray-700 space-y-1 text-sm">
+              <li><strong>OO</strong> - Factura original</li>
+              <li><strong>OR</strong> - Factura rectificativa</li>
+              <li><strong>CO</strong> - Copia de factura</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-gray-900 mt-6 mb-2">Facturas rectificativas:</h3>
+        <p class="text-gray-700">Las facturas rectificativas (tipo OR) se usan para corregir errores o anular facturas anteriores. Deben incluir referencia a la factura original y pueden tener importes negativos.</p>
+      </section>
+
+      <!-- Sección 5 -->
+      <section id="firma" class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">5. Firma Digital XAdES</h2>
+        <p class="text-gray-700 mb-4">Las facturas enviadas a FACe deben estar firmadas digitalmente con el estándar XAdES (XML Advanced Electronic Signatures), que garantiza:</p>
+
+        <ul class="list-disc list-inside text-gray-700 space-y-1 mb-4">
+          <li><strong>Autenticidad:</strong> El emisor es quien dice ser</li>
+          <li><strong>Integridad:</strong> El contenido no ha sido modificado</li>
+          <li><strong>No repudio:</strong> El emisor no puede negar haber emitido la factura</li>
+        </ul>
+
+        <h3 class="text-lg font-medium text-gray-900 mt-6 mb-2">Niveles de firma XAdES:</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="border border-gray-200 px-3 py-2">Nivel</th>
+                <th class="border border-gray-200 px-3 py-2">Incluye</th>
+                <th class="border border-gray-200 px-3 py-2">Validez</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-700">
+              <tr>
+                <td class="border border-gray-200 px-3 py-2 font-medium">XAdES-BES</td>
+                <td class="border border-gray-200 px-3 py-2">Firma básica + certificado</td>
+                <td class="border border-gray-200 px-3 py-2">Mientras el certificado sea válido</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-200 px-3 py-2 font-medium">XAdES-T</td>
+                <td class="border border-gray-200 px-3 py-2">BES + sello de tiempo</td>
+                <td class="border border-gray-200 px-3 py-2">Prueba de existencia en fecha</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-200 px-3 py-2 font-medium">XAdES-C</td>
+                <td class="border border-gray-200 px-3 py-2">T + referencias de validación</td>
+                <td class="border border-gray-200 px-3 py-2">Referencias a CRLs/OCSP</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-200 px-3 py-2 font-medium">XAdES-XL</td>
+                <td class="border border-gray-200 px-3 py-2">C + datos de validación embebidos</td>
+                <td class="border border-gray-200 px-3 py-2">Validación a largo plazo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-lg font-medium text-gray-900 mt-6 mb-2">Certificados válidos:</h3>
+        <p class="text-gray-700">Para firmar facturas electrónicas en España puedes usar:</p>
+        <ul class="list-disc list-inside text-gray-700 space-y-1 mt-2">
+          <li>Certificado de la FNMT (Fábrica Nacional de Moneda y Timbre)</li>
+          <li>DNI electrónico (DNIe)</li>
+          <li>Certificados de prestadores cualificados (Camerfirma, Firmaprofesional, etc.)</li>
+        </ul>
+      </section>
+
+      <!-- Sección 6 -->
+      <section id="face" class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">6. Envío a FACe</h2>
+        <p class="text-gray-700 mb-4">FACe (Punto General de Entrada de Facturas Electrónicas) es la plataforma del Gobierno de España para recibir facturas electrónicas de proveedores de la Administración Pública.</p>
+
+        <h3 class="text-lg font-medium text-gray-900 mt-6 mb-2">Requisitos para enviar a FACe:</h3>
+        <ol class="list-decimal list-inside text-gray-700 space-y-2">
+          <li>Factura en formato Facturae <strong>versión 3.2.2</strong></li>
+          <li>Firmada digitalmente con certificado cualificado</li>
+          <li>Incluir los códigos DIR3:
+            <ul class="list-disc list-inside ml-6 mt-1 text-sm">
+              <li>Oficina contable</li>
+              <li>Órgano gestor</li>
+              <li>Unidad tramitadora</li>
+            </ul>
+          </li>
+          <li>Datos fiscales correctos y completos</li>
+        </ol>
+
+        <h3 class="text-lg font-medium text-gray-900 mt-6 mb-2">Proceso de envío:</h3>
+        <ol class="list-decimal list-inside text-gray-700 space-y-1">
+          <li>Crear la factura en formato Facturae 3.2.2</li>
+          <li>Firmar con certificado digital</li>
+          <li>Acceder a <a href="https://face.gob.es" target="_blank" rel="noopener" class="text-blue-600 hover:underline">face.gob.es</a></li>
+          <li>Subir el archivo firmado</li>
+          <li>FACe validará y enviará al organismo correspondiente</li>
+        </ol>
+
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
+          <p class="text-yellow-800 text-sm"><strong>Importante:</strong> Los códigos DIR3 los proporciona el organismo público al que facturas. Puedes consultarlos en el <a href="https://face.gob.es/es/directorio" target="_blank" rel="noopener" class="text-blue-600 hover:underline">directorio de FACe</a>.</p>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <div class="mt-8 bg-blue-50 rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Visualiza tus facturas Facturae</h2>
+        <p class="text-gray-600 mb-4">FacturaView te permite abrir, visualizar y exportar facturas Facturae de cualquier versión.</p>
+        <a href="/" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+          Abrir FacturaView
+        </a>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-200 mt-12">
+    <div class="max-w-4xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+      <p>&copy; 2026 FacturaView. Herramienta gratuita para visualizar facturas Facturae.</p>
+      <div class="mt-2 flex justify-center gap-4">
+        <a href="/" class="hover:text-blue-600">Inicio</a>
+        <a href="/faq.html" class="hover:text-blue-600">FAQ</a>
+        <a href="/guia-facturae.html" class="hover:text-blue-600">Guía</a>
+        <a href="/about.html" class="hover:text-blue-600">Sobre nosotros</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

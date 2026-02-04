@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fe:Facturae xmlns:fe="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2">
+  <FileHeader>
+    <SchemaVersion>3.2.2</SchemaVersion>
+    <Modality>I</Modality>
+    <InvoiceIssuerType>EM</InvoiceIssuerType>
+    <Batch>
+      <BatchIdentifier>A12345678202401001</BatchIdentifier>
+      <InvoicesCount>1</InvoicesCount>
+      <TotalInvoicesAmount>
+        <TotalAmount>121.00</TotalAmount>
+      </TotalInvoicesAmount>
+      <TotalOutstandingAmount>
+        <TotalAmount>121.00</TotalAmount>
+      </TotalOutstandingAmount>
+      <TotalExecutableAmount>
+        <TotalAmount>121.00</TotalAmount>
+      </TotalExecutableAmount>
+      <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+    </Batch>
+  </FileHeader>
+  <Parties>
+    <SellerParty>
+      <TaxIdentification>
+        <PersonTypeCode>J</PersonTypeCode>
+        <ResidenceTypeCode>R</ResidenceTypeCode>
+        <TaxIdentificationNumber>A12345678</TaxIdentificationNumber>
+      </TaxIdentification>
+      <LegalEntity>
+        <CorporateName>Empresa Ejemplo S.L.</CorporateName>
+        <AddressInSpain>
+          <Address>Calle Mayor 123</Address>
+          <PostCode>28001</PostCode>
+          <Town>Madrid</Town>
+          <Province>Madrid</Province>
+          <CountryCode>ESP</CountryCode>
+        </AddressInSpain>
+      </LegalEntity>
+    </SellerParty>
+    <BuyerParty>
+      <TaxIdentification>
+        <PersonTypeCode>J</PersonTypeCode>
+        <ResidenceTypeCode>R</ResidenceTypeCode>
+        <TaxIdentificationNumber>B87654321</TaxIdentificationNumber>
+      </TaxIdentification>
+      <LegalEntity>
+        <CorporateName>Cliente Ejemplo S.A.</CorporateName>
+        <AddressInSpain>
+          <Address>Avenida Principal 456</Address>
+          <PostCode>08001</PostCode>
+          <Town>Barcelona</Town>
+          <Province>Barcelona</Province>
+          <CountryCode>ESP</CountryCode>
+        </AddressInSpain>
+      </LegalEntity>
+    </BuyerParty>
+  </Parties>
+  <Invoices>
+    <Invoice>
+      <InvoiceHeader>
+        <InvoiceNumber>2024/001</InvoiceNumber>
+        <InvoiceSeriesCode>A</InvoiceSeriesCode>
+        <InvoiceDocumentType>FC</InvoiceDocumentType>
+        <InvoiceClass>OO</InvoiceClass>
+      </InvoiceHeader>
+      <InvoiceIssueData>
+        <IssueDate>2024-01-15</IssueDate>
+        <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+        <TaxCurrencyCode>EUR</TaxCurrencyCode>
+        <LanguageName>es</LanguageName>
+      </InvoiceIssueData>
+      <TaxesOutputs>
+        <Tax>
+          <TaxTypeCode>01</TaxTypeCode>
+          <TaxRate>21.00</TaxRate>
+          <TaxableBase>
+            <TotalAmount>100.00</TotalAmount>
+          </TaxableBase>
+          <TaxAmount>
+            <TotalAmount>21.00</TotalAmount>
+          </TaxAmount>
+        </Tax>
+      </TaxesOutputs>
+      <InvoiceTotals>
+        <TotalGrossAmount>100.00</TotalGrossAmount>
+        <TotalGeneralDiscounts>0.00</TotalGeneralDiscounts>
+        <TotalGeneralSurcharges>0.00</TotalGeneralSurcharges>
+        <TotalGrossAmountBeforeTaxes>100.00</TotalGrossAmountBeforeTaxes>
+        <TotalTaxOutputs>21.00</TotalTaxOutputs>
+        <TotalTaxesWithheld>0.00</TotalTaxesWithheld>
+        <InvoiceTotal>121.00</InvoiceTotal>
+        <TotalOutstandingAmount>121.00</TotalOutstandingAmount>
+        <TotalExecutableAmount>121.00</TotalExecutableAmount>
+      </InvoiceTotals>
+      <Items>
+        <InvoiceLine>
+          <ItemDescription>Servicio de consultoría</ItemDescription>
+          <Quantity>1.00</Quantity>
+          <UnitOfMeasure>01</UnitOfMeasure>
+          <UnitPriceWithoutTax>100.00</UnitPriceWithoutTax>
+          <TotalCost>100.00</TotalCost>
+          <GrossAmount>100.00</GrossAmount>
+          <TaxesOutputs>
+            <Tax>
+              <TaxTypeCode>01</TaxTypeCode>
+              <TaxRate>21.00</TaxRate>
+              <TaxableBase>
+                <TotalAmount>100.00</TotalAmount>
+              </TaxableBase>
+              <TaxAmount>
+                <TotalAmount>21.00</TotalAmount>
+              </TaxAmount>
+            </Tax>
+          </TaxesOutputs>
+        </InvoiceLine>
+      </Items>
+      <PaymentDetails>
+        <Installment>
+          <InstallmentDueDate>2024-02-15</InstallmentDueDate>
+          <InstallmentAmount>121.00</InstallmentAmount>
+          <PaymentMeans>04</PaymentMeans>
+          <AccountToBeCredited>
+            <IBAN>ES9121000418450200051332</IBAN>
+          </AccountToBeCredited>
+        </Installment>
+      </PaymentDetails>
+    </Invoice>
+  </Invoices>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference URI=""><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>d5nr255cqtNAJjg1n50+BCSGs8IBBmcSEI4XBWWC1OU=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>MxKJxMLMkPAYYMFed/uVwnAUJU0iQfnVqcg9uPIxU3ZCWVCkH+rGC/TpubfUVxwEhoIRB2rZHSD5qLhIh5xm7DBinHJtP10wW8/KIpFwU8qaEZd36+1HPNkKHyi5TXALQMOpkijwlBACN36Ib77ww5JZ3W6bseFW7qjYSkKwW1FX0BALq0vdorkAC/XhEWL5u1Mw45Or9yzpQDvhMPHx7WFxEs1rL0qLihyVw72RMXVO4BkzcjuPb27gVkyqLWH0BaoZzlZYuf3Fa9Vxv/cZ0bTOKOJKxrw7WaI6hsoiZWl18ss50zAOg1Pmhy00BPq5GoBfrFXcSZXiGNKSO2mr/w==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIEGjCCAwKgAwIBAgIUdfv/xYpFqxlSmuqA/LBKwPdQD4owDQYJKoZIhvcNAQEL
+BQAwgbUxCzAJBgNVBAYTAkVTMQ8wDQYDVQQIDAZNYWRyaWQxDzANBgNVBAcMBk1h
+ZHJpZDEdMBsGA1UECgwURW1wcmVzYSBkZSBQcnVlYmEgU0wxJTAjBgNVBAsMHERl
+cGFydGFtZW50byBkZSBGYWN0dXJhY2nDs24xKjAoBgNVBAMMIUNlcnRpZmljYWRv
+IGRlIFBydWViYSBGYWN0dXJhVmlldzESMBAGA1UEBRMJQjEyMzQ1Njc4MB4XDTI2
+MDIwNDE1NDIyNloXDTI3MDIwNDE1NDIyNlowgbUxCzAJBgNVBAYTAkVTMQ8wDQYD
+VQQIDAZNYWRyaWQxDzANBgNVBAcMBk1hZHJpZDEdMBsGA1UECgwURW1wcmVzYSBk
+ZSBQcnVlYmEgU0wxJTAjBgNVBAsMHERlcGFydGFtZW50byBkZSBGYWN0dXJhY2nD
+s24xKjAoBgNVBAMMIUNlcnRpZmljYWRvIGRlIFBydWViYSBGYWN0dXJhVmlldzES
+MBAGA1UEBRMJQjEyMzQ1Njc4MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEA0MOoEun2WnZvMv501MGRhyUHEWC8t71pFOI+gDNWz/DArLXJEmu1XCFL45PF
+b0nwkJgUPtTYCUVbKJ3Bv7xQjm0BhAAjgaBCU8LAwUGSSmgiWxRqMPH9yw410lK9
+Fg+cTWLBEVYGtF0Ml6eJoL1OmXecK/WGLXlPKbM6NwcpOzIJWhtq8VVOwcmT8f09
+reRo/uCcnfEjZR/T9GLv/GJjUR0VNDIVb43e68foX2z+Sj0GsfL16MAi+SkOhRGM
+lR0i40oM+8IbltwYVSCBfWZSH+2xCreiiC3QShnAqpMGn8RVCVqLLSq2HiDUNwq9
+k841SgtcAzT/s+0EicmCMoKOpQIDAQABoyAwHjAMBgNVHRMBAf8EAjAAMA4GA1Ud
+DwEB/wQEAwIGwDANBgkqhkiG9w0BAQsFAAOCAQEAcW4TNo/vjAifqZednrO/MARI
+37kJwuVlsGwxm1TZ41bvvjoM7Xanr/gijVc92GgIDq5ge0UuBqNsmg7wPoYLC09g
+8u4nAhP0CHhlodhEhCCTHxjM+e6GrCUDrq2VNfJeMK/Mg3KaMVyf8jqMrGgjT9Ys
+eGqKO53H4F4ukj/Cb/B1l/TUuIVnLjuELCsOYSLvpf5frjSOfPscZ84askIpN95d
+mrDl32aP8uV1AjnOY8Xi4TCLKnqKeVu10oTox6K3LaU8fD2eZlNuMz1d1ezYcRhF
+rPVHJAdtMG9MbT41Hvx5tZHN/9Gonf9kf+WPj+HwgcMWIEdtCjCq+9rfxeiDRg==
+</ds:X509Certificate></ds:X509Data></ds:KeyInfo></ds:Signature></fe:Facturae>

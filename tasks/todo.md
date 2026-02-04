@@ -137,6 +137,12 @@
 - [x] Crear `public/manifest.json` (PWA)
 - [x] Mejorar accesibilidad (ARIA labels, teclado, scope en tablas)
 
+### Páginas Estáticas SEO (Febrero 2026)
+- [x] Crear `public/faq.html` - Preguntas frecuentes (Schema: FAQPage)
+- [x] Crear `public/guia-facturae.html` - Guía del formato (Schema: Article)
+- [x] Crear `public/about.html` - Sobre FacturaView (Schema: AboutPage)
+- [x] Actualizar sitemap.xml con las nuevas URLs
+
 ### Configuración Dominio (Enero 2026)
 - [x] Cambiar canonical URL a `www.facturaview.es`
 - [x] Solicitar reindexación en Google Search Console

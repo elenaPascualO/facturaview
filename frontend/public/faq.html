@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <title>Preguntas Frecuentes sobre Facturae - FacturaView</title>
+  <meta name="description" content="Resuelve tus dudas sobre facturas electrónicas Facturae, FACe, firmas digitales XAdES y cómo usar FacturaView para visualizar tus facturas XML.">
+  <meta name="keywords" content="facturae preguntas, faq factura electronica, como abrir xml factura, que es face, firma xades">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.facturaview.es/faq.html">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.facturaview.es/faq.html">
+  <meta property="og:title" content="Preguntas Frecuentes sobre Facturae - FacturaView">
+  <meta property="og:description" content="Resuelve tus dudas sobre facturas electrónicas Facturae, FACe, firmas digitales XAdES y cómo usar FacturaView.">
+  <meta property="og:image" content="https://www.facturaview.es/og-image.png">
+  <meta property="og:locale" content="es_ES">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Preguntas Frecuentes sobre Facturae - FacturaView">
+  <meta name="twitter:description" content="Resuelve tus dudas sobre facturas electrónicas Facturae, FACe, firmas digitales XAdES y cómo usar FacturaView.">
+  <meta name="twitter:image" content="https://www.facturaview.es/og-image.png">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#3b82f6">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Umami Analytics -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="a211c801-93da-494e-b699-21ba70081d74"></script>
+
+  <!-- Schema.org FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Qué es una factura electrónica Facturae?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Facturae es el formato estándar de factura electrónica en España. Es un archivo XML estructurado que contiene todos los datos de una factura (emisor, receptor, líneas de detalle, impuestos, totales) en un formato que pueden leer tanto personas como máquinas. Es obligatorio para facturar a la Administración Pública española."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué versiones de Facturae existen?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Existen tres versiones principales: Facturae 3.2 (legacy, aún usada en algunos organismos), Facturae 3.2.1 (común en el sector privado) y Facturae 3.2.2 (la versión actual, obligatoria para FACe desde 2015). FacturaView soporta las tres versiones."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué es FACe?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "FACe (Punto General de Entrada de Facturas Electrónicas) es el sistema de la Administración General del Estado para recibir facturas electrónicas. Si facturas a cualquier organismo público español, debes enviar tu factura Facturae firmada digitalmente a través de FACe."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cómo puedo abrir un archivo XML de factura?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Puedes usar FacturaView: simplemente arrastra tu archivo XML a la página o haz clic para seleccionarlo. FacturaView mostrará todos los datos de la factura en un formato legible, y podrás exportarla a PDF o Excel. Todo el procesamiento se hace en tu navegador, sin enviar datos a ningún servidor."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué es la firma digital XAdES?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "XAdES (XML Advanced Electronic Signatures) es el estándar europeo para firmas digitales en documentos XML. Las facturas enviadas a FACe deben estar firmadas con XAdES para garantizar su autenticidad e integridad. Existen varios niveles: XAdES-BES (básico), XAdES-T (con sello de tiempo), XAdES-C y XAdES-XL (con información de validación)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Es seguro subir mi factura a FacturaView?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí. FacturaView procesa las facturas 100% en tu navegador. El archivo XML nunca sale de tu dispositivo para la visualización y exportación. Solo si la factura está firmada y quieres verificar la firma, se envía al servidor para la validación criptográfica (que requiere librerías especializadas)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿La validación de firma de FacturaView es oficial?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. FacturaView realiza una validación técnica de la firma (verifica la integridad matemática y el certificado), pero no es una validación oficial con efectos legales. Para validación oficial, recomendamos usar VALIDe (valide.redsara.es), el servicio del Gobierno de España que cumple con la normativa eIDAS."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Es obligatorio firmar las facturas electrónicas?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Depende del destinatario. Para facturar a la Administración Pública a través de FACe, la firma digital es obligatoria. Para facturas entre empresas privadas, la firma es opcional pero recomendable para garantizar la autenticidad del documento."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <nav class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="text-xl font-bold text-blue-600 hover:text-blue-700">FacturaView</a>
+      <div class="flex gap-4 text-sm">
+        <a href="/faq.html" class="text-blue-600 font-medium">FAQ</a>
+        <a href="/guia-facturae.html" class="text-gray-600 hover:text-blue-600">Guía Facturae</a>
+        <a href="/about.html" class="text-gray-600 hover:text-blue-600">Sobre nosotros</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main content -->
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Preguntas Frecuentes</h1>
+    <p class="text-gray-600 mb-8">Todo lo que necesitas saber sobre facturas electrónicas Facturae y cómo usar FacturaView.</p>
+
+    <div class="space-y-6">
+      <!-- FAQ 1 -->
+      <article class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">¿Qué es una factura electrónica Facturae?</h2>
+        <p class="text-gray-700">Facturae es el formato estándar de factura electrónica en España. Es un archivo XML estructurado que contiene todos los datos de una factura (emisor, receptor, líneas de detalle, impuestos, totales) en un formato que pueden leer tanto personas como máquinas. Es obligatorio para facturar a la Administración Pública española.</p>
+      </article>
+
+      <!-- FAQ 2 -->
+      <article class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">¿Qué versiones de Facturae existen?</h2>
+        <p class="text-gray-700">Existen tres versiones principales:</p>
+        <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
+          <li><strong>Facturae 3.2</strong> - Versión legacy, aún usada en algunos organismos</li>
+          <li><strong>Facturae 3.2.1</strong> - Común en el sector privado</li>
+          <li><strong>Facturae 3.2.2</strong> - La versión actual, obligatoria para FACe desde 2015</li>
+        </ul>
+        <p class="text-gray-700 mt-2">FacturaView soporta las tres versiones.</p>
+      </article>
+
+      <!-- FAQ 3 -->
+      <article class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">¿Qué es FACe?</h2>
+        <p class="text-gray-700">FACe (Punto General de Entrada de Facturas Electrónicas) es el sistema de la Administración General del Estado para recibir facturas electrónicas. Si facturas a cualquier organismo público español, debes enviar tu factura Facturae firmada digitalmente a través de FACe.</p>
+        <p class="text-gray-700 mt-2">Más información: <a href="https://face.gob.es" target="_blank" rel="noopener" class="text-blue-600 hover:underline">face.gob.es</a></p>
+      </article>
+
+      <!-- FAQ 4 -->
+      <article class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">¿Cómo puedo abrir un archivo XML de factura?</h2>
+        <p class="text-gray-700">Puedes usar <a href="/" class="text-blue-600 hover:underline">FacturaView</a>: simplemente arrastra tu archivo XML a la página o haz clic para seleccionarlo. FacturaView mostrará todos los datos de la factura en un formato legible, y podrás exportarla a PDF o Excel.</p>
+        <p class="text-gray-700 mt-2">Todo el procesamiento se hace en tu navegador, sin enviar datos a ningún servidor.</p>
+      </article>
+
+      <!-- FAQ 5 -->
+      <article class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">¿Qué es la firma digital XAdES?</h2>
+        <p class="text-gray-700">XAdES (XML Advanced Electronic Signatures) es el estándar europeo para firmas digitales en documentos XML. Las facturas enviadas a FACe deben estar firmadas con XAdES para garantizar su autenticidad e integridad.</p>
+        <p class="text-gray-700 mt-2">Existen varios niveles de firma:</p>
+        <ul class="list-disc list-inside text-gray-700 mt-1 space-y-1">
+          <li><strong>XAdES-BES</strong> - Firma básica</li>
+          <li><strong>XAdES-T</strong> - Con sello de tiempo</li>
+          <li><strong>XAdES-C / XAdES-XL</strong> - Con información de validación completa</li>
+        </ul>
+      </article>
+
+      <!-- FAQ 6 -->
+      <article class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">¿Es seguro subir mi factura a FacturaView?</h2>
+        <p class="text-gray-700">Sí. FacturaView procesa las facturas <strong>100% en tu navegador</strong>. El archivo XML nunca sale de tu dispositivo para la visualización y exportación.</p>
+        <p class="text-gray-700 mt-2">Solo si la factura está firmada y quieres verificar la firma, se envía al servidor para la validación criptográfica (que requiere librerías especializadas no disponibles en el navegador).</p>
+      </article>
+
+      <!-- FAQ 7 -->
+      <article class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">¿La validación de firma de FacturaView es oficial?</h2>
+        <p class="text-gray-700">No. FacturaView realiza una <strong>validación técnica</strong> de la firma (verifica la integridad matemática y el certificado), pero no es una validación oficial con efectos legales.</p>
+        <p class="text-gray-700 mt-2">Para validación oficial, recomendamos usar <a href="https://valide.redsara.es" target="_blank" rel="noopener" class="text-blue-600 hover:underline">VALIDe</a>, el servicio del Gobierno de España que cumple con la normativa eIDAS.</p>
+      </article>
+
+      <!-- FAQ 8 -->
+      <article class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">¿Es obligatorio firmar las facturas electrónicas?</h2>
+        <p class="text-gray-700">Depende del destinatario:</p>
+        <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
+          <li><strong>Administración Pública (FACe):</strong> La firma digital es obligatoria</li>
+          <li><strong>Empresas privadas:</strong> La firma es opcional pero recomendable para garantizar la autenticidad</li>
+        </ul>
+      </article>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-12 bg-blue-50 rounded-lg p-6 text-center">
+      <h2 class="text-xl font-semibold text-gray-900 mb-2">¿Tienes una factura Facturae?</h2>
+      <p class="text-gray-600 mb-4">Visualízala gratis con FacturaView. Sin instalación, sin registro.</p>
+      <a href="/" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+        Abrir FacturaView
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-200 mt-12">
+    <div class="max-w-4xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+      <p>&copy; 2026 FacturaView. Herramienta gratuita para visualizar facturas Facturae.</p>
+      <div class="mt-2 flex justify-center gap-4">
+        <a href="/" class="hover:text-blue-600">Inicio</a>
+        <a href="/faq.html" class="hover:text-blue-600">FAQ</a>
+        <a href="/guia-facturae.html" class="hover:text-blue-600">Guía</a>
+        <a href="/about.html" class="hover:text-blue-600">Sobre nosotros</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
