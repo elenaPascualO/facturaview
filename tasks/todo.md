@@ -36,13 +36,17 @@
 - [x] Exportar a Excel (3 hojas: General, Líneas, Impuestos)
 
 ### Testing
-- [x] Tests del parser (27 tests)
+- [x] Tests del parser (30 tests)
 - [x] Tests de exportación (13 tests)
 - [x] Tests de seguridad (25 tests)
 - [x] Tests de validación de archivos (27 tests)
+- [x] Tests de errores amigables (23 tests)
+- [x] Tests de clipboard (7 tests)
+- [x] Tests de historial local (42 tests)
+- [x] Tests de internacionalización (37 tests)
 - [x] Fixtures de prueba (6 archivos XML)
 
-**Total: 167 tests pasando**
+**Total: 204 tests pasando**
 
 ### Seguridad (Auditoría completada)
 - [x] Reemplazar Discord webhook con Formspree
@@ -195,7 +199,7 @@ Causa principal: contenido renderizado 100% con JavaScript (SPA).
 - [ ] Múltiples facturas en lote (Modality="L") - Ver `plan-mejoras.md` Fase 3.1
 - [x] Copiar datos al portapapeles (botón copiar) - Completado febrero 2026
 - [x] Historial local (localStorage) - Completado febrero 2026
-- [ ] Selector de idioma (ES/EN)
+- [x] Selector de idioma (ES/EN) - Completado febrero 2026
 
 ---
 

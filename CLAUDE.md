@@ -53,6 +53,8 @@ facturaview/
 │   │   ├── export/
 │   │   │   ├── toPdf.js          # Exportar a PDF (jsPDF directo)
 │   │   │   └── toExcel.js        # Exportar a Excel (xlsx)
+│   │   ├── i18n/
+│   │   │   └── translations.js   # Diccionarios ES/EN
 │   │   └── utils/
 │   │       ├── formatters.js     # Formateo moneda, fechas, NIF
 │   │       ├── sanitizers.js     # Funciones de sanitización (XSS, Excel, filenames)
@@ -62,7 +64,8 @@ facturaview/
 │   │       ├── theme.js          # Gestión tema claro/oscuro
 │   │       ├── clipboard.js      # Copiar al portapapeles
 │   │       ├── signature.js      # Cliente API de validación de firmas
-│   │       └── storage.js        # Historial local de facturas (localStorage)
+│   │       ├── storage.js        # Historial local de facturas (localStorage)
+│   │       └── i18n.js           # Internacionalización (ES/EN)
 │   ├── public/
 │   │   ├── favicon.svg
 │   │   ├── og-image.png          # Imagen Open Graph (1200x630)
@@ -79,6 +82,7 @@ facturaview/
 │       ├── errors.test.js        # Tests de errores amigables (23 tests)
 │       ├── clipboard.test.js     # Tests de clipboard (7 tests)
 │       ├── storage.test.js       # Tests de historial local (42 tests)
+│       ├── i18n.test.js          # Tests de internacionalización (37 tests)
 │       └── fixtures/             # Archivos XML de prueba
 │           ├── simple-322.xml    # Factura simple v3.2.2
 │           ├── complex-322.xml   # Factura compleja (4 líneas, 3 IVAs)
@@ -128,7 +132,7 @@ bun run dev          # Servidor de desarrollo (http://localhost:5173)
 bun run build        # Build de producción (genera frontend/dist/)
 bun run preview      # Preview del build
 bun run test         # Tests en modo watch
-bun run test:run     # Ejecutar tests una vez (167 tests)
+bun run test:run     # Ejecutar tests una vez (204 tests)
 ```
 
 ### Backend
@@ -167,12 +171,13 @@ docker run -p 8000:8000 facturaview
 - [x] Descargar como Excel (3 hojas: General, Líneas, Impuestos)
 - [x] 100% privado (todo en navegador)
 - [x] Responsive (móvil)
-- [x] Tests automatizados (167 tests)
+- [x] Tests automatizados (204 tests)
 - [x] Formulario de contacto (Formspree)
 - [x] Protección contra XSS, inyección Excel y path traversal
 - [x] Analítica de eventos (Umami)
 - [x] PWA instalable (Service Worker + manifest)
 - [x] Historial local de facturas (localStorage)
+- [x] Internacionalización (ES/EN)
 
 ## Tipos de Factura Soportados
 
@@ -272,6 +277,24 @@ El historial permite guardar facturas localmente en el navegador para acceso rap
 - **Funciones principales:** `getHistory()`, `saveInvoice()`, `deleteInvoice()`, `clearHistory()`
 
 El componente `HistorySection.js` muestra las ultimas 5 facturas en el Dropzone. El componente `SavePrompt.js` muestra el modal de confirmacion con opcion de recordar preferencia.
+
+### Internacionalización (i18n)
+La app soporta español e inglés con cambio dinámico de idioma:
+
+- **Idiomas soportados:** Español (es) e Inglés (en)
+- **Almacenamiento:** localStorage con clave `facturaview-lang`
+- **Detección automática:** Detecta idioma del navegador en primera visita
+- **Cambio dinámico:** Toggle ES/EN en el header, actualiza toda la UI sin recargar
+- **Funciones principales:** `getLang()`, `setLang()`, `toggleLang()`, `t()`
+- **Traducciones:** `src/i18n/translations.js` con diccionarios completos
+- **Páginas estáticas:** `public/js/static-i18n.js` para FAQ, guía y about
+
+El componente principal usa la función `t(key)` para obtener traducciones:
+```javascript
+import { t } from './utils/i18n.js'
+t('app.title')           // "FacturaView"
+t('totals.vatRate', { rate: 21 }) // "IVA 21%"
+```
 
 ### SEO y Accesibilidad
 - **robots.txt y sitemap.xml:** En `public/` para indexación
