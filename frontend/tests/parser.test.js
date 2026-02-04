@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 import { parseFacturae } from '../src/parser/facturae.js'
+import { FacturaeError, ErrorCodes } from '../src/utils/errors.js'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
@@ -211,13 +212,78 @@ describe('Parser Facturae', () => {
   })
 
   describe('Manejo de errores', () => {
-    it('lanza error con XML inválido', () => {
+    it('lanza FacturaeError con XML inválido', () => {
       const invalidXml = '<invalid><not-closed>'
-      expect(() => parseFacturae(invalidXml)).toThrow()
+      expect(() => parseFacturae(invalidXml)).toThrow(FacturaeError)
+
+      try {
+        parseFacturae(invalidXml)
+      } catch (error) {
+        expect(error.code).toBe(ErrorCodes.XML_MALFORMED)
+        expect(error.friendlyMessage).toContain('XML válido')
+      }
     })
 
-    it('lanza error con XML vacío', () => {
-      expect(() => parseFacturae('')).toThrow()
+    it('lanza FacturaeError con XML vacío', () => {
+      expect(() => parseFacturae('')).toThrow(FacturaeError)
+    })
+
+    it('lanza FacturaeError cuando no hay facturas', () => {
+      const xmlWithoutInvoices = `<?xml version="1.0" encoding="UTF-8"?>
+        <fe:Facturae xmlns:fe="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml">
+          <FileHeader>
+            <SchemaVersion>3.2.2</SchemaVersion>
+            <Modality>I</Modality>
+            <InvoiceIssuerType>EM</InvoiceIssuerType>
+          </FileHeader>
+          <Parties>
+            <SellerParty>
+              <TaxIdentification>
+                <PersonTypeCode>J</PersonTypeCode>
+                <TaxIdentificationNumber>A12345678</TaxIdentificationNumber>
+              </TaxIdentification>
+              <LegalEntity>
+                <CorporateName>Test Company</CorporateName>
+              </LegalEntity>
+            </SellerParty>
+          </Parties>
+          <Invoices></Invoices>
+        </fe:Facturae>`
+
+      expect(() => parseFacturae(xmlWithoutInvoices)).toThrow(FacturaeError)
+
+      try {
+        parseFacturae(xmlWithoutInvoices)
+      } catch (error) {
+        expect(error.code).toBe(ErrorCodes.NO_INVOICES)
+        expect(error.friendlyMessage).toContain('no contiene ninguna factura')
+      }
+    })
+
+    it('lanza FacturaeError cuando el XML no es Facturae', () => {
+      const notFacturaeXml = `<?xml version="1.0" encoding="UTF-8"?>
+        <root>
+          <something>This is not a Facturae document</something>
+        </root>`
+
+      expect(() => parseFacturae(notFacturaeXml)).toThrow(FacturaeError)
+
+      try {
+        parseFacturae(notFacturaeXml)
+      } catch (error) {
+        expect(error.code).toBe(ErrorCodes.NOT_FACTURAE)
+        expect(error.friendlyMessage).toContain('factura electrónica Facturae')
+      }
+    })
+
+    it('mensaje de error no contiene términos técnicos', () => {
+      const invalidXml = '<invalid><not-closed>'
+
+      try {
+        parseFacturae(invalidXml)
+      } catch (error) {
+        expect(error.friendlyMessage).not.toMatch(/undefined|null|TypeError/)
+      }
     })
   })
 

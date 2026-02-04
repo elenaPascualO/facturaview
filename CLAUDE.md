@@ -1,13 +1,14 @@
 # FacturaView
 
-Visualizador de facturas electrónicas Facturae (XML) 100% frontend.
+Visualizador de facturas electrónicas Facturae (XML) con validación de firmas digitales.
 
 ## Descripción
 
-Web app que permite a autónomos y pymes españoles visualizar, entender y exportar facturas electrónicas en formato Facturae sin instalar software ni Java. Todo se procesa localmente en el navegador.
+Web app que permite a autónomos y pymes españoles visualizar, entender y exportar facturas electrónicas en formato Facturae sin instalar software ni Java. El parseo y visualización se procesan localmente en el navegador. Las facturas firmadas pueden validarse opcionalmente mediante un backend.
 
 ## Stack Técnico
 
+### Frontend
 - **Runtime:** Bun
 - **Build:** Vite 7.x
 - **Frontend:** Vanilla JS (ES Modules)
@@ -15,63 +16,94 @@ Web app que permite a autónomos y pymes españoles visualizar, entender y expor
 - **PDF:** jsPDF (generación directa, sin html2canvas)
 - **Excel:** SheetJS (xlsx)
 - **Testing:** Vitest + jsdom
-- **Deploy:** Railway (configurado) / Vercel / Netlify / GitHub Pages
+- **Deploy:** Railway
+
+### Backend (Validación de firmas)
+- **Runtime:** Python 3.11+
+- **Framework:** FastAPI
+- **Package Manager:** uv
+- **Validación XAdES:** signxml + cryptography
+- **Testing:** pytest + httpx
+- **Deploy:** Railway (Dockerfile)
 
 ## Estructura del Proyecto
 
 ```
 facturaview/
-├── index.html
-├── vite.config.js
-├── vitest.config.js
-├── package.json
-├── .env.example              # Variables de entorno (Formspree ID)
+├── frontend/                     # Código frontend (Vite)
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── vitest.config.js
+│   ├── bun.lock
+│   ├── .env.example              # Variables de entorno (Formspree ID)
+│   ├── src/
+│   │   ├── main.js               # Entry point
+│   │   ├── style.css             # Tailwind CSS
+│   │   ├── parser/
+│   │   │   └── facturae.js       # Parser XML (todas las versiones)
+│   │   ├── components/
+│   │   │   ├── Dropzone.js       # Área de subida drag & drop
+│   │   │   ├── InvoiceView.js    # Vista completa de factura
+│   │   │   ├── PartyCard.js      # Tarjeta emisor/receptor
+│   │   │   ├── LinesTable.js     # Tabla de líneas de detalle
+│   │   │   └── TotalsBox.js      # Caja de impuestos y totales
+│   │   ├── export/
+│   │   │   ├── toPdf.js          # Exportar a PDF (jsPDF directo)
+│   │   │   └── toExcel.js        # Exportar a Excel (xlsx)
+│   │   └── utils/
+│   │       ├── formatters.js     # Formateo moneda, fechas, NIF
+│   │       ├── sanitizers.js     # Funciones de sanitización (XSS, Excel, filenames)
+│   │       ├── tracking.js       # Tracking de eventos con Umami
+│   │       ├── validators.js     # Validación de archivos (extensión, tamaño)
+│   │       ├── errors.js         # Errores amigables para el usuario
+│   │       ├── theme.js          # Gestión tema claro/oscuro
+│   │       ├── clipboard.js      # Copiar al portapapeles
+│   │       └── signature.js      # Cliente API de validación de firmas
+│   ├── public/
+│   │   ├── favicon.svg
+│   │   ├── og-image.png          # Imagen Open Graph (1200x630)
+│   │   ├── og-image.svg          # Fuente de la imagen OG
+│   │   ├── robots.txt            # Configuración para bots/crawlers
+│   │   ├── sitemap.xml           # Mapa del sitio para SEO
+│   │   ├── manifest.json         # PWA manifest
+│   │   └── sw.js                 # Service Worker para PWA
+│   └── tests/
+│       ├── parser.test.js        # Tests del parser (30 tests)
+│       ├── export.test.js        # Tests de exportación (13 tests)
+│       ├── security.test.js      # Tests de seguridad (25 tests)
+│       ├── validators.test.js    # Tests de validación de archivos (27 tests)
+│       ├── errors.test.js        # Tests de errores amigables (23 tests)
+│       ├── clipboard.test.js     # Tests de clipboard (7 tests)
+│       └── fixtures/             # Archivos XML de prueba
+│           ├── simple-322.xml    # Factura simple v3.2.2
+│           ├── complex-322.xml   # Factura compleja (4 líneas, 3 IVAs)
+│           ├── simple-321.xml    # Factura v3.2.1
+│           ├── simple-32.xml     # Factura v3.2 (legacy)
+│           ├── with-retention.xml # Con retención IRPF 15%
+│           └── rectificativa.xml # Factura rectificativa (negativos)
+├── backend/                      # API de validación de firmas (FastAPI)
+│   ├── __init__.py
+│   ├── main.py                   # Entry point FastAPI + StaticFiles
+│   ├── app/
+│   │   ├── routes/
+│   │   │   └── signature.py      # POST /api/validate-signature
+│   │   ├── services/
+│   │   │   └── validator.py      # Lógica de validación XAdES
+│   │   └── models/
+│   │       └── response.py       # Modelos Pydantic
+│   └── tests/
+│       └── test_signature.py     # Tests del backend (8 tests)
+├── pyproject.toml                # Dependencias Python (uv)
+├── uv.lock                       # Lock file Python
+├── Dockerfile                    # Build unificado (frontend + backend)
+├── railway.json                  # Config Railway
 ├── CLAUDE.md
-├── src/
-│   ├── main.js                 # Entry point
-│   ├── style.css               # Tailwind CSS
-│   ├── parser/
-│   │   └── facturae.js         # Parser XML (todas las versiones)
-│   ├── components/
-│   │   ├── Dropzone.js         # Área de subida drag & drop
-│   │   ├── InvoiceView.js      # Vista completa de factura
-│   │   ├── PartyCard.js        # Tarjeta emisor/receptor
-│   │   ├── LinesTable.js       # Tabla de líneas de detalle
-│   │   └── TotalsBox.js        # Caja de impuestos y totales
-│   ├── export/
-│   │   ├── toPdf.js            # Exportar a PDF (jsPDF directo)
-│   │   └── toExcel.js          # Exportar a Excel (xlsx)
-│   └── utils/
-│       ├── formatters.js       # Formateo moneda, fechas, NIF
-│       ├── sanitizers.js       # Funciones de sanitización (XSS, Excel, filenames)
-│       ├── tracking.js         # Tracking de eventos con Umami
-│       └── validators.js       # Validación de archivos (extensión, tamaño)
-├── tests/
-│   ├── parser.test.js          # Tests del parser (27 tests)
-│   ├── export.test.js          # Tests de exportación (13 tests)
-│   ├── security.test.js        # Tests de seguridad (25 tests)
-│   ├── validators.test.js      # Tests de validación de archivos (27 tests)
-│   └── fixtures/               # Archivos XML de prueba
-│       ├── simple-322.xml      # Factura simple v3.2.2
-│       ├── complex-322.xml     # Factura compleja (4 líneas, 3 IVAs)
-│       ├── simple-321.xml      # Factura v3.2.1
-│       ├── simple-32.xml       # Factura v3.2 (legacy)
-│       ├── with-retention.xml  # Con retención IRPF 15%
-│       └── rectificativa.xml   # Factura rectificativa (negativos)
 ├── tasks/
-│   └── todo.md                 # Plan de tareas
-├── doc/
-│   ├── FACTURAVIEW_SPEC.md     # Especificación completa
-│   └── SEO.md                  # Plan de acción SEO
-└── public/
-    ├── favicon.svg
-    ├── og-image.png            # Imagen Open Graph (1200x630)
-    ├── og-image.svg            # Fuente de la imagen OG
-    ├── robots.txt              # Configuración para bots/crawlers
-    ├── sitemap.xml             # Mapa del sitio para SEO
-    ├── manifest.json           # PWA manifest
-    ├── sw.js                   # Service Worker para PWA
-    └── serve.json              # Config servidor: rewrites, headers, bloqueo rutas
+│   └── todo.md                   # Plan de tareas
+└── doc/
+    ├── FACTURAVIEW_SPEC.md       # Especificación completa
+    └── SEO.md                    # Plan de acción SEO
 ```
 
 ## Versiones Facturae Soportadas
@@ -84,13 +116,41 @@ facturaview/
 
 ## Comandos
 
+### Frontend
 ```bash
+cd frontend
 bun install          # Instalar dependencias
 bun run dev          # Servidor de desarrollo (http://localhost:5173)
-bun run build        # Build de producción
+bun run build        # Build de producción (genera frontend/dist/)
 bun run preview      # Preview del build
 bun run test         # Tests en modo watch
-bun run test:run     # Ejecutar tests una vez
+bun run test:run     # Ejecutar tests una vez (125 tests)
+```
+
+### Backend
+```bash
+# Desde la raíz del proyecto
+uv sync              # Instalar dependencias
+uv sync --extra dev  # Instalar con dev dependencies
+uv run uvicorn backend.main:app --reload  # Servidor desarrollo (http://localhost:8000)
+uv run pytest -v     # Ejecutar tests (8 tests)
+```
+
+### Desarrollo conjunto
+```bash
+# Terminal 1: Backend (desde raíz)
+uv run uvicorn backend.main:app --reload --port 8000
+
+# Terminal 2: Frontend (desde frontend/)
+cd frontend && bun run dev
+# El frontend usa proxy para /api y /health → http://localhost:8000
+```
+
+### Docker
+```bash
+docker build -t facturaview .
+docker run -p 8000:8000 facturaview
+# Visitar http://localhost:8000
 ```
 
 ## Funcionalidades MVP
@@ -120,8 +180,8 @@ bun run test:run     # Ejecutar tests una vez
 
 ## Principios de Desarrollo
 
-1. **Sin backend:** Todo se procesa en el navegador del usuario
-2. **Privacidad:** Los archivos nunca salen del dispositivo del usuario
+1. **Privacidad:** El parseo y visualización de facturas se hace 100% en el navegador
+2. **Backend opcional:** La validación de firmas digitales usa el backend de forma opcional
 3. **Simplicidad:** Código mínimo y dependencias mínimas
 4. **Accesibilidad:** Debe funcionar en móvil y desktop, con soporte ARIA y navegación por teclado
 
@@ -133,6 +193,7 @@ bun run test:run     # Ejecutar tests una vez
 4. **Explicar los cambios:** Proporcionar explicaciones de alto nivel sobre lo que se modificó
 5. **Mantenerlo simple:** Cada cambio debe ser lo más simple posible, impactando el mínimo código
 6. **Mantener la documentación:** Siempre sincronizar la documentación con los cambios en el código
+7. **Crear tests si es posible** Si la funcionalidad es testable, crear tests de las funciones implementadas.
 
 ## Notas Técnicas
 

@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+/* Dark mode con selector strategy para clase .dark en html */
+@variant dark (&:where(.dark, .dark *));
+
+/* Transición suave al cambiar de tema */
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* Transición de colores al cambiar tema */
+*, *::before, *::after {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.1s ease;
+}

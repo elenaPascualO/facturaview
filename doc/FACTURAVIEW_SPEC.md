@@ -4,9 +4,9 @@
 
 **Problema:** Los autónomos y pymes españoles reciben facturas electrónicas en formato XML (Facturae) que no pueden leer sin instalar software obsoleto del gobierno (requiere Java).
 
-**Solución:** Web app moderna que permite visualizar, entender y exportar facturas Facturae sin instalación.
+**Solución:** Web app moderna que permite visualizar, entender y exportar facturas Facturae sin instalación, con validación opcional de firmas digitales.
 
-**Ventaja competitiva:** 100% online, sin Java, sin registro, móvil-friendly.
+**Ventaja competitiva:** 100% online, sin Java, sin registro, móvil-friendly, modo oscuro, validación de firma XAdES.
 
 ---
 
@@ -14,29 +14,39 @@
 
 ### ¿Se puede hacer sin backend?
 
-**Sí, 100% frontend.** Razones:
+**Mayormente sí, 100% frontend.** Razones:
 
-| Funcionalidad | Solución frontend |
-|---------------|-------------------|
-| Parsear XML | `DOMParser` nativo de JS |
-| Mostrar datos | Vanilla JS |
-| Generar PDF | `jsPDF` (generación directa) |
-| Generar Excel | `SheetJS (xlsx)` |
-| Validar estructura | Comparar contra esquema XSD en JS |
+| Funcionalidad | Solución |
+|---------------|----------|
+| Parsear XML | `DOMParser` nativo de JS (frontend) |
+| Mostrar datos | Vanilla JS (frontend) |
+| Generar PDF | `jsPDF` (frontend) |
+| Generar Excel | `SheetJS (xlsx)` (frontend) |
+| Validar estructura | Comparar contra esquema XSD en JS (frontend) |
+| **Validar firma digital** | Backend Python (signxml + cryptography) |
 
-**No se envía nada al servidor.** El archivo se procesa localmente en el navegador del usuario.
+**El parseo y visualización son 100% locales.** Para validación de firmas XAdES, se usa un backend opcional que no almacena datos.
 
-### Stack recomendado (mínimo)
+### Stack técnico
 
 ```
+# Frontend
 Runtime:  Bun (más rápido que npm/node)
 Build:    Vite 7.x
 Frontend: Vanilla JS (ES Modules)
-Styling:  Tailwind CSS v4
+Styling:  Tailwind CSS v4 (con modo oscuro)
 PDF:      jsPDF (generación directa, sin html2canvas)
 Excel:    SheetJS (xlsx)
-Testing:  Vitest + jsdom
-Deploy:   Railway (configurado) / Vercel / Netlify / GitHub Pages
+Testing:  Vitest + jsdom (125 tests)
+Deploy:   Railway
+
+# Backend (validación de firmas)
+Runtime:  Python 3.11+
+Framework: FastAPI
+Packages: uv
+Crypto:   signxml + cryptography + lxml
+Testing:  pytest + httpx (8 tests)
+Deploy:   Railway (Dockerfile)
 ```
 
 **Tiempo estimado MVP:** 1-2 semanas
@@ -171,20 +181,34 @@ Deploy:   Railway (configurado) / Vercel / Netlify / GitHub Pages
 - [x] **Descargar como Excel** (3 hojas: General, Líneas, Impuestos)
 - [x] **100% privado** (todo en navegador, nada al servidor)
 - [x] **Responsive** (funciona en móvil)
-- [x] **Tests automatizados** (92 tests con Vitest)
+- [x] **Tests automatizados** (125 tests con Vitest)
 - [x] **Formulario de contacto** (Formspree)
 - [x] **Seguridad** (XSS, inyección Excel, CSP headers, bloqueo rutas sensibles)
 - [x] **Analítica de eventos** (Umami tracking)
 - [x] **PWA instalable** (Service Worker, iconos PNG, botón "Instalar app")
 
-### Nice to Have (Fase 1)
+### UX Improvements (Fase 1) - ✅ COMPLETADO
 
-- [x] Detectar firma digital (muestra si está firmada)
-- [ ] Validar firma digital (verificar certificado)
-- [ ] Detectar errores en XML malformado (mensajes descriptivos)
-- [ ] Modo oscuro
+- [x] **Loading states** (spinner durante procesamiento)
+- [x] **Toasts** (notificaciones estilizadas en lugar de alert())
+- [x] **Copiar al portapapeles** (NIF, IBAN, total)
+- [x] **Mensajes de error amigables** (mapeo de errores técnicos)
+- [x] **Modo oscuro** (toggle con persistencia, respeta preferencia del sistema)
+
+### Backend + Validación de Firma (Fase 2) - ✅ COMPLETADO
+
+- [x] **Detectar firma digital** (muestra si está firmada)
+- [x] **Validar firma digital** (backend Python/FastAPI)
+  - Verificación matemática de firma XAdES
+  - Extracción de datos del firmante y certificado
+  - Verificación de expiración del certificado
+  - Consulta OCSP cuando disponible
+- [x] **API REST** (`POST /api/validate-signature`)
+- [x] **8 tests** de backend
+
+### Nice to Have (Fase 3)
+
 - [ ] Múltiples facturas en lote (Modality="L")
-- [ ] Copiar datos al portapapeles
 - [ ] Historial local (localStorage)
 
 ### Futuro (Fase 2+)
@@ -287,7 +311,11 @@ facturaview/
 │   │   ├── formatters.js    # Formateo de moneda, fechas, etc.
 │   │   ├── sanitizers.js    # Sanitización (XSS, Excel, filenames)
 │   │   ├── tracking.js      # Tracking de eventos con Umami
-│   │   └── validators.js    # Validación de archivos (extensión, tamaño)
+│   │   ├── validators.js    # Validación de archivos (extensión, tamaño)
+│   │   ├── errors.js        # Errores amigables para el usuario
+│   │   ├── theme.js         # Gestión tema claro/oscuro
+│   │   ├── clipboard.js     # Copiar al portapapeles
+│   │   └── signature.js     # Cliente API de validación de firmas
 │   └── styles/
 │       └── main.css
 ├── public/
@@ -299,9 +327,18 @@ facturaview/
 │   ├── sw.js                # Service Worker para PWA
 │   └── serve.json           # Config servidor: rewrites, headers, bloqueo rutas sensibles
 ├── package.json
-├── .env.example             # Variables de entorno (Formspree ID)
+├── .env.example             # Variables de entorno (Formspree ID, API URL)
 ├── bun.lockb                # Lockfile de Bun
 ├── vite.config.js
+├── backend/                 # API de validación de firmas
+│   ├── main.py              # Entry point FastAPI
+│   ├── pyproject.toml       # Dependencias (uv)
+│   ├── Dockerfile           # Para Railway
+│   ├── app/
+│   │   ├── routes/signature.py   # POST /api/validate-signature
+│   │   ├── services/validator.py # Validación XAdES
+│   │   └── models/response.py    # Modelos Pydantic
+│   └── tests/test_signature.py   # Tests (8)
 └── README.md
 ```
 
@@ -497,7 +534,7 @@ bun run test:run
 - [x] Exportar a PDF (jsPDF directo)
 - [x] Exportar a Excel (3 hojas)
 - [x] Diseño responsive
-- [x] 92 tests automatizados
+- [x] 133 tests automatizados (125 frontend + 8 backend)
 - [x] Deploy en Railway (configurado)
 - [x] Formulario de contacto (Formspree)
 - [x] Auditoría de seguridad (XSS, Excel injection, CSP)
@@ -539,19 +576,26 @@ bun run test:run
 
 ## Conclusión
 
-**Estado:** MVP completado con 92 tests pasando (parser, exportación, seguridad, validación).
+**Estado:** MVP+ completado con 133 tests pasando (125 frontend + 8 backend).
 
-**¿Backend necesario?** No. Todo 100% frontend.
+**¿Backend necesario?** Solo para validación de firmas digitales. El resto es 100% frontend.
 
 **Stack actual:**
-- Bun + Vite 7.x + Vanilla JS + Tailwind CSS v4 + Railway
+- Frontend: Bun + Vite 7.x + Vanilla JS + Tailwind CSS v4 + Railway
+- Backend: Python 3.11 + FastAPI + uv + signxml + Railway
 
 **Comandos clave:**
 ```bash
-bun run dev       # Desarrollo
+# Frontend
+bun run dev       # Desarrollo (http://localhost:5173)
 bun run build     # Producción
-bun run preview   # Preview del build
-bun run test:run  # Ejecutar tests
+bun run test:run  # Ejecutar tests (125 tests)
+
+# Backend
+cd backend
+uv sync           # Instalar dependencias
+uv run uvicorn main:app --reload  # Desarrollo (http://localhost:8000)
+uv run pytest -v  # Ejecutar tests (8 tests)
 ```
 
 **Ventaja clave:** Eres más rápido que el gobierno. Siempre.

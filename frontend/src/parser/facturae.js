@@ -3,18 +3,46 @@
  * Soporta versiones 3.2, 3.2.1 y 3.2.2
  */
 
+import { FacturaeError, ErrorCodes } from '../utils/errors.js'
+
+const SUPPORTED_VERSIONS = ['3.2', '3.2.1', '3.2.2']
+
 export function parseFacturae(xmlString) {
   const parser = new DOMParser()
   const xml = parser.parseFromString(xmlString, "text/xml")
 
-  // Detectar errores de parseo
+  // Detectar errores de parseo XML
   const parseError = xml.querySelector("parsererror")
   if (parseError) {
-    throw new Error("XML inválido: " + parseError.textContent)
+    throw new FacturaeError(ErrorCodes.XML_MALFORMED, parseError.textContent)
   }
 
-  // Detectar versión
+  // Verificar que es un documento Facturae
+  const root = xml.documentElement
+  if (!root || !root.tagName.includes('Facturae')) {
+    // Verificar también por namespace o elementos típicos
+    const hasFacturaeElements = xml.querySelector('FileHeader, Invoices, SellerParty')
+    if (!hasFacturaeElements) {
+      throw new FacturaeError(ErrorCodes.NOT_FACTURAE)
+    }
+  }
+
+  // Detectar y validar versión
   const version = getTextContent(xml, "SchemaVersion")
+  if (version && !SUPPORTED_VERSIONS.includes(version)) {
+    throw new FacturaeError(ErrorCodes.UNSUPPORTED_VERSION, `Versión detectada: ${version}`)
+  }
+
+  // Parsear facturas
+  const invoices = parseInvoices(xml)
+  if (!invoices || invoices.length === 0) {
+    throw new FacturaeError(ErrorCodes.NO_INVOICES)
+  }
+
+  // Validar que al menos la primera factura tenga totales
+  if (!invoices[0].totals) {
+    throw new FacturaeError(ErrorCodes.MISSING_TOTALS)
+  }
 
   // Extraer datos principales
   return {
@@ -22,7 +50,7 @@ export function parseFacturae(xmlString) {
     fileHeader: parseFileHeader(xml),
     seller: parseParty(xml, "SellerParty"),
     buyer: parseParty(xml, "BuyerParty"),
-    invoices: parseInvoices(xml),
+    invoices,
     isSigned: xml.querySelector("Signature") !== null
   }
 }

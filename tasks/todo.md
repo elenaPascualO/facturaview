@@ -42,7 +42,7 @@
 - [x] Tests de validación de archivos (27 tests)
 - [x] Fixtures de prueba (6 archivos XML)
 
-**Total: 92 tests pasando**
+**Total: 125 tests pasando**
 
 ### Seguridad (Auditoría completada)
 - [x] Reemplazar Discord webhook con Formspree
@@ -64,13 +64,57 @@
 
 ---
 
+## Mejoras UX (Febrero 2026) - ✅ COMPLETADO
+
+### Fase 1: Esfuerzo Bajo
+- [x] Loading states (spinner durante procesamiento, "Generando..." en botones)
+- [x] Toasts estilizados en lugar de `alert()` (`src/components/Toast.js`)
+- [x] Copiar al portapapeles (NIF, IBAN, total) con feedback visual
+- [x] Tests de clipboard (7 tests nuevos)
+- [x] Mensajes de error amigables (`src/utils/errors.js`)
+  - Mapeo de errores técnicos a mensajes en español
+  - Detección automática de tipo de error (XML inválido, no Facturae, sin facturas, etc.)
+  - Tests de errores (23 tests nuevos)
+
+### Fase 2.1: Modo Oscuro
+- [x] Utilidad de tema (`src/utils/theme.js`)
+  - `initTheme()`, `toggleTheme()`, `getTheme()`
+  - Persistencia en localStorage
+  - Respeta preferencia del sistema
+- [x] Dark mode en Tailwind v4 (`src/style.css`)
+- [x] Botón toggle sol/luna en header
+- [x] Todos los componentes actualizados con clases `dark:`
+  - Dropzone, InvoiceView, PartyCard, LinesTable, TotalsBox
+
+### Fase 2.2: Backend + Validación de Firma Digital
+- [x] Backend Python/FastAPI (`backend/`)
+  - `main.py` - Entry point con CORS configurado
+  - `app/routes/signature.py` - POST /api/validate-signature
+  - `app/services/validator.py` - Validación XAdES con signxml
+  - `app/models/response.py` - Modelos Pydantic
+  - `tests/test_signature.py` - 8 tests pasando
+- [x] Gestión de dependencias con `uv`
+- [x] Dockerfile para Railway
+- [x] Cliente frontend (`src/utils/signature.js`)
+- [x] Sección de firma en InvoiceView con:
+  - Estado de validación (válida/inválida/verificando)
+  - Datos del firmante (nombre, NIF, organización)
+  - Datos del certificado (emisor, validez)
+  - Estado de revocación (OCSP cuando disponible)
+  - Nota de privacidad
+
+**Tests frontend: 125 pasando**
+**Tests backend: 8 pasando**
+
+---
+
 ## Próximos Pasos (Prioridad Alta)
 
 - [x] Deploy en Railway (configuración completada en `railway.toml`)
 - [x] Meta tags SEO y Open Graph image
+- [x] Mejorar manejo de errores (mensajes más descriptivos) - Toasts implementados
+- [x] Añadir loading state durante parseo - Spinner implementado
 - [ ] Probar con facturas reales de usuarios
-- [ ] Mejorar manejo de errores (mensajes más descriptivos)
-- [ ] Añadir loading state durante parseo
 
 ### SEO Completado (ver `doc/SEO.md`)
 - [x] Crear `public/robots.txt`
@@ -125,12 +169,12 @@ Causa principal: contenido renderizado 100% con JavaScript (SPA).
 
 ## Nice to Have (Fase 1)
 
-- [ ] Validar firma digital (mostrar detalles del certificado)
-- [ ] Detectar y mostrar errores específicos en XML malformado
-- [ ] Modo oscuro
-- [ ] Múltiples facturas en lote (Modality="L")
-- [ ] Copiar datos al portapapeles (botón copiar)
-- [ ] Historial local (localStorage)
+- [ ] Validar firma digital (mostrar detalles del certificado) - Ver `plan-mejoras.md` Fase 2.2
+- [x] Detectar y mostrar errores específicos en XML malformado - Completado febrero 2026
+- [x] Modo oscuro - Completado febrero 2026
+- [ ] Múltiples facturas en lote (Modality="L") - Ver `plan-mejoras.md` Fase 3.1
+- [x] Copiar datos al portapapeles (botón copiar) - Completado febrero 2026
+- [ ] Historial local (localStorage) - Ver `plan-mejoras.md` Fase 2.3
 - [ ] Selector de idioma (ES/EN)
 
 ---
