@@ -106,6 +106,17 @@
 **Tests frontend: 125 pasando**
 **Tests backend: 8 pasando**
 
+### Fase 2.3: Reorganización y Deploy Unificado (Febrero 2026) - ✅ COMPLETADO
+- [x] Reorganizar estructura del proyecto
+  - Mover código frontend a `frontend/`
+  - Backend en `backend/` con `__init__.py`
+  - `pyproject.toml` y `uv.lock` en raíz
+- [x] Dockerfile unificado (multi-stage: Bun + Python)
+- [x] Backend sirve archivos estáticos de `frontend/dist`
+- [x] `railway.json` para deploy unificado
+- [x] Proxy en vite.config.js para `/api` y `/health`
+- [x] Fix dark mode CSS (`@variant` en lugar de `@custom-variant` para Tailwind v4)
+
 ---
 
 ## Próximos Pasos (Prioridad Alta)

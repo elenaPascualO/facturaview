@@ -290,56 +290,74 @@ Deploy:   Railway (Dockerfile)
 
 ```
 facturaview/
-├── index.html
-├── src/
-│   ├── main.js              # Entry point
-│   ├── parser/
-│   │   ├── facturae.js      # Parser principal
-│   │   ├── v322.js          # Específico 3.2.2
-│   │   ├── v321.js          # Específico 3.2.1
-│   │   └── v32.js           # Específico 3.2
-│   ├── components/
-│   │   ├── Dropzone.js      # Área de subida
-│   │   ├── InvoiceView.js   # Vista de factura
-│   │   ├── PartyCard.js     # Tarjeta emisor/receptor
-│   │   ├── LinesTable.js    # Tabla de líneas
-│   │   └── TotalsBox.js     # Caja de totales
-│   ├── export/
-│   │   ├── toPdf.js         # Exportar a PDF
-│   │   └── toExcel.js       # Exportar a Excel
-│   ├── utils/
-│   │   ├── formatters.js    # Formateo de moneda, fechas, etc.
-│   │   ├── sanitizers.js    # Sanitización (XSS, Excel, filenames)
-│   │   ├── tracking.js      # Tracking de eventos con Umami
-│   │   ├── validators.js    # Validación de archivos (extensión, tamaño)
-│   │   ├── errors.js        # Errores amigables para el usuario
-│   │   ├── theme.js         # Gestión tema claro/oscuro
-│   │   ├── clipboard.js     # Copiar al portapapeles
-│   │   └── signature.js     # Cliente API de validación de firmas
-│   └── styles/
-│       └── main.css
-├── public/
-│   ├── favicon.svg
-│   ├── og-image.png
-│   ├── robots.txt
-│   ├── sitemap.xml
-│   ├── manifest.json
-│   ├── sw.js                # Service Worker para PWA
-│   └── serve.json           # Config servidor: rewrites, headers, bloqueo rutas sensibles
-├── package.json
-├── .env.example             # Variables de entorno (Formspree ID, API URL)
-├── bun.lockb                # Lockfile de Bun
-├── vite.config.js
-├── backend/                 # API de validación de firmas
-│   ├── main.py              # Entry point FastAPI
-│   ├── pyproject.toml       # Dependencias (uv)
-│   ├── Dockerfile           # Para Railway
+├── frontend/                    # Código frontend (Vite)
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── vitest.config.js
+│   ├── bun.lock
+│   ├── .env.example             # Variables de entorno (Formspree ID)
+│   ├── src/
+│   │   ├── main.js              # Entry point
+│   │   ├── style.css            # Tailwind CSS
+│   │   ├── parser/
+│   │   │   └── facturae.js      # Parser XML (todas las versiones)
+│   │   ├── components/
+│   │   │   ├── Dropzone.js      # Área de subida drag & drop
+│   │   │   ├── InvoiceView.js   # Vista completa de factura
+│   │   │   ├── PartyCard.js     # Tarjeta emisor/receptor
+│   │   │   ├── LinesTable.js    # Tabla de líneas de detalle
+│   │   │   ├── TotalsBox.js     # Caja de impuestos y totales
+│   │   │   └── Toast.js         # Notificaciones toast
+│   │   ├── export/
+│   │   │   ├── toPdf.js         # Exportar a PDF (jsPDF)
+│   │   │   └── toExcel.js       # Exportar a Excel (xlsx)
+│   │   └── utils/
+│   │       ├── formatters.js    # Formateo moneda, fechas, NIF
+│   │       ├── sanitizers.js    # Sanitización (XSS, Excel, filenames)
+│   │       ├── tracking.js      # Tracking de eventos con Umami
+│   │       ├── validators.js    # Validación de archivos
+│   │       ├── errors.js        # Errores amigables
+│   │       ├── theme.js         # Gestión tema claro/oscuro
+│   │       ├── clipboard.js     # Copiar al portapapeles
+│   │       └── signature.js     # Cliente API de validación de firmas
+│   ├── public/
+│   │   ├── favicon.svg
+│   │   ├── og-image.png
+│   │   ├── robots.txt
+│   │   ├── sitemap.xml
+│   │   ├── manifest.json
+│   │   └── sw.js                # Service Worker para PWA
+│   └── tests/
+│       ├── parser.test.js       # Tests del parser (30 tests)
+│       ├── export.test.js       # Tests de exportación (13 tests)
+│       ├── security.test.js     # Tests de seguridad (25 tests)
+│       ├── validators.test.js   # Tests de validación (27 tests)
+│       ├── errors.test.js       # Tests de errores (23 tests)
+│       ├── clipboard.test.js    # Tests de clipboard (7 tests)
+│       └── fixtures/            # Archivos XML de prueba
+├── backend/                     # API de validación de firmas (FastAPI)
+│   ├── __init__.py
+│   ├── main.py                  # Entry point FastAPI + StaticFiles
 │   ├── app/
-│   │   ├── routes/signature.py   # POST /api/validate-signature
-│   │   ├── services/validator.py # Validación XAdES
-│   │   └── models/response.py    # Modelos Pydantic
-│   └── tests/test_signature.py   # Tests (8)
-└── README.md
+│   │   ├── routes/
+│   │   │   └── signature.py     # POST /api/validate-signature
+│   │   ├── services/
+│   │   │   └── validator.py     # Lógica de validación XAdES
+│   │   └── models/
+│   │       └── response.py      # Modelos Pydantic
+│   └── tests/
+│       └── test_signature.py    # Tests del backend (8 tests)
+├── pyproject.toml               # Dependencias Python (uv)
+├── uv.lock                      # Lock file Python
+├── Dockerfile                   # Build unificado (frontend + backend)
+├── railway.json                 # Config Railway
+├── CLAUDE.md
+├── tasks/
+│   └── todo.md
+└── doc/
+    ├── FACTURAVIEW_SPEC.md
+    └── SEO.md
 ```
 
 ---
@@ -586,16 +604,21 @@ bun run test:run
 
 **Comandos clave:**
 ```bash
-# Frontend
+# Frontend (desde frontend/)
+cd frontend
 bun run dev       # Desarrollo (http://localhost:5173)
-bun run build     # Producción
+bun run build     # Producción (genera frontend/dist/)
 bun run test:run  # Ejecutar tests (125 tests)
 
-# Backend
-cd backend
+# Backend (desde raíz)
 uv sync           # Instalar dependencias
-uv run uvicorn main:app --reload  # Desarrollo (http://localhost:8000)
+uv run uvicorn backend.main:app --reload  # Desarrollo (http://localhost:8000)
 uv run pytest -v  # Ejecutar tests (8 tests)
+
+# Docker (simula producción)
+docker build -t facturaview .
+docker run -p 8000:8000 facturaview
+# Visitar http://localhost:8000
 ```
 
 **Ventaja clave:** Eres más rápido que el gobierno. Siempre.
