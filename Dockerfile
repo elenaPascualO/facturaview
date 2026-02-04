@@ -25,12 +25,12 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 WORKDIR /app
 
-# Copy and install Python dependencies
-COPY pyproject.toml .
-RUN uv pip install --system --no-cache -e .
-
-# Copy backend code
+# Copy backend code and pyproject.toml
 COPY backend/ backend/
+COPY pyproject.toml .
+
+# Install Python dependencies
+RUN uv pip install --system --no-cache .
 
 # Copy built frontend from first stage
 COPY --from=frontend-builder /app/frontend/dist frontend/dist
