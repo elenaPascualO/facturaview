@@ -2,7 +2,8 @@
  * Cliente para API de validación de firmas digitales
  */
 
-const API_URL = import.meta.env.VITE_SIGNATURE_API_URL
+// URL base de la API. Si no está configurada, usa ruta relativa (mismo origen)
+const API_URL = import.meta.env.VITE_SIGNATURE_API_URL || ''
 
 /**
  * Validar firma digital de un XML
@@ -10,15 +11,6 @@ const API_URL = import.meta.env.VITE_SIGNATURE_API_URL
  * @returns {Promise<Object>} - Resultado de la validación
  */
 export async function validateSignature(xmlContent) {
-  // Si no hay API configurada, devolver estado desconocido
-  if (!API_URL) {
-    return {
-      valid: null,
-      message: 'Validación de firma no disponible',
-      apiNotConfigured: true
-    }
-  }
-
   try {
     const formData = new FormData()
     formData.append('file', new Blob([xmlContent], { type: 'application/xml' }), 'factura.xml')
@@ -49,8 +41,6 @@ export async function validateSignature(xmlContent) {
  * @returns {Promise<boolean>}
  */
 export async function isSignatureApiAvailable() {
-  if (!API_URL) return false
-
   try {
     const response = await fetch(`${API_URL}/health`, {
       method: 'GET',

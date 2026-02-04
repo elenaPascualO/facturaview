@@ -85,7 +85,7 @@ export function createInvoiceView(data, signatureData = null) {
 
         <!-- Firma digital -->
         <div id="signature-section">
-          ${data.isSigned ? createSignatureSection(signatureData) : ''}
+          ${data.isSigned ? createSignatureSection(signatureData) : createNoSignatureSection()}
         </div>
 
         <!-- Botón volver -->
@@ -197,10 +197,6 @@ export function createSignatureSection(signatureData) {
     `
   }
 
-  // Si la API no está configurada
-  if (signatureData.apiNotConfigured) {
-    return ''
-  }
 
   // Determinar estado
   const statusIcon = signatureData.valid === true ? '✅' :
@@ -291,6 +287,28 @@ export function createSignatureSection(signatureData) {
       <p class="mt-4 text-xs text-gray-400 dark:text-gray-500 italic">
         El archivo se envía temporalmente para validar la firma y se descarta inmediatamente.
       </p>
+    </div>
+  `
+}
+
+/**
+ * Crea la sección informativa para facturas sin firma digital
+ */
+export function createNoSignatureSection() {
+  return `
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6 mt-6">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+        🔐 Firma Digital
+      </h3>
+      <div class="space-y-2 text-sm">
+        <p class="flex items-center gap-2">
+          <span class="text-yellow-600 dark:text-yellow-400">⚠️</span>
+          <span class="text-gray-700 dark:text-gray-300">Esta factura no contiene firma electrónica.</span>
+        </p>
+        <p class="text-gray-500 dark:text-gray-400 text-xs">
+          Las facturas enviadas a la Administración Pública (FACe) deben estar firmadas digitalmente con certificado electrónico.
+        </p>
+      </div>
     </div>
   `
 }
