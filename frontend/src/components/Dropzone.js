@@ -92,6 +92,15 @@ export function createDropzone(historyInvoices = []) {
           💬 Contacto / Sugerencias
         </button>
 
+        <!-- Navigation links -->
+        <nav class="mt-4 flex justify-center gap-4 text-sm">
+          <a href="/faq.html" class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">FAQ</a>
+          <span class="text-gray-300 dark:text-gray-600">|</span>
+          <a href="/guia-facturae.html" class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">Guia Facturae</a>
+          <span class="text-gray-300 dark:text-gray-600">|</span>
+          <a href="/about.html" class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">Sobre nosotros</a>
+        </nav>
+
         <div id="contact-form-container" class="hidden mt-4 max-w-md mx-auto">
           <form
             id="contact-form"
