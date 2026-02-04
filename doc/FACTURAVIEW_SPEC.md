@@ -205,6 +205,8 @@ Deploy:   Railway (Dockerfile)
   - Consulta OCSP cuando disponible
 - [x] **API REST** (`POST /api/validate-signature`)
 - [x] **8 tests** de backend
+- [x] **Mensaje informativo para facturas sin firma** (nota sobre requisito FACe)
+- [x] **URLs relativas por defecto** (`VITE_SIGNATURE_API_URL` opcional)
 
 ### Nice to Have (Fase 3)
 

@@ -22,7 +22,7 @@ export function createDropzone() {
 
       <header class="text-center mb-8">
         <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">FacturaView</h1>
-        <p class="text-lg text-gray-600 dark:text-gray-300">Visualiza tus facturas electrónicas Facturae</p>
+        <p class="text-lg text-gray-600 dark:text-gray-300">Visualiza y verifica tus facturas electrónicas Facturae</p>
         <p class="text-sm text-gray-500 dark:text-gray-400">Sin instalar nada. 100% privado.</p>
       </header>
 
@@ -53,7 +53,27 @@ export function createDropzone() {
         />
       </div>
 
-      <footer class="mt-8 text-center">
+      <!-- Features info -->
+      <div class="mt-6 max-w-xl text-center">
+        <div class="flex flex-wrap justify-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+          <span class="flex items-center gap-1">
+            <span>📄</span> PDF y Excel
+          </span>
+          <span class="flex items-center gap-1">
+            <span>🔐</span> Verifica firmas XAdES
+          </span>
+          <span class="flex items-center gap-1">
+            <span>✓</span> FACe compatible
+          </span>
+        </div>
+        <p class="mt-2 text-xs text-gray-400 dark:text-gray-500">
+          La verificacion de firma es tecnica, no oficial.
+          <a href="https://valide.redsara.es/" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">VALIDe</a>
+          ofrece validacion con efectos legales.
+        </p>
+      </div>
+
+      <footer class="mt-6 text-center">
         <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2">
           🔒 Tu archivo no sale de tu navegador
         </p>

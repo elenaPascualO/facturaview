@@ -283,10 +283,16 @@ export function createSignatureSection(signatureData) {
         ` : ''}
       </div>
 
-      <!-- Nota de privacidad -->
-      <p class="mt-4 text-xs text-gray-400 dark:text-gray-500 italic">
-        El archivo se envía temporalmente para validar la firma y se descarta inmediatamente.
-      </p>
+      <!-- Nota de privacidad y disclaimer -->
+      <div class="mt-4 text-xs text-gray-400 dark:text-gray-500 space-y-1">
+        <p class="italic">
+          El archivo se envía temporalmente para validar la firma y se descarta inmediatamente.
+        </p>
+        <p>
+          Esta es una validacion tecnica, no oficial. Para validacion con efectos legales, usa
+          <a href="https://valide.redsara.es/" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">VALIDe</a>.
+        </p>
+      </div>
     </div>
   `
 }

@@ -10,9 +10,9 @@
 
     <!-- SEO Básico -->
     <meta name="google-site-verification" content="N4FhpVpXq4HtMkKrJY5l0MLab6yGr987D1mnBuwMmkA" />
-    <title>FacturaView - Visualiza facturas Facturae online gratis</title>
-    <meta name="description" content="Abre y visualiza tus facturas electrónicas Facturae (XML) sin instalar nada. Exporta a PDF y Excel. 100% gratis y privado.">
-    <meta name="keywords" content="facturae, factura electronica, xml, visualizador, visor, pdf, excel, gratis, online, autonomos, pymes, españa">
+    <title>FacturaView - Visualiza y valida facturas Facturae online gratis</title>
+    <meta name="description" content="Visualiza facturas electrónicas Facturae (XML) y verifica firmas digitales XAdES. Exporta a PDF y Excel. 100% gratis, sin instalar nada.">
+    <meta name="keywords" content="facturae, factura electronica, xml, visualizador, visor, pdf, excel, gratis, online, autonomos, pymes, españa, firma digital, xades, validar firma">
     <meta name="author" content="FacturaView">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://www.facturaview.es/">
@@ -31,8 +31,8 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.facturaview.es/">
-    <meta property="og:title" content="FacturaView - Visualiza facturas Facturae online gratis">
-    <meta property="og:description" content="Abre y visualiza tus facturas electrónicas Facturae (XML) sin instalar nada. Exporta a PDF y Excel. 100% gratis y privado.">
+    <meta property="og:title" content="FacturaView - Visualiza y valida facturas Facturae online gratis">
+    <meta property="og:description" content="Visualiza facturas electrónicas Facturae (XML) y verifica firmas digitales XAdES. Exporta a PDF y Excel. 100% gratis, sin instalar nada.">
     <meta property="og:image" content="https://www.facturaview.es/og-image.png">
     <meta property="og:locale" content="es_ES">
     <meta property="og:site_name" content="FacturaView">
@@ -40,8 +40,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://www.facturaview.es/">
-    <meta name="twitter:title" content="FacturaView - Visualiza facturas Facturae online gratis">
-    <meta name="twitter:description" content="Abre y visualiza tus facturas electrónicas Facturae (XML) sin instalar nada. Exporta a PDF y Excel. 100% gratis y privado.">
+    <meta name="twitter:title" content="FacturaView - Visualiza y valida facturas Facturae online gratis">
+    <meta name="twitter:description" content="Visualiza facturas electrónicas Facturae (XML) y verifica firmas digitales XAdES. Exporta a PDF y Excel. 100% gratis, sin instalar nada.">
     <meta name="twitter:image" content="https://www.facturaview.es/og-image.png">
 
     <!-- Tema y colores -->
@@ -61,7 +61,7 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "FacturaView",
-      "description": "Visualizador de facturas electrónicas Facturae (XML) online, gratuito y privado",
+      "description": "Visualizador de facturas electrónicas Facturae (XML) con verificación de firmas digitales XAdES. Online, gratuito y privado.",
       "url": "https://www.facturaview.es",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web Browser",
@@ -71,10 +71,12 @@
         "priceCurrency": "EUR"
       },
       "featureList": [
-        "Visualizar facturas Facturae XML",
+        "Visualizar facturas Facturae XML (versiones 3.2, 3.2.1, 3.2.2)",
+        "Verificar firmas digitales XAdES (validación técnica)",
         "Exportar a PDF",
         "Exportar a Excel",
-        "100% privado - procesamiento local"
+        "100% privado - procesamiento local",
+        "Compatible con facturas de FACe"
       ]
     }
     </script>
@@ -87,8 +89,8 @@
       <!-- Fallback content for search engines and users without JavaScript -->
       <noscript>
         <main style="max-width: 800px; margin: 0 auto; padding: 2rem; font-family: system-ui, sans-serif;">
-          <h1>FacturaView - Visualizador de Facturas Electrónicas Facturae</h1>
-          <p>Visualiza, entiende y exporta tus facturas electrónicas en formato Facturae (XML) sin instalar nada. 100% gratuito y privado.</p>
+          <h1>FacturaView - Visualizador de Facturas Electrónicas Facturae con Verificación de Firma</h1>
+          <p>Visualiza, entiende y exporta tus facturas electrónicas en formato Facturae (XML). Verifica firmas digitales XAdES. 100% gratuito y privado.</p>
 
           <h2>¿Qué es FacturaView?</h2>
           <p>FacturaView es una herramienta online gratuita para autónomos y pymes españoles que permite abrir y visualizar facturas electrónicas en formato Facturae (XML). Todo el procesamiento se realiza localmente en tu navegador, garantizando la privacidad de tus datos.</p>
@@ -96,17 +98,29 @@
           <h2>Funcionalidades</h2>
           <ul>
             <li><strong>Visualizar facturas Facturae:</strong> Soporta versiones 3.2, 3.2.1 y 3.2.2</li>
+            <li><strong>Verificar firmas digitales:</strong> Comprueba firmas XAdES (validación técnica, no oficial)</li>
             <li><strong>Exportar a PDF:</strong> Descarga tu factura en formato PDF legible</li>
             <li><strong>Exportar a Excel:</strong> Genera un archivo Excel con todos los datos</li>
-            <li><strong>100% privado:</strong> Tus archivos nunca salen de tu dispositivo</li>
+            <li><strong>100% privado:</strong> Tus archivos nunca salen de tu dispositivo (excepto para validar firma)</li>
             <li><strong>Sin instalación:</strong> Funciona directamente en el navegador</li>
             <li><strong>Compatible con FACe:</strong> Facturas de la administración pública española</li>
           </ul>
+
+          <h2>Verificación de Firma Digital</h2>
+          <p>FacturaView puede verificar la integridad técnica de las firmas digitales XAdES incluidas en las facturas Facturae. Esta verificación comprueba:</p>
+          <ul>
+            <li>Integridad matemática de la firma</li>
+            <li>Validez temporal del certificado</li>
+            <li>Datos del firmante (nombre, NIF, organización)</li>
+            <li>Tipo de firma (XAdES-BES, XAdES-T, XAdES-XL)</li>
+          </ul>
+          <p><strong>Nota importante:</strong> Esta es una validación técnica, no una validación oficial. Para validación con efectos legales, utiliza el servicio oficial <a href="https://valide.redsara.es/">VALIDe</a> del Gobierno de España.</p>
 
           <h2>¿Cómo funciona?</h2>
           <ol>
             <li>Arrastra tu archivo XML de factura electrónica o haz clic para seleccionarlo</li>
             <li>Visualiza todos los datos: emisor, receptor, líneas de detalle, impuestos y totales</li>
+            <li>Si la factura está firmada, se verificará automáticamente la firma</li>
             <li>Exporta a PDF o Excel si lo necesitas</li>
           </ol>
 

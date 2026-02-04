@@ -96,12 +96,15 @@
 - [x] Gestión de dependencias con `uv`
 - [x] Dockerfile para Railway
 - [x] Cliente frontend (`src/utils/signature.js`)
+  - URLs relativas por defecto (funciona automáticamente en Railway/Docker)
+  - `VITE_SIGNATURE_API_URL` solo necesaria si backend en dominio diferente
 - [x] Sección de firma en InvoiceView con:
   - Estado de validación (válida/inválida/verificando)
   - Datos del firmante (nombre, NIF, organización)
   - Datos del certificado (emisor, validez)
   - Estado de revocación (OCSP cuando disponible)
   - Nota de privacidad
+  - Mensaje informativo para facturas sin firma (nota sobre requisito FACe)
 
 **Tests frontend: 125 pasando**
 **Tests backend: 8 pasando**

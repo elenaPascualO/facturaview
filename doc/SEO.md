@@ -45,16 +45,17 @@ www.facturaview.es    CNAME   y81ss8y2.up.railway.app  (Railway - OK)
 ### Lo que está bien
 - Meta tags completos en `index.html` (title, description, OG, Twitter Card)
 - Imagen OG correcta (1200x630px) en `public/og-image.png`
-- Keywords relevantes para el nicho español
+- Keywords relevantes para el nicho español (incluye "firma digital", "xades", "validar firma")
 - Analytics privacy-first (Umami)
 - Estructura semántica básica (headings jerárquicos)
 - Headers de seguridad (CSP, X-Content-Type-Options, X-Frame-Options)
 - ✅ robots.txt con referencia al sitemap
 - ✅ sitemap.xml para indexación
-- ✅ Datos estructurados Schema.org (WebApplication)
+- ✅ Datos estructurados Schema.org (WebApplication) con featureList actualizado
 - ✅ manifest.json para PWA
 - ✅ Accesibilidad mejorada (ARIA, scope, teclado)
 - ✅ Preconnect para Umami
+- ✅ Contenido noscript con información de validación de firma
 
 ### Problemas Detectados (Resueltos)
 | Problema | Prioridad | Estado |
@@ -257,8 +258,52 @@ Insertar al inicio del `<head>`:
 
 ---
     
+---
+
+## Validación de Firma Digital (Febrero 2026)
+
+### Nueva funcionalidad
+La app ahora incluye verificación de firmas digitales XAdES en facturas Facturae.
+
+### Validación Técnica vs Oficial
+
+**Lo que hace FacturaView (validación técnica):**
+- ✅ Verifica integridad matemática de la firma
+- ✅ Comprueba validez temporal del certificado
+- ✅ Extrae datos del firmante (nombre, NIF, organización)
+- ✅ Identifica tipo de firma (XAdES-BES, XAdES-T, XAdES-C, XAdES-XL)
+- ⚠️ Verificación OCSP parcial
+
+**Lo que NO hace (validación oficial):**
+- ❌ Validación de cadena de certificados contra CAs reconocidas
+- ❌ Trust store de prestadores cualificados españoles (FNMT, Camerfirma, etc.)
+- ❌ Cumplimiento eIDAS
+- ❌ Integración con servicios oficiales (@firma, VALIDe)
+
+### Para validación oficial
+Recomendar a los usuarios el servicio **VALIDe** del Gobierno de España:
+- URL: https://valide.redsara.es/
+- Proporciona validación con efectos legales
+- Cumple normativa eIDAS
+
+### Keywords adicionales
+| Keyword | Volumen | Dificultad |
+|---------|---------|------------|
+| "validar firma facturae" | Bajo | Baja |
+| "verificar firma digital factura" | Bajo | Baja |
+| "comprobar firma xades" | Muy bajo | Muy baja |
+| "facturae firma electronica" | Bajo | Baja |
+
+### Mensaje en la app
+La UI muestra claramente que la validación es técnica, no oficial:
+- En facturas sin firma: nota sobre requisito FACe
+- En validación: disclaimer que recomienda VALIDe para validación oficial
+
+---
+
 ## Mejoras Futuras (No prioritarias)
 
+- **Validación oficial:** Integrar con VALIDe API o trust store de CAs españolas
 - **SSR/Prerendering:** Considerar vite-plugin-ssr o similar para mejor crawlabilidad
 - **Múltiples páginas:** Añadir /about, /faq con contenido indexable
 - **Hreflang:** Preparar para versiones en otros idiomas

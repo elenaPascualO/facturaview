@@ -218,6 +218,13 @@ Formulario colapsable en el Dropzone que envía mensajes via Formspree. Configur
 - Copiar `.env.example` a `.env`
 - Configurar `VITE_FORMSPREE_ID` con tu Form ID
 
+### Validación de Firmas Digitales
+El cliente de validación (`utils/signature.js`) usa URLs relativas por defecto, lo que permite que funcione automáticamente cuando frontend y backend están en el mismo servidor (Railway, Docker).
+
+- **Facturas sin firma:** Muestra mensaje informativo indicando que la factura no está firmada y que FACe requiere firma digital
+- **Facturas con firma:** Muestra spinner "Validando..." y luego el resultado (válida/inválida/error de conexión)
+- **Variable de entorno:** `VITE_SIGNATURE_API_URL` solo es necesaria si el backend está en un dominio diferente
+
 ### Seguridad
 - **XSS Prevention:** Todos los datos del XML se escapan con `escapeHtml()` antes de renderizar
 - **Excel Formula Injection:** Los valores de texto en Excel se sanitizan con `sanitizeExcelValue()`
