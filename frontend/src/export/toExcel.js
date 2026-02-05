@@ -4,9 +4,78 @@
 
 import * as XLSX from 'xlsx'
 import { sanitizeExcelValue, sanitizeFilename } from '../utils/sanitizers.js'
-import { t } from '../utils/i18n.js'
+import { t, getLang } from '../utils/i18n.js'
 
-export function exportToExcel(data, invoiceIndex = 0) {
+// URL base de la API. Si no está configurada, usa ruta relativa (mismo origen)
+const API_URL = import.meta.env.VITE_API_URL || ''
+
+/**
+ * Exportar factura a Excel usando el backend (diseño mejorado)
+ * @param {Object} data - Datos parseados de la factura
+ * @param {number} invoiceIndex - Índice de la factura
+ * @returns {Promise<boolean>} - true si se exportó correctamente
+ */
+async function exportViaBackend(data, invoiceIndex = 0) {
+  const invoice = data.invoices[invoiceIndex]
+  const safeNumber = sanitizeFilename(`${invoice.series || ''}${invoice.number || ''}`)
+  const filename = `factura-${safeNumber || 'sin-numero'}.xlsx`
+  const lang = getLang()
+
+  const response = await fetch(`${API_URL}/api/export/excel`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      data,
+      invoice_index: invoiceIndex,
+      lang,
+      filename
+    }),
+    signal: AbortSignal.timeout(10000) // 10s timeout
+  })
+
+  if (!response.ok) {
+    throw new Error(`Backend error: ${response.status}`)
+  }
+
+  // Descargar el archivo
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+
+  return true
+}
+
+/**
+ * Exportar factura a Excel
+ * Intenta usar el backend para mejor diseño, si falla usa exportación local
+ * @param {Object} data - Datos parseados de la factura
+ * @param {number} invoiceIndex - Índice de la factura
+ */
+export async function exportToExcel(data, invoiceIndex = 0) {
+  // Intentar exportación via backend (mejor diseño)
+  try {
+    await exportViaBackend(data, invoiceIndex)
+    return
+  } catch (error) {
+    console.warn('[FacturaView] Backend export failed, using local fallback:', error.message)
+  }
+
+  // Fallback: exportación local con SheetJS
+  exportToExcelLocal(data, invoiceIndex)
+}
+
+/**
+ * Exportación local con SheetJS (fallback)
+ */
+function exportToExcelLocal(data, invoiceIndex = 0) {
   const invoice = data.invoices[invoiceIndex]
   const safeNumber = sanitizeFilename(`${invoice.series || ''}${invoice.number || ''}`)
   const filename = `factura-${safeNumber || 'sin-numero'}.xlsx`

@@ -18,11 +18,12 @@ Web app que permite a autónomos y pymes españoles visualizar, entender y expor
 - **Testing:** Vitest + jsdom
 - **Deploy:** Railway
 
-### Backend (Validación de firmas)
+### Backend (Validación de firmas + Exportación Excel)
 - **Runtime:** Python 3.11+
 - **Framework:** FastAPI
 - **Package Manager:** uv
 - **Validación XAdES:** signxml + cryptography
+- **Exportación Excel:** openpyxl (diseño profesional con estilos)
 - **Testing:** pytest + httpx
 - **Deploy:** Railway (Dockerfile)
 
@@ -95,18 +96,21 @@ facturaview/
 │           ├── with-retention.xml # Con retención IRPF 15%
 │           ├── rectificativa.xml # Factura rectificativa (negativos)
 │           └── batch-322.xml     # Lote de 3 facturas (Modality="L")
-├── backend/                      # API de validación de firmas (FastAPI)
+├── backend/                      # API de validación de firmas + exportación (FastAPI)
 │   ├── __init__.py
 │   ├── main.py                   # Entry point FastAPI + StaticFiles
 │   ├── app/
 │   │   ├── routes/
-│   │   │   └── signature.py      # POST /api/validate-signature
+│   │   │   ├── signature.py      # POST /api/validate-signature
+│   │   │   └── export.py         # POST /api/export/excel
 │   │   ├── services/
-│   │   │   └── validator.py      # Lógica de validación XAdES
+│   │   │   ├── validator.py      # Lógica de validación XAdES
+│   │   │   └── excel_generator.py # Generación Excel con openpyxl
 │   │   └── models/
 │   │       └── response.py       # Modelos Pydantic
 │   └── tests/
-│       └── test_signature.py     # Tests del backend (8 tests)
+│       ├── test_signature.py     # Tests de validación de firma (11 tests)
+│       └── test_export.py        # Tests de exportación Excel (8 tests)
 ├── pyproject.toml                # Dependencias Python (uv)
 ├── uv.lock                       # Lock file Python
 ├── Dockerfile                    # Build unificado (frontend + backend)
@@ -146,7 +150,7 @@ bun run test:run     # Ejecutar tests una vez (223 tests)
 uv sync              # Instalar dependencias
 uv sync --extra dev  # Instalar con dev dependencies
 uv run uvicorn backend.main:app --reload  # Servidor desarrollo (http://localhost:8000)
-uv run pytest -v     # Ejecutar tests (8 tests)
+uv run pytest -v     # Ejecutar tests (19 tests)
 ```
 
 ### Desarrollo conjunto
@@ -218,7 +222,16 @@ docker run -p 8000:8000 facturaview
 Se usa jsPDF directamente (sin html2canvas) porque Tailwind CSS v4 usa colores `oklch` que html2canvas no soporta. El PDF se genera programáticamente con todas las secciones de la factura. Usa la moneda del documento (`InvoiceCurrencyCode`) en lugar de asumir EUR.
 
 ### Exportación Excel
-Genera 3 hojas (General, Líneas, Impuestos) con anchos de columna optimizados. Incluye información de pago y usa la moneda del documento.
+La exportación a Excel usa el backend (Python/openpyxl) para generar archivos con diseño profesional:
+- **1 sola hoja** con todas las secciones bien diferenciadas visualmente
+- Headers con fondo de color y texto en negrita
+- Bordes en tablas y formato de moneda
+- Celdas combinadas para títulos de sección
+- **Auto-ajuste de ancho** de columnas según el contenido
+- **Text wrap** en celdas de descripción, direcciones y labels largos
+- Soporte para español e inglés
+
+Si el backend no está disponible, se usa un fallback local (SheetJS) que genera 3 hojas básicas sin estilos.
 
 ### Parser XML
 El parser usa `DOMParser` nativo del navegador. Detecta automáticamente la versión del esquema y extrae:
@@ -313,10 +326,11 @@ El historial permite guardar facturas localmente en el navegador para acceso rap
   - `ask` (por defecto): Pregunta al usuario si desea guardar cada factura
   - `always`: Guarda automaticamente todas las facturas
   - `never`: No guarda ni pregunta
+- **Cambiar preferencia:** El usuario puede cambiar su preferencia en cualquier momento desde la sección de historial (botón "Cambiar")
 - **Datos guardados:** Metadata (numero, emisor, total), datos parseados, XML original, estado de firma
-- **Funciones principales:** `getHistory()`, `saveInvoice()`, `deleteInvoice()`, `clearHistory()`
+- **Funciones principales:** `getHistory()`, `saveInvoice()`, `deleteInvoice()`, `clearHistory()`, `getSavePreference()`, `setSavePreference()`
 
-El componente `HistorySection.js` muestra las ultimas 5 facturas en el Dropzone. El componente `SavePrompt.js` muestra el modal de confirmacion con opcion de recordar preferencia.
+El componente `HistorySection.js` muestra las ultimas 5 facturas en el Dropzone con la preferencia de guardado actual. El componente `SavePrompt.js` muestra el modal de confirmacion con opcion de recordar preferencia.
 
 ### Internacionalización (i18n)
 La app soporta español e inglés con cambio dinámico de idioma:

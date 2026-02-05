@@ -17,6 +17,7 @@ import {
   clearHistory,
   shouldAskToSave,
   shouldAutoSave,
+  getSavePreference,
   setSavePreference,
   findExistingInvoice
 } from './utils/storage.js'
@@ -208,6 +209,12 @@ function setupHistoryEvents() {
   if (clearBtn) {
     clearBtn.addEventListener('click', showClearHistoryModal)
   }
+
+  // Botón cambiar preferencia de guardado
+  const changePreferenceBtn = document.getElementById('btn-change-save-preference')
+  if (changePreferenceBtn) {
+    changePreferenceBtn.addEventListener('click', showChangeSavePreferenceModal)
+  }
 }
 
 // Cargar factura desde el historial
@@ -263,6 +270,92 @@ function showClearHistoryModal() {
     cleanup()
     showToast(t('toast.historyCleared'), 'success')
     renderApp()
+  })
+
+  btnCancel?.addEventListener('click', cleanup)
+
+  // Cerrar con Escape
+  function handleKeydown(e) {
+    if (e.key === 'Escape') {
+      cleanup()
+      document.removeEventListener('keydown', handleKeydown)
+    }
+  }
+  document.addEventListener('keydown', handleKeydown)
+
+  // Cerrar al hacer click fuera
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) cleanup()
+  })
+}
+
+// Mostrar modal para cambiar preferencia de guardado
+function showChangeSavePreferenceModal() {
+  const currentPref = getSavePreference()
+
+  const modalHtml = `
+    <div id="change-preference-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="change-preference-title">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl max-w-sm w-full p-6">
+        <h3 id="change-preference-title" class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+          ${t('savePreference.change')}
+        </h3>
+
+        <div class="space-y-3 mb-6">
+          <label class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-slate-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors ${currentPref === 'ask' ? 'ring-2 ring-blue-500' : ''}">
+            <input type="radio" name="save-preference" value="ask" ${currentPref === 'ask' ? 'checked' : ''} class="w-4 h-4 text-blue-500 focus:ring-blue-500">
+            <div>
+              <p class="font-medium text-gray-800 dark:text-gray-100">${t('savePreference.reset')}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">${t('savePrompt.message')}</p>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-slate-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors ${currentPref === 'always' ? 'ring-2 ring-blue-500' : ''}">
+            <input type="radio" name="save-preference" value="always" ${currentPref === 'always' ? 'checked' : ''} class="w-4 h-4 text-blue-500 focus:ring-blue-500">
+            <div>
+              <p class="font-medium text-gray-800 dark:text-gray-100">${t('savePreference.always')}</p>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-slate-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors ${currentPref === 'never' ? 'ring-2 ring-blue-500' : ''}">
+            <input type="radio" name="save-preference" value="never" ${currentPref === 'never' ? 'checked' : ''} class="w-4 h-4 text-blue-500 focus:ring-blue-500">
+            <div>
+              <p class="font-medium text-gray-800 dark:text-gray-100">${t('savePreference.never')}</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="flex justify-end gap-3">
+          <button id="btn-cancel-preference" class="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+            ${t('clearHistory.cancel')}
+          </button>
+          <button id="btn-save-preference" class="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            ${t('savePrompt.yes')}
+          </button>
+        </div>
+      </div>
+    </div>
+  `
+
+  const modalWrapper = document.createElement('div')
+  modalWrapper.innerHTML = modalHtml
+  document.body.appendChild(modalWrapper.firstElementChild)
+
+  const modal = document.getElementById('change-preference-modal')
+  const btnSave = document.getElementById('btn-save-preference')
+  const btnCancel = document.getElementById('btn-cancel-preference')
+
+  function cleanup() {
+    modal?.remove()
+  }
+
+  btnSave?.addEventListener('click', () => {
+    const selected = document.querySelector('input[name="save-preference"]:checked')
+    if (selected) {
+      setSavePreference(selected.value)
+      cleanup()
+      showToast(t('toast.preferenceChanged'), 'success')
+      renderApp()
+    }
   })
 
   btnCancel?.addEventListener('click', cleanup)
@@ -469,7 +562,7 @@ function setupInvoiceViewEvents() {
     try {
       track(events.EXPORT_EXCEL, { version: currentInvoice?.version })
       const { exportToExcel } = await import('./export/toExcel.js')
-      exportToExcel(currentInvoice, currentInvoiceIndex)
+      await exportToExcel(currentInvoice, currentInvoiceIndex)
     } finally {
       excelBtn.disabled = false
       excelBtn.textContent = originalText

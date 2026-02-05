@@ -10,10 +10,10 @@ from fastapi.staticfiles import StaticFiles
 
 try:
     # Production: running from root with 'backend.main:app'
-    from backend.app.routes import signature_router
+    from backend.app.routes import signature_router, export_router
 except ImportError:
     # Development: running from backend/ with 'main:app'
-    from app.routes import signature_router
+    from app.routes import signature_router, export_router
 
 app = FastAPI(
     title="FacturaView API",
@@ -37,6 +37,7 @@ app.add_middleware(
 
 # Registrar rutas API
 app.include_router(signature_router)
+app.include_router(export_router)
 
 
 @app.get("/health")

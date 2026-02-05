@@ -21,7 +21,7 @@
 | Parsear XML | `DOMParser` nativo de JS (frontend) |
 | Mostrar datos | Vanilla JS (frontend) |
 | Generar PDF | `jsPDF` (frontend) |
-| Generar Excel | `SheetJS (xlsx)` (frontend) |
+| Generar Excel | Backend Python (`openpyxl`) con fallback frontend (`SheetJS`) |
 | Validar estructura | Comparar contra esquema XSD en JS (frontend) |
 | **Validar firma digital** | Backend Python (signxml + cryptography) |
 
@@ -45,7 +45,7 @@ Runtime:  Python 3.11+
 Framework: FastAPI
 Packages: uv
 Crypto:   signxml + cryptography + lxml
-Testing:  pytest + httpx (8 tests)
+Testing:  pytest + httpx (19 tests)
 Deploy:   Railway (Dockerfile)
 ```
 
@@ -178,7 +178,7 @@ Deploy:   Railway (Dockerfile)
   - Totales
   - Información de pago (IBAN, vencimiento)
 - [x] **Descargar como PDF** (generado con jsPDF)
-- [x] **Descargar como Excel** (3 hojas: General, Líneas, Impuestos)
+- [x] **Descargar como Excel** (1 hoja con diseño profesional, auto-ajuste de columnas)
 - [x] **100% privado** (todo en navegador, nada al servidor)
 - [x] **Responsive** (funciona en móvil)
 - [x] **Tests automatizados** (223 tests con Vitest)
@@ -358,18 +358,21 @@ facturaview/
 │       ├── storage.test.js      # Tests de historial local (42 tests)
 │       ├── i18n.test.js         # Tests de internacionalización (37 tests)
 │       └── fixtures/            # Archivos XML de prueba
-├── backend/                     # API de validación de firmas (FastAPI)
+├── backend/                     # API de validación de firmas + exportación (FastAPI)
 │   ├── __init__.py
 │   ├── main.py                  # Entry point FastAPI + StaticFiles
 │   ├── app/
 │   │   ├── routes/
-│   │   │   └── signature.py     # POST /api/validate-signature
+│   │   │   ├── signature.py     # POST /api/validate-signature
+│   │   │   └── export.py        # POST /api/export/excel
 │   │   ├── services/
-│   │   │   └── validator.py     # Lógica de validación XAdES
+│   │   │   ├── validator.py     # Lógica de validación XAdES
+│   │   │   └── excel_generator.py # Generación Excel con openpyxl
 │   │   └── models/
 │   │       └── response.py      # Modelos Pydantic
 │   └── tests/
-│       └── test_signature.py    # Tests del backend (8 tests)
+│       ├── test_signature.py    # Tests de validación de firma (11 tests)
+│       └── test_export.py       # Tests de exportación Excel (8 tests)
 ├── pyproject.toml               # Dependencias Python (uv)
 ├── uv.lock                      # Lock file Python
 ├── Dockerfile                   # Build unificado (frontend + backend)
@@ -574,7 +577,7 @@ bun run test:run
 - [x] Exportar a PDF (jsPDF directo)
 - [x] Exportar a Excel (3 hojas)
 - [x] Diseño responsive
-- [x] 231 tests automatizados (223 frontend + 8 backend)
+- [x] 242 tests automatizados (223 frontend + 19 backend)
 - [x] Deploy en Railway (configurado)
 - [x] Formulario de contacto (Formspree)
 - [x] Auditoría de seguridad (XSS, Excel injection, CSP)
@@ -616,7 +619,7 @@ bun run test:run
 
 ## Conclusión
 
-**Estado:** MVP+ completado con 231 tests pasando (223 frontend + 8 backend).
+**Estado:** MVP+ completado con 242 tests pasando (223 frontend + 19 backend).
 
 **¿Backend necesario?** Solo para validación de firmas digitales. El resto es 100% frontend.
 
@@ -635,7 +638,7 @@ bun run test:run  # Ejecutar tests (223 tests)
 # Backend (desde raíz)
 uv sync           # Instalar dependencias
 uv run uvicorn backend.main:app --reload  # Desarrollo (http://localhost:8000)
-uv run pytest -v  # Ejecutar tests (8 tests)
+uv run pytest -v  # Ejecutar tests (19 tests)
 
 # Docker (simula producción)
 docker build -t facturaview .

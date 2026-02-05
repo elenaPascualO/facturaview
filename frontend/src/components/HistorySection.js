@@ -5,6 +5,7 @@
 import { formatCurrency, formatDate } from '../utils/formatters.js'
 import { escapeHtml } from '../utils/sanitizers.js'
 import { t } from '../utils/i18n.js'
+import { getSavePreference } from '../utils/storage.js'
 
 /**
  * Crea la sección de historial de facturas recientes
@@ -30,6 +31,8 @@ export function createHistorySection(invoices) {
         <ul class="space-y-3" role="list">
           ${recentInvoices.map(invoice => createHistoryCard(invoice)).join('')}
         </ul>
+
+        ${createSavePreferenceSection()}
 
         <!-- Botón limpiar historial -->
         <button
@@ -138,6 +141,49 @@ function getSignatureStatusHtml(signatureValid) {
 function truncate(text, maxLength) {
   if (!text || text.length <= maxLength) return text || ''
   return text.substring(0, maxLength - 1) + '…'
+}
+
+/**
+ * Crea la sección de preferencia de guardado
+ * @returns {string} HTML de la sección (vacío si preferencia es 'ask')
+ */
+function createSavePreferenceSection() {
+  const preference = getSavePreference()
+
+  // No mostrar nada si la preferencia es "preguntar"
+  if (preference === 'ask') {
+    return ''
+  }
+
+  const isAlways = preference === 'always'
+  const statusText = isAlways
+    ? t('savePreference.always')
+    : t('savePreference.never')
+  const statusColor = isAlways
+    ? 'text-green-600 dark:text-green-400'
+    : 'text-yellow-600 dark:text-yellow-400'
+  const icon = isAlways
+    ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>'
+    : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>'
+
+  return `
+    <div class="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700">
+      <div class="flex items-center justify-between text-sm">
+        <span class="${statusColor} flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            ${icon}
+          </svg>
+          ${statusText}
+        </span>
+        <button
+          id="btn-change-save-preference"
+          class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"
+        >
+          ${t('savePreference.change')}
+        </button>
+      </div>
+    </div>
+  `
 }
 
 /**

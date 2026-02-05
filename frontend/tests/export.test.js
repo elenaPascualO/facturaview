@@ -112,23 +112,26 @@ describe('Exportación a Excel', () => {
   it('genera Excel sin errores para factura simple', async () => {
     const { exportToExcel } = await import('../src/export/toExcel.js')
 
-    expect(() => exportToExcel(invoiceData)).not.toThrow()
+    // exportToExcel is now async (tries backend first, falls back to local)
+    await expect(exportToExcel(invoiceData)).resolves.not.toThrow()
   })
 
-  it('llama a XLSX.writeFile', async () => {
+  it('llama a XLSX.writeFile (fallback local)', async () => {
     const XLSX = await import('xlsx')
     const { exportToExcel } = await import('../src/export/toExcel.js')
 
-    exportToExcel(invoiceData)
+    // Wait for the async function to complete (backend will fail, fallback kicks in)
+    await exportToExcel(invoiceData)
 
     expect(XLSX.writeFile).toHaveBeenCalled()
   })
 
-  it('crea hojas para General, Líneas e Impuestos', async () => {
+  it('crea hojas para General, Líneas e Impuestos (fallback local)', async () => {
     const XLSX = await import('xlsx')
     const { exportToExcel } = await import('../src/export/toExcel.js')
 
-    exportToExcel(invoiceData)
+    // Wait for the async function to complete
+    await exportToExcel(invoiceData)
 
     // Verificar que se crearon las hojas
     expect(XLSX.utils.book_append_sheet).toHaveBeenCalledTimes(3)
@@ -145,7 +148,7 @@ describe('Exportación a Excel', () => {
     const complexData = parseFacturae(xml)
     const { exportToExcel } = await import('../src/export/toExcel.js')
 
-    expect(() => exportToExcel(complexData)).not.toThrow()
+    await expect(exportToExcel(complexData)).resolves.not.toThrow()
   })
 
   it('genera Excel para factura sin información de pago', async () => {
@@ -153,7 +156,7 @@ describe('Exportación a Excel', () => {
     const dataNoPayment = parseFacturae(xml)
     const { exportToExcel } = await import('../src/export/toExcel.js')
 
-    expect(() => exportToExcel(dataNoPayment)).not.toThrow()
+    await expect(exportToExcel(dataNoPayment)).resolves.not.toThrow()
   })
 
   it('genera Excel para todas las versiones Facturae', async () => {
@@ -163,7 +166,7 @@ describe('Exportación a Excel', () => {
     for (const file of versions) {
       const xml = readFixture(file)
       const data = parseFacturae(xml)
-      expect(() => exportToExcel(data)).not.toThrow()
+      await expect(exportToExcel(data)).resolves.not.toThrow()
     }
   })
 })

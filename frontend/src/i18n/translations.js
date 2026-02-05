@@ -186,7 +186,14 @@ export const translations = {
     'savePrompt.yes': 'Guardar',
     'savePrompt.privacyNote': 'Solo se guarda en tu navegador, nunca en nuestros servidores.',
 
+    // Save preference
+    'savePreference.always': 'Guardado automatico activado',
+    'savePreference.never': 'Guardado automatico desactivado',
+    'savePreference.change': 'Cambiar',
+    'savePreference.reset': 'Volver a preguntar',
+
     // Toasts
+    'toast.preferenceChanged': 'Preferencia de guardado actualizada',
     'toast.invoiceNotFound': 'No se encontró la factura',
     'toast.historyCleared': 'Historial eliminado',
     'toast.invoiceSaved': 'Factura guardada en historial',
@@ -667,7 +674,14 @@ export const translations = {
     'savePrompt.yes': 'Save',
     'savePrompt.privacyNote': 'Only saved in your browser, never on our servers.',
 
+    // Save preference
+    'savePreference.always': 'Auto-save enabled',
+    'savePreference.never': 'Auto-save disabled',
+    'savePreference.change': 'Change',
+    'savePreference.reset': 'Ask again',
+
     // Toasts
+    'toast.preferenceChanged': 'Save preference updated',
     'toast.invoiceNotFound': 'Invoice not found',
     'toast.historyCleared': 'History cleared',
     'toast.invoiceSaved': 'Invoice saved to history',

@@ -204,6 +204,31 @@ Causa principal: contenido renderizado 100% con JavaScript (SPA).
 
 ---
 
+## Mejora Exportación Excel (Febrero 2026) - ✅ COMPLETADO
+
+### Objetivo
+Migrar la exportación Excel del frontend (SheetJS) al backend (Python) para mejorar el diseño visual del archivo generado.
+
+### Tareas
+- [x] Crear endpoint `POST /api/export/excel` en backend
+- [x] Implementar generación Excel con `openpyxl`
+- [x] Diseño mejorado:
+  - [x] Headers con fondo de color y texto en negrita
+  - [x] Bordes en tablas
+  - [x] Formato de moneda en columnas numéricas
+  - [x] Anchos de columna auto-ajustados al contenido
+  - [x] Text wrap en descripciones, direcciones y labels largos
+  - [x] Celdas combinadas para títulos de sección
+- [x] Decidir estructura: 1 hoja con secciones bien diferenciadas visualmente
+- [x] Actualizar cliente frontend para usar el nuevo endpoint
+- [x] Tests del nuevo endpoint (8 tests)
+- [x] Mantener fallback a exportación frontend si backend no disponible
+
+**Tests backend: 19 pasando (8 export + 11 signature)**
+**Tests frontend: 223 pasando**
+
+---
+
 ## Futuro (Fase 2+)
 
 - [ ] Soporte UBL (formato europeo)
