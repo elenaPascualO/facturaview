@@ -4,12 +4,22 @@
  */
 
 /**
+ * Comprueba si estamos en un entorno de desarrollo local
+ * @returns {boolean}
+ */
+function isLocalhost() {
+  if (typeof window === 'undefined') return false
+  const hostname = window.location.hostname
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '0.0.0.0'
+}
+
+/**
  * Trackea un evento en Umami
  * @param {string} event - Nombre del evento
  * @param {Object} [data] - Datos adicionales del evento
  */
 export function track(event, data = {}) {
-  if (typeof window !== 'undefined' && window.umami) {
+  if (typeof window !== 'undefined' && window.umami && !isLocalhost()) {
     window.umami.track(event, data)
   }
 }
