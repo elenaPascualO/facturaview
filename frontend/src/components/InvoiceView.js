@@ -7,11 +7,16 @@ import { escapeHtml } from '../utils/sanitizers.js'
 import { createPartyCard } from './PartyCard.js'
 import { createLinesTable } from './LinesTable.js'
 import { createTotalsBox } from './TotalsBox.js'
+import { createBatchHeader } from './BatchHeader.js'
+import { createFileSelector } from './FileSelector.js'
+import { isBatchInvoice } from '../parser/facturae.js'
 import { t, getLang } from '../utils/i18n.js'
 
-export function createInvoiceView(data, signatureData = null) {
-  const invoice = data.invoices[0] // Por ahora solo la primera factura
+export function createInvoiceView(data, signatureData = null, invoiceIndex = 0, loadedFiles = [], currentFileIndex = 0) {
+  const invoice = data.invoices[invoiceIndex]
   const currentLang = getLang()
+  const isBatch = isBatchInvoice(data)
+  const hasMultipleFiles = loadedFiles.length > 1
 
   return `
     <main role="main" class="min-h-screen bg-gray-50 dark:bg-slate-900 p-4 md:p-8">
@@ -44,7 +49,7 @@ export function createInvoiceView(data, signatureData = null) {
               </svg>
             </button>
           </div>
-          <div class="flex gap-2">
+          <div class="flex gap-2 flex-wrap">
             <button
               id="btn-pdf"
               aria-label="${t('invoice.downloadPdf')}"
@@ -59,8 +64,23 @@ export function createInvoiceView(data, signatureData = null) {
             >
               ${t('invoice.downloadExcel')}
             </button>
+            ${isBatch ? `
+              <button
+                id="btn-export-all"
+                aria-label="${t('invoice.exportAll')}"
+                class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
+              >
+                ${t('invoice.exportAll')}
+              </button>
+            ` : ''}
           </div>
         </header>
+
+        <!-- File selector (for multiple loaded files) -->
+        ${hasMultipleFiles ? createFileSelector(loadedFiles, currentFileIndex) : ''}
+
+        <!-- Batch header with navigation (only for batch invoices within a file) -->
+        ${isBatch ? createBatchHeader(data, invoiceIndex) : ''}
 
         <!-- Info de factura -->
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6 mb-6">

@@ -66,6 +66,7 @@ export function createDropzone(historyInvoices = []) {
           type="file"
           id="file-input"
           accept=".xml,.xsig"
+          multiple
           class="hidden"
         />
       </div>

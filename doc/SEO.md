@@ -119,5 +119,6 @@ Crear contenido educativo que atraiga tráfico orgánico.
 - **Twitter Card:** https://cards-dev.twitter.com/validator
 - **Lighthouse:** Chrome DevTools > Lighthouse (objetivo: 90+ SEO)
 
-### Pendiente
-- [ ] Enviar sitemap actualizado a Google Search Console (con las 4 URLs)
+### Completado
+- [x] Enviar sitemap actualizado a Google Search Console (con las 4 URLs)
+- [x] Enviar sitemap actualizado a Bing Webmaster Tools

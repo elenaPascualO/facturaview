@@ -1,7 +1,7 @@
 import './style.css'
 import { createDropzone } from './components/Dropzone.js'
 import { createInvoiceView } from './components/InvoiceView.js'
-import { parseFacturae } from './parser/facturae.js'
+import { parseFacturae, isBatchInvoice } from './parser/facturae.js'
 import { validateFile } from './utils/validators.js'
 import { track, events } from './utils/tracking.js'
 import { showToast } from './components/Toast.js'
@@ -26,10 +26,30 @@ import { createClearHistoryModal } from './components/HistorySection.js'
 const app = document.querySelector('#app')
 
 // Estado de la aplicación
-let currentInvoice = null
-let currentXmlContent = null
-let signatureData = null
+// Multiple files support: array of { data, xmlContent, signatureData, filename }
+let loadedFiles = []
+let currentFileIndex = 0
+let currentInvoiceIndex = 0 // Index for batch invoice navigation within a file
 let deferredInstallPrompt = null
+
+// Getters for current file data (for backwards compatibility)
+function getCurrentInvoice() {
+  return loadedFiles[currentFileIndex]?.data || null
+}
+
+function getCurrentXmlContent() {
+  return loadedFiles[currentFileIndex]?.xmlContent || null
+}
+
+function getCurrentSignatureData() {
+  return loadedFiles[currentFileIndex]?.signatureData || null
+}
+
+function setCurrentSignatureData(data) {
+  if (loadedFiles[currentFileIndex]) {
+    loadedFiles[currentFileIndex].signatureData = data
+  }
+}
 
 // Capturar evento de instalación PWA
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -67,14 +87,55 @@ function hideLoading() {
 
 // Renderizar vista inicial
 function renderApp() {
+  const currentInvoice = getCurrentInvoice()
   if (currentInvoice) {
-    app.innerHTML = createInvoiceView(currentInvoice, signatureData)
+    app.innerHTML = createInvoiceView(
+      currentInvoice,
+      getCurrentSignatureData(),
+      currentInvoiceIndex,
+      loadedFiles,
+      currentFileIndex
+    )
     setupInvoiceViewEvents()
   } else {
     const history = getHistory()
     app.innerHTML = createDropzone(history)
     setupDropzoneEvents()
   }
+}
+
+// Batch invoice navigation functions (within a single file)
+function selectInvoice(index) {
+  const currentInvoice = getCurrentInvoice()
+  if (!currentInvoice?.invoices) return
+  const max = currentInvoice.invoices.length - 1
+  currentInvoiceIndex = Math.max(0, Math.min(index, max))
+  renderApp()
+}
+
+function nextInvoice() {
+  selectInvoice(currentInvoiceIndex + 1)
+}
+
+function prevInvoice() {
+  selectInvoice(currentInvoiceIndex - 1)
+}
+
+// File navigation functions (between multiple loaded files)
+function selectFile(index) {
+  if (loadedFiles.length === 0) return
+  const max = loadedFiles.length - 1
+  currentFileIndex = Math.max(0, Math.min(index, max))
+  currentInvoiceIndex = 0 // Reset invoice index when changing files
+  renderApp()
+}
+
+function nextFile() {
+  selectFile(currentFileIndex + 1)
+}
+
+function prevFile() {
+  selectFile(currentFileIndex - 1)
 }
 
 // Configurar eventos del dropzone
@@ -104,13 +165,13 @@ function setupDropzoneEvents() {
   dropzone.addEventListener('drop', (e) => {
     e.preventDefault()
     dropzone.classList.remove('border-blue-500', 'bg-blue-50')
-    const file = e.dataTransfer.files[0]
-    if (file) handleFile(file)
+    const files = Array.from(e.dataTransfer.files)
+    if (files.length > 0) handleFiles(files)
   })
 
   fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0]
-    if (file) handleFile(file)
+    const files = Array.from(e.target.files)
+    if (files.length > 0) handleFiles(files)
   })
 
   // Botón de instalación PWA
@@ -159,17 +220,22 @@ async function loadFromHistory(id) {
 
   showLoading()
   try {
-    // Usar los datos guardados directamente
-    currentInvoice = saved.data
-    currentXmlContent = saved.xmlContent
-    signatureData = saved.signatureValid !== null
-      ? { valid: saved.signatureValid }
-      : null
+    // Usar los datos guardados directamente - load as single file
+    loadedFiles = [{
+      data: saved.data,
+      xmlContent: saved.xmlContent,
+      signatureData: saved.signatureValid !== null ? { valid: saved.signatureValid } : null,
+      filename: saved.metadata?.number || 'history'
+    }]
+    currentFileIndex = 0
+    currentInvoiceIndex = 0
 
     renderApp()
 
     // Si estaba firmada, re-validar en background para datos actualizados
-    if (currentInvoice.isSigned && currentXmlContent) {
+    const currentInvoice = getCurrentInvoice()
+    const currentXmlContent = getCurrentXmlContent()
+    if (currentInvoice?.isSigned && currentXmlContent) {
       validateSignatureAsync(currentXmlContent)
     }
   } finally {
@@ -239,39 +305,95 @@ function setupInstallButton() {
   })
 }
 
-// Procesar archivo XML
-async function handleFile(file) {
-  // Validar archivo (extensión y tamaño)
-  const validation = validateFile(file)
-  if (!validation.valid) {
-    track(events.FILE_ERROR, { reason: 'validation', error: validation.error })
-    showToast(validation.error, 'error')
-    return
-  }
-
+// Procesar múltiples archivos XML
+async function handleFiles(files) {
   showLoading()
-  try {
-    const text = await file.text()
-    currentXmlContent = text
-    currentInvoice = parseFacturae(text)
-    signatureData = null // Reset
-    track(events.FILE_UPLOADED, { version: currentInvoice.version })
-    renderApp()
 
-    // Si está firmada, validar firma en background
-    if (currentInvoice.isSigned) {
-      validateSignatureAsync(text)
+  // Reset state
+  loadedFiles = []
+  currentFileIndex = 0
+  currentInvoiceIndex = 0
+
+  let successCount = 0
+  let errorCount = 0
+
+  for (const file of files) {
+    // Validar archivo (extensión y tamaño)
+    const validation = validateFile(file)
+    if (!validation.valid) {
+      track(events.FILE_ERROR, { reason: 'validation', error: validation.error })
+      if (files.length === 1) {
+        showToast(validation.error, 'error')
+      }
+      errorCount++
+      continue
     }
 
-    // Manejar guardado en historial
-    handleSaveToHistory(currentInvoice, text)
+    try {
+      const text = await file.text()
+      const parsed = parseFacturae(text)
+
+      loadedFiles.push({
+        data: parsed,
+        xmlContent: text,
+        signatureData: null,
+        filename: file.name
+      })
+
+      track(events.FILE_UPLOADED, { version: parsed.version })
+      successCount++
+
+      // Si está firmada, validar firma en background (después del render)
+      if (parsed.isSigned) {
+        // Schedule signature validation after render
+        setTimeout(() => validateSignatureForFile(loadedFiles.length - 1, text), 0)
+      }
+    } catch (error) {
+      const friendlyMessage = getFriendlyErrorMessage(error)
+      track(events.FILE_ERROR, { reason: 'parse', error: error.message })
+      if (files.length === 1) {
+        showToast(friendlyMessage, 'error')
+      }
+      errorCount++
+      console.error('[FacturaView] Error técnico:', error)
+    }
+  }
+
+  hideLoading()
+
+  // Show results
+  if (successCount > 0) {
+    renderApp()
+
+    // Handle save to history for each successfully loaded file
+    for (const fileData of loadedFiles) {
+      handleSaveToHistory(fileData.data, fileData.xmlContent)
+    }
+
+    // Show summary toast for multiple files
+    if (files.length > 1) {
+      if (errorCount > 0) {
+        showToast(t('toast.filesPartialSuccess', { success: successCount, error: errorCount }), 'warning')
+      }
+    }
+  } else if (files.length > 1) {
+    showToast(t('toast.allFilesFailed'), 'error')
+  }
+}
+
+// Validate signature for a specific file by index
+async function validateSignatureForFile(fileIndex, xmlContent) {
+  try {
+    const signatureData = await validateSignature(xmlContent)
+    if (loadedFiles[fileIndex]) {
+      loadedFiles[fileIndex].signatureData = signatureData
+      // If this is the current file, update the UI
+      if (fileIndex === currentFileIndex) {
+        updateSignatureSection()
+      }
+    }
   } catch (error) {
-    const friendlyMessage = getFriendlyErrorMessage(error)
-    track(events.FILE_ERROR, { reason: 'parse', error: error.message })
-    showToast(friendlyMessage, 'error')
-    console.error('[FacturaView] Error técnico:', error)
-  } finally {
-    hideLoading()
+    console.error('[FacturaView] Error validando firma:', error)
   }
 }
 
@@ -285,24 +407,26 @@ async function handleSaveToHistory(invoice, xmlContent) {
   // Según preferencia del usuario
   if (shouldAutoSave()) {
     // Guardar automáticamente
-    const result = saveInvoice(invoice, xmlContent, signatureData)
+    const result = saveInvoice(invoice, xmlContent, getCurrentSignatureData())
     if (result.success) {
       showToast(t('toast.invoiceSaved'), 'success')
     }
   } else if (shouldAskToSave()) {
-    // Mostrar prompt
-    const { save, remember } = await showSavePrompt(document.body)
+    // Mostrar prompt (only for first file to avoid multiple prompts)
+    if (loadedFiles.length <= 1 || loadedFiles[0]?.data === invoice) {
+      const { save, remember } = await showSavePrompt(document.body)
 
-    if (remember) {
-      setSavePreference(save ? 'always' : 'never')
-    }
+      if (remember) {
+        setSavePreference(save ? 'always' : 'never')
+      }
 
-    if (save) {
-      const result = saveInvoice(invoice, xmlContent, signatureData)
-      if (result.success) {
-        showToast(t('toast.invoiceSaved'), 'success')
-      } else {
-        showToast(result.error || t('toast.saveError'), 'error')
+      if (save) {
+        const result = saveInvoice(invoice, xmlContent, getCurrentSignatureData())
+        if (result.success) {
+          showToast(t('toast.invoiceSaved'), 'success')
+        } else {
+          showToast(result.error || t('toast.saveError'), 'error')
+        }
       }
     }
   }
@@ -316,20 +440,21 @@ function setupInvoiceViewEvents() {
   const excelBtn = document.getElementById('btn-excel')
 
   backBtn?.addEventListener('click', () => {
-    currentInvoice = null
-    currentXmlContent = null
-    signatureData = null
+    loadedFiles = []
+    currentFileIndex = 0
+    currentInvoiceIndex = 0
     renderApp()
   })
 
   pdfBtn?.addEventListener('click', async () => {
+    const currentInvoice = getCurrentInvoice()
     const originalText = pdfBtn.textContent
     pdfBtn.disabled = true
     pdfBtn.textContent = t('invoice.generating')
     try {
-      track(events.EXPORT_PDF, { version: currentInvoice.version })
+      track(events.EXPORT_PDF, { version: currentInvoice?.version })
       const { exportToPdf } = await import('./export/toPdf.js')
-      exportToPdf(currentInvoice)
+      exportToPdf(currentInvoice, currentInvoiceIndex)
     } finally {
       pdfBtn.disabled = false
       pdfBtn.textContent = originalText
@@ -337,18 +462,34 @@ function setupInvoiceViewEvents() {
   })
 
   excelBtn?.addEventListener('click', async () => {
+    const currentInvoice = getCurrentInvoice()
     const originalText = excelBtn.textContent
     excelBtn.disabled = true
     excelBtn.textContent = t('invoice.generating')
     try {
-      track(events.EXPORT_EXCEL, { version: currentInvoice.version })
+      track(events.EXPORT_EXCEL, { version: currentInvoice?.version })
       const { exportToExcel } = await import('./export/toExcel.js')
-      exportToExcel(currentInvoice)
+      exportToExcel(currentInvoice, currentInvoiceIndex)
     } finally {
       excelBtn.disabled = false
       excelBtn.textContent = originalText
     }
   })
+
+  // File navigation event listeners (multiple files)
+  document.getElementById('btn-prev-file')?.addEventListener('click', prevFile)
+  document.getElementById('btn-next-file')?.addEventListener('click', nextFile)
+  document.getElementById('file-selector')?.addEventListener('change', (e) => {
+    selectFile(parseInt(e.target.value))
+  })
+
+  // Batch navigation event listeners (within single file)
+  document.getElementById('btn-prev-invoice')?.addEventListener('click', prevInvoice)
+  document.getElementById('btn-next-invoice')?.addEventListener('click', nextInvoice)
+  document.getElementById('invoice-selector')?.addEventListener('change', (e) => {
+    selectInvoice(parseInt(e.target.value))
+  })
+  document.getElementById('btn-export-all')?.addEventListener('click', handleExportAll)
 
   // Event delegation para botones de copiar
   setupCopyButtons()
@@ -467,10 +608,11 @@ function setupLangToggle() {
   })
 }
 
-// Validar firma en background
+// Validar firma en background (for files loaded from history)
 async function validateSignatureAsync(xmlContent) {
   try {
-    signatureData = await validateSignature(xmlContent)
+    const sigData = await validateSignature(xmlContent)
+    setCurrentSignatureData(sigData)
     // Re-renderizar solo la sección de firma
     updateSignatureSection()
   } catch (error) {
@@ -489,6 +631,28 @@ function updateSignatureSection() {
       container.innerHTML = createSignatureSection(signatureData)
     }
   })
+}
+
+// Handle batch export to ZIP
+async function handleExportAll() {
+  const exportAllBtn = document.getElementById('btn-export-all')
+  const currentInvoice = getCurrentInvoice()
+  if (!exportAllBtn || !currentInvoice) return
+
+  const originalText = exportAllBtn.textContent
+  exportAllBtn.disabled = true
+  exportAllBtn.textContent = t('invoice.generating')
+
+  try {
+    const { exportBatchToPdf } = await import('./export/toBatchPdf.js')
+    await exportBatchToPdf(currentInvoice)
+  } catch (error) {
+    console.error('[FacturaView] Error exporting batch:', error)
+    showToast(t('toast.saveError'), 'error')
+  } finally {
+    exportAllBtn.disabled = false
+    exportAllBtn.textContent = originalText
+  }
 }
 
 // Configurar botones de copiar (event delegation)

@@ -44,10 +44,18 @@ export function parseFacturae(xmlString) {
     throw new FacturaeError(ErrorCodes.MISSING_TOTALS)
   }
 
+  // Parse file header to get batch info
+  const fileHeader = parseFileHeader(xml)
+
+  // Validate InvoicesCount matches actual count (warning only)
+  if (fileHeader.batch?.invoicesCount && fileHeader.batch.invoicesCount !== invoices.length) {
+    console.warn(`[FacturaView] Batch declares ${fileHeader.batch.invoicesCount} invoices but contains ${invoices.length}`)
+  }
+
   // Extraer datos principales
   return {
     version,
-    fileHeader: parseFileHeader(xml),
+    fileHeader,
     seller: parseParty(xml, "SellerParty"),
     buyer: parseParty(xml, "BuyerParty"),
     invoices,
@@ -61,12 +69,29 @@ function getTextContent(xml, tagName) {
 }
 
 function parseFileHeader(xml) {
+  const batch = xml.getElementsByTagName("Batch")[0]
+
   return {
     schemaVersion: getTextContent(xml, "SchemaVersion"),
     modality: getTextContent(xml, "Modality"),
     invoiceIssuerType: getTextContent(xml, "InvoiceIssuerType"),
-    currencyCode: getTextContent(xml, "InvoiceCurrencyCode") || "EUR"
+    currencyCode: getTextContent(xml, "InvoiceCurrencyCode") || "EUR",
+    // Batch metadata for Modality="L" (batch invoices)
+    batch: batch ? {
+      identifier: getTextContent(batch, "BatchIdentifier"),
+      invoicesCount: parseInt(getTextContent(batch, "InvoicesCount")) || 0,
+      totalAmount: parseFloat(getTextContent(batch.querySelector("TotalInvoicesAmount"), "TotalAmount")) || 0
+    } : null
   }
+}
+
+/**
+ * Determines if the data represents a batch invoice (multiple invoices in one file)
+ * @param {Object} data - Parsed Facturae data
+ * @returns {boolean} true if it's a batch invoice
+ */
+export function isBatchInvoice(data) {
+  return data.fileHeader?.modality === 'L' || data.invoices?.length > 1
 }
 
 function parseParty(xml, partyType) {

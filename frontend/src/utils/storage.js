@@ -110,16 +110,27 @@ export function getInvoice(id) {
  * @returns {Object} Metadata resumida
  */
 function extractMetadata(parsedData) {
-  const invoice = parsedData.invoices?.[0] || {}
+  const invoices = parsedData.invoices || []
+  const firstInvoice = invoices[0] || {}
+  const isBatch = invoices.length > 1 || parsedData.fileHeader?.modality === 'L'
+
   return {
-    number: invoice.number || '',
-    series: invoice.series || '',
-    issueDate: invoice.issueDate || '',
+    number: isBatch
+      ? `Lote ${invoices.length} facturas`
+      : firstInvoice.number || '',
+    series: isBatch ? '' : firstInvoice.series || '',
+    issueDate: firstInvoice.issueDate || '',
     sellerName: parsedData.seller?.name || '',
     buyerName: parsedData.buyer?.name || '',
-    total: invoice.totals?.total || 0,
-    currency: parsedData.currency || 'EUR',
-    version: parsedData.version || ''
+    total: isBatch
+      ? invoices.reduce((sum, inv) => sum + (inv.totals?.totalToPay || inv.totals?.total || 0), 0)
+      : firstInvoice.totals?.totalToPay || firstInvoice.totals?.total || 0,
+    currency: parsedData.fileHeader?.currencyCode || parsedData.currency || 'EUR',
+    version: parsedData.version || '',
+    // Batch-specific metadata
+    isBatch,
+    invoiceCount: invoices.length,
+    batchIdentifier: parsedData.fileHeader?.batch?.identifier || null
   }
 }
 
@@ -272,16 +283,28 @@ export function setSavePreference(value) {
 }
 
 /**
- * Verifica si una factura ya está guardada (por número y fecha)
+ * Verifica si una factura ya está guardada (por número y fecha, o por batch identifier)
  * @param {Object} parsedData - Datos parseados de la factura
  * @returns {Object|null} Factura guardada si existe, null si no
  */
 export function findExistingInvoice(parsedData) {
-  const invoice = parsedData?.invoices?.[0]
-  if (!invoice) return null
+  const invoices = parsedData?.invoices
+  if (!invoices || invoices.length === 0) return null
 
   const data = readStorage()
+  const isBatch = invoices.length > 1 || parsedData.fileHeader?.modality === 'L'
+
+  // For batch invoices, match by batch identifier if available
+  if (isBatch && parsedData.fileHeader?.batch?.identifier) {
+    return data.invoices.find(saved =>
+      saved.metadata.batchIdentifier === parsedData.fileHeader.batch.identifier
+    ) || null
+  }
+
+  // For single invoices, match by number, series, and date
+  const invoice = invoices[0]
   return data.invoices.find(saved =>
+    !saved.metadata.isBatch &&
     saved.metadata.number === invoice.number &&
     saved.metadata.series === (invoice.series || '') &&
     saved.metadata.issueDate === invoice.issueDate

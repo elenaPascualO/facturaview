@@ -6,17 +6,37 @@ import { jsPDF } from 'jspdf'
 import { sanitizeFilename } from '../utils/sanitizers.js'
 import { t, getLang } from '../utils/i18n.js'
 
-export function exportToPdf(data) {
-  const invoice = data.invoices[0]
+/**
+ * Export a single invoice to PDF (public function)
+ * @param {Object} data - Parsed Facturae data
+ * @param {number} invoiceIndex - Index of the invoice to export (default: 0)
+ */
+export function exportToPdf(data, invoiceIndex = 0) {
+  const invoice = data.invoices[invoiceIndex]
   const safeNumber = sanitizeFilename(`${invoice.series || ''}${invoice.number || ''}`)
   const filename = `factura-${safeNumber || 'sin-numero'}.pdf`
 
   try {
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4'
-    })
+    const pdf = generatePdfForInvoice(data, invoice)
+    pdf.save(filename)
+  } catch (error) {
+    console.error(`${t('pdf.errorGenerating')}`, error)
+    alert(`${t('pdf.errorGenerating')} ${error.message}`)
+  }
+}
+
+/**
+ * Generate a jsPDF document for a single invoice (reusable for batch export)
+ * @param {Object} data - Parsed Facturae data (contains seller, buyer, fileHeader)
+ * @param {Object} invoice - Single invoice object
+ * @returns {jsPDF} The generated PDF document
+ */
+export function generatePdfForInvoice(data, invoice) {
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  })
 
     const pageWidth = pdf.internal.pageSize.getWidth()
     const margin = 20
@@ -217,11 +237,7 @@ export function exportToPdf(data) {
       }
     }
 
-    pdf.save(filename)
-  } catch (error) {
-    console.error(`${t('pdf.errorGenerating')}`, error)
-    alert(`${t('pdf.errorGenerating')} ${error.message}`)
-  }
+  return pdf
 }
 
 function formatCurrency(amount, currency = 'EUR', locale = 'es-ES') {

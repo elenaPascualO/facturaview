@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
-import { parseFacturae } from '../src/parser/facturae.js'
+import { parseFacturae, isBatchInvoice } from '../src/parser/facturae.js'
 import { FacturaeError, ErrorCodes } from '../src/utils/errors.js'
 import { setLang } from '../src/utils/i18n.js'
 import { readFileSync } from 'fs'
@@ -297,6 +297,65 @@ describe('Parser Facturae', () => {
       const xml = readFixture('simple-322.xml')
       const result = parseFacturae(xml)
       expect(result.isSigned).toBe(false)
+    })
+  })
+
+  describe('Factura en lote (Modality=L)', () => {
+    let result
+
+    beforeAll(() => {
+      const xml = readFixture('batch-322.xml')
+      result = parseFacturae(xml)
+    })
+
+    it('detecta modalidad lote', () => {
+      expect(result.fileHeader.modality).toBe('L')
+    })
+
+    it('extrae metadatos del batch', () => {
+      expect(result.fileHeader.batch).toBeDefined()
+      expect(result.fileHeader.batch.identifier).toBe('A12345678-LOTE-2024-001')
+      expect(result.fileHeader.batch.invoicesCount).toBe(3)
+      expect(result.fileHeader.batch.totalAmount).toBe(665.50)
+    })
+
+    it('extrae todas las facturas', () => {
+      expect(result.invoices).toHaveLength(3)
+    })
+
+    it('isBatchInvoice devuelve true para lote', () => {
+      expect(isBatchInvoice(result)).toBe(true)
+    })
+
+    it('isBatchInvoice devuelve false para factura simple', () => {
+      const simpleXml = readFixture('simple-322.xml')
+      const simpleResult = parseFacturae(simpleXml)
+      expect(isBatchInvoice(simpleResult)).toBe(false)
+    })
+
+    it('extrae correctamente la primera factura del lote', () => {
+      const invoice = result.invoices[0]
+      expect(invoice.number).toBe('2024/001')
+      expect(invoice.series).toBe('L')
+      expect(invoice.totals.totalToPay).toBe(121)
+    })
+
+    it('extrae correctamente la segunda factura del lote', () => {
+      const invoice = result.invoices[1]
+      expect(invoice.number).toBe('2024/002')
+      expect(invoice.totals.totalToPay).toBe(242)
+    })
+
+    it('extrae correctamente la tercera factura del lote', () => {
+      const invoice = result.invoices[2]
+      expect(invoice.number).toBe('2024/003')
+      expect(invoice.totals.totalToPay).toBe(302.50)
+      expect(invoice.taxes[0].rate).toBe(10)
+    })
+
+    it('mantiene datos compartidos del emisor y receptor', () => {
+      expect(result.seller.name).toBe('Empresa Lote S.L.')
+      expect(result.buyer.name).toBe('Cliente Lote S.A.')
     })
   })
 })

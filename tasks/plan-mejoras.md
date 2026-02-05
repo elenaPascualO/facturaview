@@ -306,42 +306,26 @@ function createSignatureSection(signatureData) {
 
 ---
 
-## Fase 3: Esfuerzo Alto
+## Fase 3: Esfuerzo Alto - ✅ COMPLETADO
 
-### 3.1 Múltiples Facturas en Lote
+### 3.1 Múltiples Facturas en Lote ✅
 **Objetivo:** Procesar varios XMLs y exportar en lote.
 
-**Dependencia nueva:**
-```bash
-bun add jszip
-```
+**Implementado:**
+- Soporte para facturas en lote (Modality="L")
+- Soporte para múltiples archivos XML simultáneos
+- Navegación entre facturas (selector dropdown + botones Anterior/Siguiente)
+- Exportación de lotes a ZIP con PDFs individuales
+- Tests de exportación de lotes (10 tests)
 
-**Archivos a crear:**
-- `src/components/InvoiceList.js` - Vista de lista de facturas
-- `src/export/toBatchExcel.js` - Excel con todas las facturas
-- `src/export/toBatchPdf.js` - ZIP de PDFs
-- `tests/batch.test.js` - Tests
+**Componentes creados:**
+- `src/components/BatchHeader.js` - Navegación para facturas en lote
+- `src/components/FileSelector.js` - Navegación para múltiples archivos
+- `src/export/toBatchPdf.js` - Exportar lote a ZIP con PDFs
+- `tests/batch-export.test.js` - Tests de exportación de lotes
 
-**Archivos a modificar:**
-- `src/main.js` - Nuevo estado `currentInvoices[]`, `selectedInvoiceIndex`, `viewMode`
-- `src/components/Dropzone.js` - Añadir `multiple` al input
-- `src/components/InvoiceView.js` - Navegación Anterior/Siguiente
-
-**Nuevo estado en main.js:**
-```javascript
-let currentInvoices = []
-let selectedInvoiceIndex = 0
-let viewMode = 'single' // 'single' | 'list'
-```
-
-**Implementación:**
-1. Modificar Dropzone para aceptar múltiples archivos
-2. Modificar `handleFile()` → `handleFiles()` con `Promise.all()`
-3. Crear InvoiceList.js con grid de tarjetas resumen
-4. Añadir navegación entre facturas en InvoiceView
-5. Crear toBatchExcel.js (hoja resumen + detalle)
-6. Crear toBatchPdf.js (ZIP con JSZip)
-7. **Seguridad:** Sanitizar nombres de archivo en ZIP
+**Dependencias añadidas:**
+- `jszip` - Para generar archivos ZIP con PDFs
 
 ---
 
@@ -366,9 +350,9 @@ FASE 2 (Medio) ✅ COMPLETADO
 6. Historial local ─────────── ✅ Implementado (incluye estado de firma)
          │
          ▼
-FASE 3 (Alto)
+FASE 3 (Alto) ✅ COMPLETADO
 ─────────────────────────────
-7. Múltiples facturas ──────── (más complejo)
+7. Múltiples facturas ──────── ✅ Implementado (lotes + múltiples archivos)
          │
          ▼
 FASE 4 (Evolución)

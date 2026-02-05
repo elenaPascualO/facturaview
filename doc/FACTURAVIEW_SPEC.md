@@ -37,7 +37,7 @@ Frontend: Vanilla JS (ES Modules)
 Styling:  Tailwind CSS v4 (con modo oscuro)
 PDF:      jsPDF (generación directa, sin html2canvas)
 Excel:    SheetJS (xlsx)
-Testing:  Vitest + jsdom (167 tests)
+Testing:  Vitest + jsdom (223 tests)
 Deploy:   Railway
 
 # Backend (validación de firmas)
@@ -181,7 +181,7 @@ Deploy:   Railway (Dockerfile)
 - [x] **Descargar como Excel** (3 hojas: General, Líneas, Impuestos)
 - [x] **100% privado** (todo en navegador, nada al servidor)
 - [x] **Responsive** (funciona en móvil)
-- [x] **Tests automatizados** (167 tests con Vitest)
+- [x] **Tests automatizados** (223 tests con Vitest)
 - [x] **Formulario de contacto** (Formspree)
 - [x] **Seguridad** (XSS, inyección Excel, CSP headers, bloqueo rutas sensibles)
 - [x] **Analítica de eventos** (Umami tracking)
@@ -217,9 +217,11 @@ Deploy:   Railway (Dockerfile)
 - [x] **Limpiar historial** (con confirmación)
 - [x] **42 tests nuevos** para storage
 
-### Nice to Have (Fase 3)
+### Nice to Have (Fase 3) - ✅ COMPLETADO
 
-- [ ] Múltiples facturas en lote (Modality="L")
+- [x] Múltiples facturas en lote (Modality="L")
+- [x] Múltiples archivos XML simultáneos
+- [x] Internacionalización (ES/EN)
 
 ### Futuro (Fase 2+)
 
@@ -320,10 +322,13 @@ facturaview/
 │   │   │   ├── TotalsBox.js     # Caja de impuestos y totales
 │   │   │   ├── Toast.js         # Notificaciones toast
 │   │   │   ├── HistorySection.js # Sección de facturas recientes
-│   │   │   └── SavePrompt.js    # Modal para guardar en historial
+│   │   │   ├── SavePrompt.js    # Modal para guardar en historial
+│   │   │   ├── BatchHeader.js   # Navegación para facturas en lote
+│   │   │   └── FileSelector.js  # Navegación para múltiples archivos
 │   │   ├── export/
 │   │   │   ├── toPdf.js         # Exportar a PDF (jsPDF)
-│   │   │   └── toExcel.js       # Exportar a Excel (xlsx)
+│   │   │   ├── toExcel.js       # Exportar a Excel (xlsx)
+│   │   │   └── toBatchPdf.js    # Exportar lote a ZIP con PDFs
 │   │   └── utils/
 │   │       ├── formatters.js    # Formateo moneda, fechas, NIF
 │   │       ├── sanitizers.js    # Sanitización (XSS, Excel, filenames)
@@ -333,7 +338,8 @@ facturaview/
 │   │       ├── theme.js         # Gestión tema claro/oscuro
 │   │       ├── clipboard.js     # Copiar al portapapeles
 │   │       ├── signature.js     # Cliente API de validación de firmas
-│   │       └── storage.js       # Historial local (localStorage)
+│   │       ├── storage.js       # Historial local (localStorage)
+│   │       └── i18n.js          # Internacionalización (ES/EN)
 │   ├── public/
 │   │   ├── favicon.svg
 │   │   ├── og-image.png
@@ -342,13 +348,15 @@ facturaview/
 │   │   ├── manifest.json
 │   │   └── sw.js                # Service Worker para PWA
 │   └── tests/
-│       ├── parser.test.js       # Tests del parser (30 tests)
+│       ├── parser.test.js       # Tests del parser (39 tests)
 │       ├── export.test.js       # Tests de exportación (13 tests)
+│       ├── batch-export.test.js # Tests de exportación de lotes (10 tests)
 │       ├── security.test.js     # Tests de seguridad (25 tests)
 │       ├── validators.test.js   # Tests de validación (27 tests)
 │       ├── errors.test.js       # Tests de errores (23 tests)
 │       ├── clipboard.test.js    # Tests de clipboard (7 tests)
 │       ├── storage.test.js      # Tests de historial local (42 tests)
+│       ├── i18n.test.js         # Tests de internacionalización (37 tests)
 │       └── fixtures/            # Archivos XML de prueba
 ├── backend/                     # API de validación de firmas (FastAPI)
 │   ├── __init__.py
@@ -566,7 +574,7 @@ bun run test:run
 - [x] Exportar a PDF (jsPDF directo)
 - [x] Exportar a Excel (3 hojas)
 - [x] Diseño responsive
-- [x] 175 tests automatizados (167 frontend + 8 backend)
+- [x] 231 tests automatizados (223 frontend + 8 backend)
 - [x] Deploy en Railway (configurado)
 - [x] Formulario de contacto (Formspree)
 - [x] Auditoría de seguridad (XSS, Excel injection, CSP)
@@ -608,7 +616,7 @@ bun run test:run
 
 ## Conclusión
 
-**Estado:** MVP+ completado con 175 tests pasando (167 frontend + 8 backend).
+**Estado:** MVP+ completado con 231 tests pasando (223 frontend + 8 backend).
 
 **¿Backend necesario?** Solo para validación de firmas digitales. El resto es 100% frontend.
 
@@ -622,7 +630,7 @@ bun run test:run
 cd frontend
 bun run dev       # Desarrollo (http://localhost:5173)
 bun run build     # Producción (genera frontend/dist/)
-bun run test:run  # Ejecutar tests (167 tests)
+bun run test:run  # Ejecutar tests (223 tests)
 
 # Backend (desde raíz)
 uv sync           # Instalar dependencias

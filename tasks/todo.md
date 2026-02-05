@@ -46,7 +46,7 @@
 - [x] Tests de internacionalización (37 tests)
 - [x] Fixtures de prueba (6 archivos XML)
 
-**Total: 204 tests pasando**
+**Total: 223 tests pasando**
 
 ### Seguridad (Auditoría completada)
 - [x] Reemplazar Discord webhook con Formspree
@@ -177,8 +177,8 @@ Causa principal: contenido renderizado 100% con JavaScript (SPA).
 - [x] Confirmar que se procesa correctamente (Status: Success, 1 URL discovered)
 
 ### Paso 4: Solicitar indexación
-- [ ] Usar "Request indexing" en URL Inspection
-- [ ] Opcional: usar API de URL Submission para indexación más rápida
+- [x] Usar "Request indexing" en URL Inspection
+- [x] Enviar sitemap actualizado a Google Search Console y Bing Webmaster Tools
 
 ### Paso 5: Backlinks (mejora autoridad)
 - [ ] Registrar en directorios de herramientas para autónomos españoles
@@ -196,7 +196,8 @@ Causa principal: contenido renderizado 100% con JavaScript (SPA).
 - [ ] Validar firma digital (mostrar detalles del certificado) - Ver `plan-mejoras.md` Fase 2.2
 - [x] Detectar y mostrar errores específicos en XML malformado - Completado febrero 2026
 - [x] Modo oscuro - Completado febrero 2026
-- [ ] Múltiples facturas en lote (Modality="L") - Ver `plan-mejoras.md` Fase 3.1
+- [x] Múltiples facturas en lote (Modality="L") - Completado febrero 2026
+- [x] Múltiples archivos XML - Completado febrero 2026
 - [x] Copiar datos al portapapeles (botón copiar) - Completado febrero 2026
 - [x] Historial local (localStorage) - Completado febrero 2026
 - [x] Selector de idioma (ES/EN) - Completado febrero 2026
@@ -223,3 +224,4 @@ Causa principal: contenido renderizado 100% con JavaScript (SPA).
 | `simple-32.xml` | 3.2 | Factura legacy (floristería) |
 | `with-retention.xml` | 3.2.2 | Autónomo con IRPF 15% |
 | `rectificativa.xml` | 3.2.2 | Factura rectificativa (negativos) |
+| `batch-322.xml` | 3.2.2 | Lote de 3 facturas (Modality="L") |

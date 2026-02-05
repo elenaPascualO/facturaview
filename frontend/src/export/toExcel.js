@@ -6,8 +6,8 @@ import * as XLSX from 'xlsx'
 import { sanitizeExcelValue, sanitizeFilename } from '../utils/sanitizers.js'
 import { t } from '../utils/i18n.js'
 
-export function exportToExcel(data) {
-  const invoice = data.invoices[0]
+export function exportToExcel(data, invoiceIndex = 0) {
+  const invoice = data.invoices[invoiceIndex]
   const safeNumber = sanitizeFilename(`${invoice.series || ''}${invoice.number || ''}`)
   const filename = `factura-${safeNumber || 'sin-numero'}.xlsx`
   const currencyCode = data.fileHeader?.currencyCode || 'EUR'

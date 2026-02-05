@@ -57,6 +57,23 @@ export const translations = {
     'invoice.downloadExcel': 'Descargar Excel',
     'invoice.generating': 'Generando...',
     'invoice.loadAnother': '← Cargar otra factura',
+    'invoice.exportAll': 'Exportar todo (ZIP)',
+
+    // Batch invoices (internal - single XML with multiple invoices)
+    'batch.title': 'Lote de {count} facturas',
+    'batch.identifier': 'Identificador de lote',
+    'batch.totalAmount': 'Importe total del lote',
+    'batch.previous': 'Factura anterior',
+    'batch.next': 'Siguiente factura',
+    'batch.selectInvoice': 'Seleccionar factura',
+    'batch.invoiceOf': 'Factura {current} de {total}',
+
+    // Multiple files support
+    'files.title': '{count} archivos cargados',
+    'files.previous': 'Archivo anterior',
+    'files.next': 'Siguiente archivo',
+    'files.selectFile': 'Seleccionar archivo',
+    'files.fileOf': 'Archivo {current} de {total}',
 
     // Invoice types
     'invoiceType.FC': 'Factura completa',
@@ -153,6 +170,7 @@ export const translations = {
     'history.signatureValid': '✓ Firma valida',
     'history.signatureInvalid': '✕ Firma invalida',
     'history.noSignature': '⚠ Sin firma',
+    'history.batchCount': 'Lote de {count} facturas',
 
     // Clear history modal
     'clearHistory.title': '¿Limpiar historial?',
@@ -174,6 +192,8 @@ export const translations = {
     'toast.invoiceSaved': 'Factura guardada en historial',
     'toast.saveError': 'Error al guardar',
     'toast.copyError': 'No se pudo copiar al portapapeles',
+    'toast.filesPartialSuccess': '{success} archivos cargados, {error} con errores',
+    'toast.allFilesFailed': 'No se pudo cargar ningún archivo',
 
     // Errors
     'error.xmlMalformed': 'El archivo no es un XML válido. Verifica que el archivo no esté dañado.',
@@ -518,6 +538,23 @@ export const translations = {
     'invoice.downloadExcel': 'Download Excel',
     'invoice.generating': 'Generating...',
     'invoice.loadAnother': '← Load another invoice',
+    'invoice.exportAll': 'Export all (ZIP)',
+
+    // Batch invoices (internal - single XML with multiple invoices)
+    'batch.title': 'Batch of {count} invoices',
+    'batch.identifier': 'Batch identifier',
+    'batch.totalAmount': 'Batch total amount',
+    'batch.previous': 'Previous invoice',
+    'batch.next': 'Next invoice',
+    'batch.selectInvoice': 'Select invoice',
+    'batch.invoiceOf': 'Invoice {current} of {total}',
+
+    // Multiple files support
+    'files.title': '{count} files loaded',
+    'files.previous': 'Previous file',
+    'files.next': 'Next file',
+    'files.selectFile': 'Select file',
+    'files.fileOf': 'File {current} of {total}',
 
     // Invoice types
     'invoiceType.FC': 'Full invoice',
@@ -614,6 +651,7 @@ export const translations = {
     'history.signatureValid': '✓ Valid signature',
     'history.signatureInvalid': '✕ Invalid signature',
     'history.noSignature': '⚠ No signature',
+    'history.batchCount': 'Batch of {count} invoices',
 
     // Clear history modal
     'clearHistory.title': 'Clear history?',
@@ -635,6 +673,8 @@ export const translations = {
     'toast.invoiceSaved': 'Invoice saved to history',
     'toast.saveError': 'Error saving',
     'toast.copyError': 'Could not copy to clipboard',
+    'toast.filesPartialSuccess': '{success} files loaded, {error} with errors',
+    'toast.allFilesFailed': 'Could not load any file',
 
     // Errors
     'error.xmlMalformed': 'The file is not a valid XML. Check that the file is not corrupted.',

@@ -49,10 +49,13 @@ facturaview/
 │   │   │   ├── LinesTable.js     # Tabla de líneas de detalle
 │   │   │   ├── TotalsBox.js      # Caja de impuestos y totales
 │   │   │   ├── HistorySection.js # Sección de facturas recientes
-│   │   │   └── SavePrompt.js     # Modal para guardar en historial
+│   │   │   ├── SavePrompt.js     # Modal para guardar en historial
+│   │   │   ├── BatchHeader.js    # Navegación para facturas en lote
+│   │   │   └── FileSelector.js   # Navegación para múltiples archivos
 │   │   ├── export/
 │   │   │   ├── toPdf.js          # Exportar a PDF (jsPDF directo)
-│   │   │   └── toExcel.js        # Exportar a Excel (xlsx)
+│   │   │   ├── toExcel.js        # Exportar a Excel (xlsx)
+│   │   │   └── toBatchPdf.js     # Exportar lote a ZIP con PDFs
 │   │   ├── i18n/
 │   │   │   └── translations.js   # Diccionarios ES/EN
 │   │   └── utils/
@@ -75,8 +78,9 @@ facturaview/
 │   │   ├── manifest.json         # PWA manifest
 │   │   └── sw.js                 # Service Worker para PWA
 │   └── tests/
-│       ├── parser.test.js        # Tests del parser (30 tests)
+│       ├── parser.test.js        # Tests del parser (39 tests)
 │       ├── export.test.js        # Tests de exportación (13 tests)
+│       ├── batch-export.test.js  # Tests de exportación de lotes (10 tests)
 │       ├── security.test.js      # Tests de seguridad (25 tests)
 │       ├── validators.test.js    # Tests de validación de archivos (27 tests)
 │       ├── errors.test.js        # Tests de errores amigables (23 tests)
@@ -89,7 +93,8 @@ facturaview/
 │           ├── simple-321.xml    # Factura v3.2.1
 │           ├── simple-32.xml     # Factura v3.2 (legacy)
 │           ├── with-retention.xml # Con retención IRPF 15%
-│           └── rectificativa.xml # Factura rectificativa (negativos)
+│           ├── rectificativa.xml # Factura rectificativa (negativos)
+│           └── batch-322.xml     # Lote de 3 facturas (Modality="L")
 ├── backend/                      # API de validación de firmas (FastAPI)
 │   ├── __init__.py
 │   ├── main.py                   # Entry point FastAPI + StaticFiles
@@ -132,7 +137,7 @@ bun run dev          # Servidor de desarrollo (http://localhost:5173)
 bun run build        # Build de producción (genera frontend/dist/)
 bun run preview      # Preview del build
 bun run test         # Tests en modo watch
-bun run test:run     # Ejecutar tests una vez (204 tests)
+bun run test:run     # Ejecutar tests una vez (223 tests)
 ```
 
 ### Backend
@@ -171,7 +176,9 @@ docker run -p 8000:8000 facturaview
 - [x] Descargar como Excel (3 hojas: General, Líneas, Impuestos)
 - [x] 100% privado (todo en navegador)
 - [x] Responsive (móvil)
-- [x] Tests automatizados (204 tests)
+- [x] Tests automatizados (223 tests)
+- [x] Soporte facturas en lote (Modality="L")
+- [x] Soporte para múltiples archivos XML
 - [x] Formulario de contacto (Formspree)
 - [x] Protección contra XSS, inyección Excel y path traversal
 - [x] Analítica de eventos (Umami)
@@ -221,6 +228,39 @@ El parser usa `DOMParser` nativo del navegador. Detecta automáticamente la vers
 - Impuestos agregados (múltiples tipos de IVA)
 - Retenciones IRPF
 - Información de pago (IBAN, BIC, vencimiento)
+- Metadatos del lote (Modality="L")
+
+### Facturas en Lote (Modality="L")
+El sistema soporta archivos Facturae con múltiples facturas (lotes):
+
+- **Detección automática:** El parser detecta lotes por `Modality="L"` o múltiples elementos `<Invoice>`
+- **Navegación:** UI con selector dropdown y botones Anterior/Siguiente
+- **Exportación:** Botón "Exportar todo (ZIP)" genera un archivo ZIP con PDFs individuales
+- **Historial:** Los lotes se guardan como una única entrada con el total combinado
+- **Funciones disponibles:**
+  - `isBatchInvoice(data)` - Determina si es un lote
+  - `generatePdfForInvoice(data, invoice)` - Genera PDF para una factura del lote
+  - `exportBatchToPdf(data)` - Exporta todo el lote a ZIP
+
+```javascript
+import { isBatchInvoice } from './parser/facturae.js'
+
+if (isBatchInvoice(parsedData)) {
+  // Mostrar navegación de lote
+  console.log(`Lote de ${parsedData.invoices.length} facturas`)
+}
+```
+
+### Múltiples Archivos XML
+El sistema permite cargar múltiples archivos XML a la vez:
+
+- **Carga múltiple:** Arrastrar varios archivos o seleccionar múltiples en el diálogo
+- **Navegación:** Selector dropdown y botones Anterior/Siguiente entre archivos
+- **Independencia:** Cada archivo mantiene su propia información (emisor, receptor, firma)
+- **Compatibilidad:** Funciona junto con el soporte de lotes (un archivo con múltiples facturas)
+- **Estado:** Se gestiona en `loadedFiles[]` con `currentFileIndex`
+
+El componente `FileSelector.js` proporciona la UI de navegación cuando hay más de un archivo cargado.
 
 ### Formulario de Contacto
 Formulario colapsable en el Dropzone que envía mensajes via Formspree. Configuración:
