@@ -116,11 +116,13 @@ facturaview/
 ├── Dockerfile                    # Build unificado (frontend + backend)
 ├── railway.json                  # Config Railway
 ├── CLAUDE.md
-├── tasks/
-│   └── todo.md                   # Plan de tareas
 └── doc/
     ├── FACTURAVIEW_SPEC.md       # Especificación completa
-    └── SEO.md                    # Plan de acción SEO
+    ├── ROADMAP.md                # Roadmap del proyecto
+    ├── SEO.md                    # Plan de acción SEO
+    └── tasks/
+        ├── todo.md               # Plan de tareas
+        └── plan-mejoras.md       # Plan de mejoras detallado
 ```
 
 ## Versiones Facturae Soportadas
@@ -208,7 +210,7 @@ docker run -p 8000:8000 facturaview
 
 ## Guías Generales
 
-1. **Planificar primero:** Analizar el problema, leer archivos relevantes y escribir un plan en `tasks/todo.md`
+1. **Planificar primero:** Analizar el problema, leer archivos relevantes y escribir un plan en `doc/tasks/todo.md`
 2. **Verificar el plan:** Consultar con el usuario antes de comenzar la implementación
 3. **Seguir el progreso:** Marcar las tareas como completadas conforme se avanza
 4. **Explicar los cambios:** Proporcionar explicaciones de alto nivel sobre lo que se modificó
@@ -359,7 +361,8 @@ t('totals.vatRate', { rate: 21 }) // "IVA 21%"
 
 ## Documentación
 
-- Especificación completa: `doc/FACTURAVIEW_SPEC.md`
+- Especificación técnica: `doc/SPEC.md`
+- Roadmap: `doc/ROADMAP.md`
 - Plan de SEO: `doc/SEO.md`
 - Esquema XSD Facturae: https://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml
 - Documentación oficial: https://www.facturae.gob.es/formato/Paginas/version-3-2.aspx
