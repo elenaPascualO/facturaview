@@ -13,23 +13,21 @@ El MVP está completo (242 tests, 7 fases de desarrollo terminadas). No se debe 
 Objetivo: poner FacturaView delante de usuarios potenciales lo antes posible.
 
 ### Directorios de software
-- [ ] **AlternativeTo** — Registrar como alternativa a: Facturae (app gobierno), Firma-e Visualizador, B2Brouter, Visor VISDOC de la IGAE
-  - Destacar: gratis, sin registro, sin Java, online, privado
-- [ ] **Product Hunt** — Preparar lanzamiento (título, tagline, descripción, capturas)
-  - Tagline sugerida: "View and export Spanish e-invoices (Facturae XML) — no Java, no signup, 100% private"
-  - Programar para un martes o miércoles (mejores días)
+- [x] **AlternativeTo** — Rechazada (no aceptan converters/viewers simples)
+- [x] **Product Hunt** — Lanzamiento preparado y programado
 
 ### Comunidades tech
-- [ ] **Hacker News** — Post "Show HN: FacturaView — View Spanish e-invoices without Java or signup"
-  - Incluir contexto: en España las facturas electrónicas son XML, el visor oficial requiere Java
-- [ ] **Reddit r/SideProject** — Post breve mostrando el proyecto
-- [ ] **Reddit r/spain o r/es** — Post en español explicando la herramienta
-- [ ] **Indie Hackers** — Publicar en comunidad como proyecto side
+- [x] **Hacker News** — Publicado Show HN
+- [x] **Reddit r/SideProject** — Bloqueado por filtros anti-autopromoción
+- [x] **Reddit r/spain o r/es** — Descartado (filtros estrictos en Reddit)
+- [x] **Indie Hackers** — Descartado (audiencia no relevante para el nicho)
 
 ### Comunidades de autónomos (España)
-- [ ] **Foro de Infoautónomos** — Post genuino: "He creado una herramienta gratuita para abrir facturas Facturae sin instalar Java"
+- [ ] **Rankia Autónomos** (https://www.rankia.com/foro/autonomos) — Post genuino sobre FacturaView
+- [ ] **Área de Pymes** (https://foros.areadepymes.com/) — Sección de facturación/Verifactu
+- [ ] **Mundo Autónomos** (https://mundoautonomos.org/forums/) — Sección de facturación
 - [ ] **Grupos de Facebook** — Buscar 2-3 grupos de autónomos españoles y compartir
-- [ ] **LinkedIn** — Post personal + compartir en grupos de facturación electrónica / autónomos España
+- [x] **LinkedIn** — Publicado desde página de empresa Hola Datos
 - [ ] **Forocoches/Burbuja** (subforo autónomos) — Si existe subforo relevante
 
 ### Directorios secundarios
