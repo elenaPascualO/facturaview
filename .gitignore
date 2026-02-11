@@ -40,3 +40,7 @@ venv/
 *.sw?
 
 .playwright-mcp
+
+# Documentation
+doc/
+CLAUDE.md
