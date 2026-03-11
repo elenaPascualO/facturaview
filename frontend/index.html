@@ -52,8 +52,16 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://formspree.io https://cloud.umami.is https://api-gateway.umami.dev;" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
 
-    <!-- Umami Analytics -->
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="a211c801-93da-494e-b699-21ba70081d74"></script>
+    <!-- Umami Analytics (privacy-focused, no cookies) -->
+    <!-- Disable tracking: localStorage.setItem('umami.disabled', '1') in browser console -->
+    <script>
+      try { if (localStorage.getItem('umami.disabled') !== '1') {
+        var s = document.createElement('script'); s.defer = true;
+        s.src = 'https://cloud.umami.is/script.js';
+        s.dataset.websiteId = 'a211c801-93da-494e-b699-21ba70081d74';
+        document.body.appendChild(s);
+      }} catch(e) {}
+    </script>
 
     <!-- Datos estructurados Schema.org -->
     <script type="application/ld+json">
