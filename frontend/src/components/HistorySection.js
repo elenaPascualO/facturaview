@@ -21,7 +21,7 @@ export function createHistorySection(invoices) {
   const recentInvoices = invoices.slice(0, 5)
 
   return `
-    <section class="mt-8 w-full max-w-xl" aria-label="${t('history.title')}">
+    <section class="w-full max-w-3xl mx-auto" aria-label="${t('history.title')}">
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
           <span>${t('history.title')}</span>

@@ -6,10 +6,15 @@ export const translations = {
   es: {
     // App general
     'app.title': 'FacturaView',
-    'app.subtitle': 'Visualiza y verifica tus facturas electrónicas Facturae',
-    'app.tagline': 'Sin instalar nada. 100% privado.',
     'app.changeTheme': 'Cambiar tema',
     'app.changeLang': 'Change to English',
+
+    // Hero section
+    'hero.title': 'Visualiza tus facturas electrónicas Facturae online',
+    'hero.subtitle': 'Abre, entiende y exporta facturas XML del formato Facturae sin instalar software ni Java. Todo se procesa en tu navegador.',
+    'hero.badgePrivacy': '100% Privado',
+    'hero.badgeFree': 'Gratis',
+    'hero.badgeNoInstall': 'Sin instalación',
 
     // Dropzone
     'dropzone.dragHere': 'Arrastra tu archivo XML aquí',
@@ -17,17 +22,44 @@ export const translations = {
     'dropzone.formats': 'Formatos: Facturae 3.2, 3.2.1, 3.2.2',
     'dropzone.processing': 'Procesando factura...',
 
-    // Features
-    'features.pdfExcel': 'PDF y Excel',
-    'features.verifySignatures': 'Verifica firmas XAdES',
-    'features.faceCompatible': 'FACe compatible',
+    // How it works section
+    'howItWorks.title': '¿Cómo funciona?',
+    'howItWorks.subtitle': 'Visualiza tu factura electrónica en 3 sencillos pasos',
+    'howItWorks.step1.title': 'Sube tu XML',
+    'howItWorks.step1.description': 'Arrastra o selecciona tu archivo de factura electrónica Facturae (.xml o .xsig)',
+    'howItWorks.step2.title': 'Visualiza los datos',
+    'howItWorks.step2.description': 'Consulta emisor, receptor, líneas de detalle, impuestos y totales de forma clara',
+    'howItWorks.step3.title': 'Exporta a PDF o Excel',
+    'howItWorks.step3.description': 'Descarga tu factura Facturae como PDF legible o Excel con desglose completo',
+
+    // Features section
+    'featureSection.title': 'Todo lo que necesitas para tus facturas electrónicas',
+    'featureSection.subtitle': 'El visor Facturae gratuito para autónomos y pymes',
+    'feature.versions.title': 'Todas las versiones',
+    'feature.versions.description': 'Soporta Facturae 3.2, 3.2.1 y 3.2.2, incluyendo facturas en lote',
+    'feature.exportPdf.title': 'Exportar a PDF',
+    'feature.exportPdf.description': 'Convierte tu factura Facturae a un PDF legible y profesional al instante',
+    'feature.signatures.title': 'Firmas digitales XAdES',
+    'feature.signatures.description': 'Verifica la firma digital XAdES de tus facturas electrónicas',
+    'feature.face.title': 'Compatible con FACe',
+    'feature.face.description': 'Visualiza facturas del formato obligatorio para la Administración Pública',
+    'feature.exportExcel.title': 'Exportar a Excel',
+    'feature.exportExcel.description': 'Descarga los datos de la factura en Excel con desglose de impuestos',
+    'feature.privacy.title': '100% Privado',
+    'feature.privacy.description': 'Tu factura no sale de tu navegador. Sin servidores, sin registros',
+
+    // Signature disclaimer
     'features.signatureDisclaimer': 'La verificacion de firma es tecnica, no oficial.',
     'features.signatureDisclaimerLink': 'ofrece validacion con efectos legales.',
 
     // Footer
+    'footer.description': 'Herramienta gratuita para visualizar, entender y exportar facturas electrónicas en formato Facturae. 100% privado.',
     'footer.privacy': 'Tu archivo no sale de tu navegador',
     'footer.install': 'Instalar app',
     'footer.contact': 'Contacto / Sugerencias',
+    'footer.linksTitle': 'Recursos',
+    'footer.contactTitle': 'Contacto',
+    'footer.copyright': '© 2026 FacturaView',
 
     // Navigation
     'nav.faq': 'FAQ',
@@ -494,10 +526,15 @@ export const translations = {
   en: {
     // App general
     'app.title': 'FacturaView',
-    'app.subtitle': 'View and verify your Facturae electronic invoices',
-    'app.tagline': 'No installation required. 100% private.',
     'app.changeTheme': 'Change theme',
     'app.changeLang': 'Cambiar a Español',
+
+    // Hero section
+    'hero.title': 'View your Facturae electronic invoices online',
+    'hero.subtitle': 'Open, understand and export XML invoices in Facturae format without installing software or Java. Everything is processed in your browser.',
+    'hero.badgePrivacy': '100% Private',
+    'hero.badgeFree': 'Free',
+    'hero.badgeNoInstall': 'No installation',
 
     // Dropzone
     'dropzone.dragHere': 'Drag your XML file here',
@@ -505,17 +542,44 @@ export const translations = {
     'dropzone.formats': 'Formats: Facturae 3.2, 3.2.1, 3.2.2',
     'dropzone.processing': 'Processing invoice...',
 
-    // Features
-    'features.pdfExcel': 'PDF & Excel',
-    'features.verifySignatures': 'Verify XAdES signatures',
-    'features.faceCompatible': 'FACe compatible',
+    // How it works section
+    'howItWorks.title': 'How does it work?',
+    'howItWorks.subtitle': 'View your electronic invoice in 3 simple steps',
+    'howItWorks.step1.title': 'Upload your XML',
+    'howItWorks.step1.description': 'Drag or select your Facturae electronic invoice file (.xml or .xsig)',
+    'howItWorks.step2.title': 'View the data',
+    'howItWorks.step2.description': 'Check seller, buyer, line items, taxes and totals in a clear layout',
+    'howItWorks.step3.title': 'Export to PDF or Excel',
+    'howItWorks.step3.description': 'Download your Facturae invoice as a readable PDF or Excel with full breakdown',
+
+    // Features section
+    'featureSection.title': 'Everything you need for your electronic invoices',
+    'featureSection.subtitle': 'The free Facturae viewer for freelancers and SMEs',
+    'feature.versions.title': 'All versions',
+    'feature.versions.description': 'Supports Facturae 3.2, 3.2.1 and 3.2.2, including batch invoices',
+    'feature.exportPdf.title': 'Export to PDF',
+    'feature.exportPdf.description': 'Convert your Facturae invoice to a readable, professional PDF instantly',
+    'feature.signatures.title': 'XAdES digital signatures',
+    'feature.signatures.description': 'Verify the XAdES digital signature of your electronic invoices',
+    'feature.face.title': 'FACe compatible',
+    'feature.face.description': 'View invoices in the mandatory format for Spanish Public Administration',
+    'feature.exportExcel.title': 'Export to Excel',
+    'feature.exportExcel.description': 'Download invoice data in Excel with full tax breakdown',
+    'feature.privacy.title': '100% Private',
+    'feature.privacy.description': 'Your invoice never leaves your browser. No servers, no sign-up',
+
+    // Signature disclaimer
     'features.signatureDisclaimer': 'Signature verification is technical, not official.',
     'features.signatureDisclaimerLink': 'offers legally valid verification.',
 
     // Footer
+    'footer.description': 'Free tool to view, understand and export electronic invoices in Facturae format. 100% private.',
     'footer.privacy': 'Your file never leaves your browser',
     'footer.install': 'Install app',
     'footer.contact': 'Contact / Suggestions',
+    'footer.linksTitle': 'Resources',
+    'footer.contactTitle': 'Contact',
+    'footer.copyright': '© 2026 FacturaView',
 
     // Navigation
     'nav.faq': 'FAQ',
