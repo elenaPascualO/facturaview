@@ -9,47 +9,22 @@ import { createLinesTable } from './LinesTable.js'
 import { createTotalsBox } from './TotalsBox.js'
 import { createBatchHeader } from './BatchHeader.js'
 import { createFileSelector } from './FileSelector.js'
+import { createNavbar } from './Navbar.js'
 import { isBatchInvoice } from '../parser/facturae.js'
-import { t, getLang } from '../utils/i18n.js'
+import { t } from '../utils/i18n.js'
 
 export function createInvoiceView(data, signatureData = null, invoiceIndex = 0, loadedFiles = [], currentFileIndex = 0) {
   const invoice = data.invoices[invoiceIndex]
-  const currentLang = getLang()
   const isBatch = isBatchInvoice(data)
   const hasMultipleFiles = loadedFiles.length > 1
 
   return `
-    <main role="main" class="min-h-screen bg-gray-50 dark:bg-slate-900 p-4 md:p-8">
-      <div class="max-w-4xl mx-auto">
-        <!-- Header -->
-        <header class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-          <div class="flex items-center gap-3">
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">${t('app.title')}</h1>
-            <!-- Botón de idioma -->
-            <button
-              id="btn-lang"
-              aria-label="${t('app.changeLang')}"
-              title="${t('app.changeLang')}"
-              class="px-2 py-1 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
-            >
-              ${currentLang === 'es' ? 'ES' : 'EN'}
-            </button>
-            <!-- Botón de tema -->
-            <button
-              id="btn-theme"
-              aria-label="${t('app.changeTheme')}"
-              title="${t('app.changeTheme')}"
-              class="p-2 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
-            >
-              <svg class="w-5 h-5 icon-sun hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-              </svg>
-              <svg class="w-5 h-5 icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="flex gap-2 flex-wrap">
+    <div class="min-h-screen bg-gray-50 dark:bg-slate-900 flex flex-col">
+      ${createNavbar({ showBackButton: true })}
+      <main role="main" class="flex-1 p-4 md:p-8">
+        <div class="max-w-4xl mx-auto">
+          <!-- Export buttons -->
+          <div class="flex gap-2 flex-wrap mb-6">
             <button
               id="btn-pdf"
               aria-label="${t('invoice.downloadPdf')}"
@@ -74,63 +49,52 @@ export function createInvoiceView(data, signatureData = null, invoiceIndex = 0, 
               </button>
             ` : ''}
           </div>
-        </header>
 
-        <!-- File selector (for multiple loaded files) -->
-        ${hasMultipleFiles ? createFileSelector(loadedFiles, currentFileIndex) : ''}
+          <!-- File selector (for multiple loaded files) -->
+          ${hasMultipleFiles ? createFileSelector(loadedFiles, currentFileIndex) : ''}
 
-        <!-- Batch header with navigation (only for batch invoices within a file) -->
-        ${isBatch ? createBatchHeader(data, invoiceIndex) : ''}
+          <!-- Batch header with navigation (only for batch invoices within a file) -->
+          ${isBatch ? createBatchHeader(data, invoiceIndex) : ''}
 
-        <!-- Info de factura -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6 mb-6">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-            ${t('invoice.title')} ${invoice.series ? escapeHtml(invoice.series) + '/' : ''}${escapeHtml(invoice.number)}
-              </h2>
-              <p class="text-gray-500 dark:text-gray-400">${escapeHtml(getInvoiceTypeLabel(invoice.invoiceType))} · ${escapeHtml(getInvoiceClassLabel(invoice.invoiceClass))}</p>
-            </div>
-            <div class="text-right">
-              <p class="text-gray-600 dark:text-gray-300">${t('invoice.date')} <span class="font-medium">${escapeHtml(formatDate(invoice.issueDate))}</span></p>
-              <p class="text-sm text-gray-400 dark:text-gray-500">${t('invoice.version')} ${escapeHtml(data.version)}</p>
-              ${data.isSigned ? `<p class="text-sm text-green-600 dark:text-green-400">${t('invoice.signed')}</p>` : ''}
+          <!-- Info de factura -->
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+              ${t('invoice.title')} ${invoice.series ? escapeHtml(invoice.series) + '/' : ''}${escapeHtml(invoice.number)}
+                </h2>
+                <p class="text-gray-500 dark:text-gray-400">${escapeHtml(getInvoiceTypeLabel(invoice.invoiceType))} · ${escapeHtml(getInvoiceClassLabel(invoice.invoiceClass))}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-gray-600 dark:text-gray-300">${t('invoice.date')} <span class="font-medium">${escapeHtml(formatDate(invoice.issueDate))}</span></p>
+                <p class="text-sm text-gray-400 dark:text-gray-500">${t('invoice.version')} ${escapeHtml(data.version)}</p>
+                ${data.isSigned ? `<p class="text-sm text-green-600 dark:text-green-400">${t('invoice.signed')}</p>` : ''}
+              </div>
             </div>
           </div>
+
+          <!-- Emisor y Receptor -->
+          <div class="grid md:grid-cols-2 gap-6 mb-6">
+            ${createPartyCard(t('party.seller'), data.seller)}
+            ${createPartyCard(t('party.buyer'), data.buyer)}
+          </div>
+
+          <!-- Líneas de detalle -->
+          ${createLinesTable(invoice.lines)}
+
+          <!-- Impuestos y Totales -->
+          ${createTotalsBox(invoice.taxes, invoice.totals)}
+
+          <!-- Información de pago -->
+          ${invoice.payment ? createPaymentInfo(invoice.payment) : ''}
+
+          <!-- Firma digital -->
+          <div id="signature-section">
+            ${data.isSigned ? createSignatureSection(signatureData) : createNoSignatureSection()}
+          </div>
         </div>
-
-        <!-- Emisor y Receptor -->
-        <div class="grid md:grid-cols-2 gap-6 mb-6">
-          ${createPartyCard(t('party.seller'), data.seller)}
-          ${createPartyCard(t('party.buyer'), data.buyer)}
-        </div>
-
-        <!-- Líneas de detalle -->
-        ${createLinesTable(invoice.lines)}
-
-        <!-- Impuestos y Totales -->
-        ${createTotalsBox(invoice.taxes, invoice.totals)}
-
-        <!-- Información de pago -->
-        ${invoice.payment ? createPaymentInfo(invoice.payment) : ''}
-
-        <!-- Firma digital -->
-        <div id="signature-section">
-          ${data.isSigned ? createSignatureSection(signatureData) : createNoSignatureSection()}
-        </div>
-
-        <!-- Botón volver -->
-        <div class="mt-8 text-center">
-          <button
-            id="btn-back"
-            aria-label="${t('invoice.loadAnother')}"
-            class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
-          >
-            ${t('invoice.loadAnother')}
-          </button>
-        </div>
-      </div>
-    </main>
+      </main>
+    </div>
   `
 }
 

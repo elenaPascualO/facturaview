@@ -86,10 +86,29 @@ function hideLoading() {
   if (overlay) overlay.classList.add('hidden')
 }
 
+// Volver al home limpiando estado
+function goHome() {
+  loadedFiles = []
+  currentFileIndex = 0
+  currentInvoiceIndex = 0
+  renderApp()
+}
+
+// Manejar botón atrás del navegador
+window.addEventListener('popstate', () => {
+  if (loadedFiles.length > 0) {
+    goHome()
+  }
+})
+
 // Renderizar vista inicial
 function renderApp() {
   const currentInvoice = getCurrentInvoice()
   if (currentInvoice) {
+    // Push state so browser back button returns to home
+    if (!history.state?.invoice) {
+      history.pushState({ invoice: true }, '')
+    }
     app.innerHTML = createInvoiceView(
       currentInvoice,
       getCurrentSignatureData(),
@@ -533,10 +552,11 @@ function setupInvoiceViewEvents() {
   const excelBtn = document.getElementById('btn-excel')
 
   backBtn?.addEventListener('click', () => {
-    loadedFiles = []
-    currentFileIndex = 0
-    currentInvoiceIndex = 0
-    renderApp()
+    if (window.history.state?.invoice) {
+      window.history.back()
+    } else {
+      goHome()
+    }
   })
 
   pdfBtn?.addEventListener('click', async () => {

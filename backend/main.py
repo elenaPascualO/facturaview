@@ -4,8 +4,9 @@ FacturaView API - Validación de firmas digitales
 
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 try:
@@ -50,5 +51,13 @@ async def health_check():
 # Debe ir al final para que las rutas API tengan prioridad
 frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
 
+# SPA fallback: serve index.html for unknown routes (not API)
 if frontend_dist.exists():
+    @app.exception_handler(404)
+    async def spa_fallback(request: Request, exc):
+        api_prefixes = ("/api/", "/health", "/docs", "/redoc", "/openapi.json")
+        if not request.url.path.startswith(api_prefixes):
+            return FileResponse(frontend_dist / "index.html")
+        return JSONResponse({"detail": "Not Found"}, status_code=404)
+
     app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
