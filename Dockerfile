@@ -1,18 +1,25 @@
-# FacturaView - Unified Dockerfile
-# Multi-stage build: Frontend (Bun) + Backend (Python/FastAPI)
-
-# Stage 1: Build frontend
+# -------- Stage 1: Build frontend --------
 FROM oven/bun:1 AS frontend-builder
+
 WORKDIR /app/frontend
+
+# Install deps (cacheable layer)
 COPY frontend/package.json frontend/bun.lock ./
 RUN bun install --frozen-lockfile
+
+# Copy source
 COPY frontend/ .
+
+# Build production assets
 RUN bun run build
 
-# Stage 2: Python backend
+
+# -------- Stage 2: Python backend --------
 FROM python:3.12-slim
 
-# Install system dependencies for lxml and cryptography
+WORKDIR /app
+
+# System deps (for lxml, cryptography, etc.)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2-dev \
     libxslt1-dev \
@@ -22,20 +29,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
-WORKDIR /app
+# Install Python deps (cached layer)
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
 
-# Copy backend code and pyproject.toml
+# Copy backend code
 COPY backend/ backend/
-COPY pyproject.toml .
 
-# Install Python dependencies
-RUN uv pip install --system --no-cache .
-
-# Copy built frontend from first stage
+# Copy built frontend
 COPY --from=frontend-builder /app/frontend/dist frontend/dist
 
+# Expose FastAPI port
 EXPOSE 8000
 
+# Run server (exec form)
 CMD ["uv", "run", "uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
