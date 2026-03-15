@@ -43,7 +43,7 @@ app.include_router(export_router)
 
 @app.get("/health")
 async def health_check():
-    """Health check para Railway"""
+    """Health check endpoint"""
     return {"status": "ok", "service": "facturaview-api"}
 
 

@@ -31,7 +31,7 @@ FacturaView permite abrir, visualizar y exportar facturas electrónicas Facturae
 | Excel | openpyxl (backend) / SheetJS (fallback) |
 | Firma digital | signxml + cryptography |
 | Tests | Vitest (223) + pytest (19) |
-| Despliegue | Docker + Railway |
+| Despliegue | Docker + Coolify (Hetzner) |
 
 ## Inicio rápido
 
