@@ -38,5 +38,4 @@ COPY --from=frontend-builder /app/frontend/dist frontend/dist
 
 EXPOSE 8000
 
-# Use shell form to expand $PORT environment variable
-CMD uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}
+CMD ["uv", "run", "uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
