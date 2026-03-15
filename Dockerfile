@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxslt1-dev \
     libffi-dev \
     gcc \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
